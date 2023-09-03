@@ -1,0 +1,27 @@
+{
+  "giftandgainFrontendApp": {
+    "currentInventory": {
+      "home": {
+        "title": "View Current Inventory",
+        "refreshListLabel": "Refresh List",
+        "createLabel": "Add Food Item",
+        "editLabel": "Edit Food Item",
+        "createOrEditLabel": "Add or Edit Food Item",
+        "notFound": "No Items Found"
+      },
+      "created": "A new Current Inventory is created with identifier {{ param }}",
+      "updated": "A Current Inventory is updated with identifier {{ param }}",
+      "deleted": "A Current Inventory is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Item {{ id }}?"
+      },
+      "detail": {
+        "title": "Current Inventory"
+      },
+      "id": "ID",
+      "itemName": "Item Name",
+      "expiryDate": "Expiry Date",
+      "quantity": "Quantity"
+    }
+  }
+}

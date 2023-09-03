@@ -1,0 +1,26 @@
+{
+  "giftandgainFrontendApp": {
+    "currentInventory": {
+      "home": {
+        "title": "CurrentInventories",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Current Inventory",
+        "createOrEditLabel": "Créer ou éditer un Current Inventory",
+        "notFound": "Aucun Current Inventory trouvé"
+      },
+      "created": "Un nouveau Current Inventory a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Current Inventory avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Current Inventory avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Current Inventory {{ id }} ?"
+      },
+      "detail": {
+        "title": "Current Inventory"
+      },
+      "id": "ID",
+      "itemName": "Item Name",
+      "expiryDate": "Expiry Date",
+      "quantity": "Quantity"
+    }
+  }
+}
