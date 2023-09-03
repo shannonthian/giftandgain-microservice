@@ -67,8 +67,8 @@ module.exports = async options =>
       process.env.JHI_DISABLE_WEBPACK_LOGS
         ? null
         : new SimpleProgressWebpackPlugin({
-            format: options.stats === 'minimal' ? 'compact' : 'expanded',
-          }),
+          format: options.stats === 'minimal' ? 'compact' : 'expanded',
+        }),
       new BrowserSyncPlugin(
         {
           https: options.tls,
@@ -99,8 +99,8 @@ module.exports = async options =>
         }
       ),
       new WebpackNotifierPlugin({
-        title: 'Giftandgain Frontend',
-        contentImage: path.join(__dirname, 'logo-jhipster.png'),
+        title: 'Gift & Gain',
+        contentImage: path.join(__dirname, 'logo-charity.png'),
       }),
     ].filter(Boolean),
   });
