@@ -1,0 +1,14 @@
+services:
+  item-server:
+    container_name: listing-server
+    build:
+      context: listing
+      dockerfile: Dockerfile
+    image: listing-server:latest
+    ports:
+      - 16666:8080
+    networks:
+      - spring-cloud-network
+networks:
+  spring-cloud-network:
+    driver: bridge
