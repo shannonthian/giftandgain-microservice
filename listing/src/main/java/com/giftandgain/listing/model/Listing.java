@@ -1,7 +1,7 @@
 package com.giftandgain.listing.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.io.Serializable;
 
