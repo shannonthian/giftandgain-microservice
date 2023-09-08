@@ -9,6 +9,19 @@ services:
       - 16666:8080
     networks:
       - spring-cloud-network
+
+  frontend:
+    container_name: frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/frontend'
+      - '/frontend/node_modules'
+    ports:
+      - 3001:9060
+    environment:
+      - CHOKIDAR_USEPOLLING=true
 networks:
   spring-cloud-network:
     driver: bridge
