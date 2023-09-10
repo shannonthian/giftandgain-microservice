@@ -26,12 +26,12 @@ export const CurrentInventoryDeleteDialog = () => {
   const updateSuccess = useAppSelector(state => state.currentInventory.updateSuccess);
 
   const handleClose = () => {
-    toast.success(translate("giftandgainFrontendApp.currentInventory.deleted", { id }));
     navigate('/current-inventory' + location.search);
   };
 
   useEffect(() => {
     if (updateSuccess && loadModal) {
+      toast.success(translate("giftandgainFrontendApp.currentInventory.deleted", { id }));
       handleClose();
       setLoadModal(false);
     }

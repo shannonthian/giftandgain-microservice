@@ -26,12 +26,12 @@ export const TargetInventoryDeleteDialog = () => {
   const updateSuccess = useAppSelector(state => state.targetInventory.updateSuccess);
 
   const handleClose = () => {
-    toast.success(translate("giftandgainFrontendApp.targetInventory.deleted", { id }));
     navigate('/target-inventory');
   };
 
   useEffect(() => {
     if (updateSuccess && loadModal) {
+      toast.success(translate("giftandgainFrontendApp.targetInventory.deleted", { id }));
       handleClose();
       setLoadModal(false);
     }

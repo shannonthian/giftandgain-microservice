@@ -26,7 +26,6 @@ export const CurrentInventoryUpdate = () => {
   const updateSuccess = useAppSelector(state => state.currentInventory.updateSuccess);
 
   const handleClose = () => {
-    toast.success(translate("giftandgainFrontendApp.currentInventory." + (isNew ? "created" : "updated"), { id: currentInventoryEntity.id }));
     navigate('/current-inventory' + location.search);
   };
 
@@ -40,6 +39,7 @@ export const CurrentInventoryUpdate = () => {
 
   useEffect(() => {
     if (updateSuccess) {
+      toast.success(translate("giftandgainFrontendApp.currentInventory." + (isNew ? "created" : "updated"), { id: currentInventoryEntity.id }));
       handleClose();
     }
   }, [updateSuccess]);
