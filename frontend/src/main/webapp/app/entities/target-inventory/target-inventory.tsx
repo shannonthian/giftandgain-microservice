@@ -75,7 +75,7 @@ export const TargetInventory = () => {
           <Link to="/target-inventory/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
             <FontAwesomeIcon icon="plus" />
             &nbsp;
-            <Translate contentKey="giftandgainFrontendApp.targetInventory.home.createLabel">Create new Target Inventory</Translate>
+            <Translate contentKey="giftandgainFrontendApp.targetInventory.home.createBtnLabel">Create new Target Inventory</Translate>
           </Link>
         </div>
       </h2>

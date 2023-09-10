@@ -4,16 +4,17 @@
       "home": {
         "title": "View Current Inventory",
         "refreshListLabel": "Refresh List",
-        "createLabel": "Add Food Item",
-        "editLabel": "Edit Food Item",
-        "createOrEditLabel": "Add or Edit Food Item",
+        "createBtnLabel": "Add Item",
+        "createLabel": "Add Current Inventory Item",
+        "editLabel": "Edit Current Inventory Item",
+        "createOrEditLabel": "Add or Edit Current Inventory Item",
         "notFound": "No Items Found"
       },
-      "created": "A new Current Inventory is created with identifier {{ param }}",
-      "updated": "A Current Inventory is updated with identifier {{ param }}",
-      "deleted": "A Current Inventory is deleted with identifier {{ param }}",
+      "created": "A new Current Inventory Item is successfully added with identifier {{ id }}.",
+      "updated": "Current Inventory Item {{ id }} is successfully updated.",
+      "deleted": "Current Inventory Item {{ id }} is successfully deleted.",
       "delete": {
-        "question": "Are you sure you want to delete Item {{ id }}?"
+        "question": "Are you sure you want to delete Current Inventory Item {{ id }}?"
       },
       "detail": {
         "title": "Current Inventory"

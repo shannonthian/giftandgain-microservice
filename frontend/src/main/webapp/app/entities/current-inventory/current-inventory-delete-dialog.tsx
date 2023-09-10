@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Translate } from 'react-jhipster';
+import { Translate, translate } from 'react-jhipster';
+import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
@@ -25,6 +26,7 @@ export const CurrentInventoryDeleteDialog = () => {
   const updateSuccess = useAppSelector(state => state.currentInventory.updateSuccess);
 
   const handleClose = () => {
+    toast.success(translate("giftandgainFrontendApp.currentInventory.deleted", { id }));
     navigate('/current-inventory' + location.search);
   };
 

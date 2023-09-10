@@ -102,7 +102,7 @@ export const CurrentInventory = () => {
           <Link to="/current-inventory/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
             <FontAwesomeIcon icon="plus" />
             &nbsp;
-            <Translate contentKey="giftandgainFrontendApp.currentInventory.home.createLabel">Create new Current Inventory</Translate>
+            <Translate contentKey="giftandgainFrontendApp.currentInventory.home.createBtnLabel">Create new Current Inventory</Translate>
           </Link>
         </div>
       </h2>

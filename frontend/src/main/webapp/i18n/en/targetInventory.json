@@ -4,16 +4,17 @@
       "home": {
         "title": "View Target Inventory",
         "refreshListLabel": "Refresh List",
-        "createLabel": "Add Food Item",
-        "editLabel": "Edit Food Item",
-        "createOrEditLabel": "Add or Edit Food Item",
+        "createBtnLabel": "Add Item",
+        "createLabel": "Add Target Inventory Item",
+        "editLabel": "Edit Target Inventory Item",
+        "createOrEditLabel": "Add or Edit Target Inventory Item",
         "notFound": "No Items Found"
       },
-      "created": "A new Target Inventory is created with identifier {{ param }}",
-      "updated": "A Target Inventory is updated with identifier {{ param }}",
-      "deleted": "A Target Inventory is deleted with identifier {{ param }}",
+      "created": "A new Target Inventory Item is successfully added with identifier {{ id }}.",
+      "updated": "Target Inventory Item {{ id }} is successfully updated.",
+      "deleted": "Target Inventory Item {{ id }} is successfully deleted.",
       "delete": {
-        "question": "Are you sure you want to delete Item {{ id }}?"
+        "question": "Are you sure you want to delete Target Inventory Item {{ id }}?"
       },
       "detail": {
         "title": "Target Inventory"

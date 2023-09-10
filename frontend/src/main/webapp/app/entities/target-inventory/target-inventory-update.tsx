@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Row, Col, FormText } from 'reactstrap';
 import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
+import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -25,6 +26,7 @@ export const TargetInventoryUpdate = () => {
   const updateSuccess = useAppSelector(state => state.targetInventory.updateSuccess);
 
   const handleClose = () => {
+    toast.success(translate("giftandgainFrontendApp.targetInventory." + (isNew ? "created" : "updated"), { id: targetInventoryEntity.id }));
     navigate('/target-inventory');
   };
 
