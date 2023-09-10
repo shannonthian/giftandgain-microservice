@@ -6,11 +6,14 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
+import { ASC } from 'app/shared/util/pagination.constants';
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { ICurrentInventory } from 'app/shared/model/current-inventory.model';
 import { getEntity, updateEntity, createEntity, reset } from './current-inventory.reducer';
+import { ITargetInventory } from 'app/shared/model/target-inventory.model';
+import { getEntities } from '../target-inventory/target-inventory.reducer';
 
 export const CurrentInventoryUpdate = () => {
   const dispatch = useAppDispatch();
@@ -24,6 +27,7 @@ export const CurrentInventoryUpdate = () => {
   const loading = useAppSelector(state => state.currentInventory.loading);
   const updating = useAppSelector(state => state.currentInventory.updating);
   const updateSuccess = useAppSelector(state => state.currentInventory.updateSuccess);
+  const targetInventoryList = useAppSelector(state => state.targetInventory.entities);
 
   const handleClose = () => {
     navigate('/current-inventory' + location.search);
@@ -35,6 +39,9 @@ export const CurrentInventoryUpdate = () => {
     } else {
       dispatch(getEntity(id));
     }
+    dispatch(getEntities({
+      sort: `itemName,${ASC}`
+    }));
   }, []);
 
   useEffect(() => {
@@ -43,6 +50,10 @@ export const CurrentInventoryUpdate = () => {
       handleClose();
     }
   }, [updateSuccess]);
+
+  const itemOptions = targetInventoryList.map((item: ITargetInventory) => {
+    return <option key={item.id}>{item.itemName}</option>
+  });
 
   const saveEntity = values => {
     const entity = {
@@ -97,12 +108,15 @@ export const CurrentInventoryUpdate = () => {
                 id="current-inventory-itemName"
                 name="itemName"
                 data-cy="itemName"
-                type="text"
+                type="select"
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
                   maxLength: { value: 100, message: translate('entity.validation.maxlength', { max: 100 }) },
                 }}
-              />
+              >
+                <option></option>
+                {itemOptions}
+              </ValidatedField>
               <ValidatedField
                 label={translate('giftandgainFrontendApp.currentInventory.expiryDate')}
                 id="current-inventory-expiryDate"
