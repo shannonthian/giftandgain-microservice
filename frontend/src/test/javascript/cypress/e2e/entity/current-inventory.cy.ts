@@ -15,7 +15,7 @@ describe('CurrentInventory e2e test', () => {
   const currentInventoryPageUrlPattern = new RegExp('/current-inventory(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const currentInventorySample = { itemName: 'quicker Usability', expiryDate: '2023-09-03', quantity: 20610 };
+  const currentInventorySample = { itemName: 'quicker Usability', expiryDate: '2023-09-03', quantity: 20611 };
 
   let currentInventory;
 
@@ -169,8 +169,8 @@ describe('CurrentInventory e2e test', () => {
       cy.get(`[data-cy="expiryDate"]`).blur();
       cy.get(`[data-cy="expiryDate"]`).should('have.value', '2023-09-03');
 
-      cy.get(`[data-cy="quantity"]`).type('5102');
-      cy.get(`[data-cy="quantity"]`).should('have.value', '5102');
+      cy.get(`[data-cy="quantity"]`).type('5103');
+      cy.get(`[data-cy="quantity"]`).should('have.value', '5103');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

@@ -1,0 +1,26 @@
+{
+  "giftandgainFrontendApp": {
+    "targetInventory": {
+      "home": {
+        "title": "View Target Inventory",
+        "refreshListLabel": "Refresh List",
+        "createLabel": "Add Food Item",
+        "editLabel": "Edit Food Item",
+        "createOrEditLabel": "Add or Edit Food Item",
+        "notFound": "No Items Found"
+      },
+      "created": "A new Target Inventory is created with identifier {{ param }}",
+      "updated": "A Target Inventory is updated with identifier {{ param }}",
+      "deleted": "A Target Inventory is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Item {{ id }}?"
+      },
+      "detail": {
+        "title": "Target Inventory"
+      },
+      "id": "ID",
+      "itemName": "Item Name",
+      "quantity": "Quantity"
+    }
+  }
+}

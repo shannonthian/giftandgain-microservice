@@ -1,0 +1,25 @@
+{
+  "giftandgainFrontendApp": {
+    "targetInventory": {
+      "home": {
+        "title": "TargetInventories",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Target Inventory",
+        "createOrEditLabel": "Créer ou éditer un Target Inventory",
+        "notFound": "Aucun Target Inventory trouvé"
+      },
+      "created": "Un nouveau Target Inventory a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Target Inventory avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Target Inventory avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Target Inventory {{ id }} ?"
+      },
+      "detail": {
+        "title": "Target Inventory"
+      },
+      "id": "ID",
+      "itemName": "Item Name",
+      "quantity": "Quantity"
+    }
+  }
+}

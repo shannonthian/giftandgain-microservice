@@ -1,41 +1,41 @@
 import axios from 'axios';
 import { createAsyncThunk, isFulfilled, isPending, isRejected } from '@reduxjs/toolkit';
+import { ASC } from 'app/shared/util/pagination.constants';
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
-import { ICurrentInventory, defaultValue } from 'app/shared/model/current-inventory.model';
+import { ITargetInventory, defaultValue } from 'app/shared/model/target-inventory.model';
 
-const initialState: EntityState<ICurrentInventory> = {
+const initialState: EntityState<ITargetInventory> = {
   loading: false,
   errorMessage: null,
   entities: [],
   entity: defaultValue,
   updating: false,
-  totalItems: 0,
   updateSuccess: false,
 };
 
-const apiUrl = 'api/current-inventory';
+const apiUrl = 'api/target-inventory';
 
 // Actions
 
-export const getEntities = createAsyncThunk('currentInventory/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
-  return axios.get<ICurrentInventory[]>(requestUrl);
+export const getEntities = createAsyncThunk('targetInventory/fetch_entity_list', async ({ sort }: IQueryParams) => {
+  const requestUrl = `${apiUrl}?${sort ? `sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
+  return axios.get<ITargetInventory[]>(requestUrl);
 });
 
 export const getEntity = createAsyncThunk(
-  'currentInventory/fetch_entity',
+  'targetInventory/fetch_entity',
   async (id: string | number) => {
     const requestUrl = `${apiUrl}/${id}`;
-    return axios.get<ICurrentInventory>(requestUrl);
+    return axios.get<ITargetInventory>(requestUrl);
   },
   { serializeError: serializeAxiosError }
 );
 
 export const createEntity = createAsyncThunk(
-  'currentInventory/create_entity',
-  async (entity: ICurrentInventory, thunkAPI) => {
-    const result = await axios.post<ICurrentInventory>(apiUrl, cleanEntity(entity));
+  'targetInventory/create_entity',
+  async (entity: ITargetInventory, thunkAPI) => {
+    const result = await axios.post<ITargetInventory>(apiUrl, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -43,9 +43,9 @@ export const createEntity = createAsyncThunk(
 );
 
 export const updateEntity = createAsyncThunk(
-  'currentInventory/update_entity',
-  async (entity: ICurrentInventory, thunkAPI) => {
-    const result = await axios.put<ICurrentInventory>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+  'targetInventory/update_entity',
+  async (entity: ITargetInventory, thunkAPI) => {
+    const result = await axios.put<ITargetInventory>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -53,9 +53,9 @@ export const updateEntity = createAsyncThunk(
 );
 
 export const partialUpdateEntity = createAsyncThunk(
-  'currentInventory/partial_update_entity',
-  async (entity: ICurrentInventory, thunkAPI) => {
-    const result = await axios.patch<ICurrentInventory>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+  'targetInventory/partial_update_entity',
+  async (entity: ITargetInventory, thunkAPI) => {
+    const result = await axios.patch<ITargetInventory>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -63,10 +63,10 @@ export const partialUpdateEntity = createAsyncThunk(
 );
 
 export const deleteEntity = createAsyncThunk(
-  'currentInventory/delete_entity',
+  'targetInventory/delete_entity',
   async (id: string | number, thunkAPI) => {
     const requestUrl = `${apiUrl}/${id}`;
-    const result = await axios.delete<ICurrentInventory>(requestUrl);
+    const result = await axios.delete<ITargetInventory>(requestUrl);
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -75,8 +75,8 @@ export const deleteEntity = createAsyncThunk(
 
 // slice
 
-export const CurrentInventorySlice = createEntitySlice({
-  name: 'currentInventory',
+export const TargetInventorySlice = createEntitySlice({
+  name: 'targetInventory',
   initialState,
   extraReducers(builder) {
     builder
@@ -90,12 +90,18 @@ export const CurrentInventorySlice = createEntitySlice({
         state.entity = {};
       })
       .addMatcher(isFulfilled(getEntities), (state, action) => {
-        const { data, headers } = action.payload;
+        const { data } = action.payload;
         return {
           ...state,
           loading: false,
-          entities: data,
-          totalItems: parseInt(headers['x-total-count'], 10),
+          entities: data.sort((a, b) => {
+            if (!action.meta?.arg?.sort) {
+              return 1;
+            }
+            const order = action.meta.arg.sort.split(',')[1];
+            const predicate = action.meta.arg.sort.split(',')[0];
+            return order === ASC ? (a[predicate] < b[predicate] ? -1 : 1) : b[predicate] < a[predicate] ? -1 : 1;
+          }),
         };
       })
       .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {
@@ -117,7 +123,7 @@ export const CurrentInventorySlice = createEntitySlice({
   },
 });
 
-export const { reset } = CurrentInventorySlice.actions;
+export const { reset } = TargetInventorySlice.actions;
 
 // Reducer
-export default CurrentInventorySlice.reducer;
+export default TargetInventorySlice.reducer;

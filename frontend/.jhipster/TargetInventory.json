@@ -1,16 +1,11 @@
 {
-  "changelogDate": "20230903094922",
+  "changelogDate": "20230910065039",
   "fields": [
     {
       "fieldName": "itemName",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRules": ["required", "unique", "maxlength"],
       "fieldValidateRulesMaxlength": "100"
-    },
-    {
-      "fieldName": "expiryDate",
-      "fieldType": "LocalDate",
-      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "quantity",
@@ -19,8 +14,8 @@
       "fieldValidateRulesMin": "1"
     }
   ],
-  "name": "CurrentInventory",
-  "pagination": "pagination",
+  "name": "TargetInventory",
+  "pagination": "no",
   "readOnly": false,
   "relationships": [],
   "skipServer": true

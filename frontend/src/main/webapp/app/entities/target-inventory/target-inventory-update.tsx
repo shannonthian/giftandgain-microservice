@@ -8,10 +8,10 @@ import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateT
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { ICurrentInventory } from 'app/shared/model/current-inventory.model';
-import { getEntity, updateEntity, createEntity, reset } from './current-inventory.reducer';
+import { ITargetInventory } from 'app/shared/model/target-inventory.model';
+import { getEntity, updateEntity, createEntity, reset } from './target-inventory.reducer';
 
-export const CurrentInventoryUpdate = () => {
+export const TargetInventoryUpdate = () => {
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
@@ -19,13 +19,13 @@ export const CurrentInventoryUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const currentInventoryEntity = useAppSelector(state => state.currentInventory.entity);
-  const loading = useAppSelector(state => state.currentInventory.loading);
-  const updating = useAppSelector(state => state.currentInventory.updating);
-  const updateSuccess = useAppSelector(state => state.currentInventory.updateSuccess);
+  const targetInventoryEntity = useAppSelector(state => state.targetInventory.entity);
+  const loading = useAppSelector(state => state.targetInventory.loading);
+  const updating = useAppSelector(state => state.targetInventory.updating);
+  const updateSuccess = useAppSelector(state => state.targetInventory.updateSuccess);
 
   const handleClose = () => {
-    navigate('/current-inventory' + location.search);
+    navigate('/target-inventory');
   };
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export const CurrentInventoryUpdate = () => {
 
   const saveEntity = values => {
     const entity = {
-      ...currentInventoryEntity,
+      ...targetInventoryEntity,
       ...values,
     };
 
@@ -59,16 +59,16 @@ export const CurrentInventoryUpdate = () => {
     isNew
       ? {}
       : {
-        ...currentInventoryEntity,
+        ...targetInventoryEntity,
       };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="giftandgainFrontendApp.currentInventory.home.createOrEditLabel" data-cy="CurrentInventoryCreateUpdateHeading">
-            <Translate contentKey={isNew ? "giftandgainFrontendApp.currentInventory.home.createLabel" : "giftandgainFrontendApp.currentInventory.home.editLabel"}>
-              Create or edit a CurrentInventory
+          <h2 id="giftandgainFrontendApp.targetInventory.home.createOrEditLabel" data-cy="TargetInventoryCreateUpdateHeading">
+            <Translate contentKey={isNew ? "giftandgainFrontendApp.targetInventory.home.createLabel" : "giftandgainFrontendApp.targetInventory.home.editLabel"}>
+              Create or edit a TargetInventory
             </Translate>
           </h2>
         </Col>
@@ -85,14 +85,14 @@ export const CurrentInventoryUpdate = () => {
                   required
                   readOnly
                   disabled
-                  id="current-inventory-id"
+                  id="target-inventory-id"
                   label={translate('global.field.id')}
                   validate={{ required: true }}
                 />
               ) : null}
               <ValidatedField
-                label={translate('giftandgainFrontendApp.currentInventory.itemName')}
-                id="current-inventory-itemName"
+                label={translate('giftandgainFrontendApp.targetInventory.itemName')}
+                id="target-inventory-itemName"
                 name="itemName"
                 data-cy="itemName"
                 type="text"
@@ -102,18 +102,8 @@ export const CurrentInventoryUpdate = () => {
                 }}
               />
               <ValidatedField
-                label={translate('giftandgainFrontendApp.currentInventory.expiryDate')}
-                id="current-inventory-expiryDate"
-                name="expiryDate"
-                data-cy="expiryDate"
-                type="date"
-                validate={{
-                  required: { value: true, message: translate('entity.validation.required') },
-                }}
-              />
-              <ValidatedField
-                label={translate('giftandgainFrontendApp.currentInventory.quantity')}
-                id="current-inventory-quantity"
+                label={translate('giftandgainFrontendApp.targetInventory.quantity')}
+                id="target-inventory-quantity"
                 name="quantity"
                 data-cy="quantity"
                 type="text"
@@ -123,7 +113,7 @@ export const CurrentInventoryUpdate = () => {
                   validate: v => isNumber(v) || translate('entity.validation.number'),
                 }}
               />
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/current-inventory" replace color="info">
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/target-inventory" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -144,4 +134,4 @@ export const CurrentInventoryUpdate = () => {
   );
 };
 
-export default CurrentInventoryUpdate;
+export default TargetInventoryUpdate;
