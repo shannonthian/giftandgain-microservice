@@ -70,6 +70,8 @@ validity: integer (in days)
 # Database diagram (ERD for relational database)
 
 https://databasediagram.com/app
+
+```
 tbl_user
 
 - ID int PK
@@ -78,20 +80,21 @@ tbl_user
   email varchar(100) NOT NULL
   roleID int FK > tbl_code_role.role PK
 
-## tbl_code_role
+tbl_code_role
 
 ID int PK
 role varchar(20) NOT NULL
 description varchar(100) NOT NULL
 
-## tbl_code_unit
+tbl_code_unit
 
 ID int PK
 unit varchar(20)
 description varchar(100)
 
-## tbl_code_category
+tbl_code_category
 
 ID int PK
 unit varchar(20)
 description varchar(100)
+```
