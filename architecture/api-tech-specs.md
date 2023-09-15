@@ -1,15 +1,15 @@
 # Query
 
-| **API**                          | **Method**  | **Request Body**  | **Response Body**                                                              | **Remarks**                                                                                                                                                                                                                                                                   |
-| -------------------------------- | ----------- | ----------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| **API**   | **Method**  | **Request Body**  | **Response Body** | **Remarks**  |
+| --- | ----------- | --- | --- | --- |
 | **/api/query/inventory**         | GET         |                   | { payload: […inventory]}                                                       |
 | **/api/query/target-quantities** | GET         |                   | { payload: […targetInventory]}                                                 |                                                                                                                                                                                                                                                                               |     |
 | **/api/query/wish-list**         | GET         | -                 | {"high": ["Item A", "Item B", "Item C"],"low": ["Item D", "Item E","Item F"]}  | "high" would contain the list of items where current_inventory is less than target_inventory, ordered from largest to smallest difference;"low" would contain the list of items where current_inventory exceeds target_inventory, ordered from smallest to largest difference |
 
 # Authentication
 
-| **API**                 | **Method**  | **Request Body**                                                                                  | **Response Body**                                                                                                       | **Remarks**                                                                                                                                                                                                                                                                                             |
-| ----------------------- | ----------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| **API** | **Method**  | **Request Body**  | **Response Body**  | **Remarks** |
+| --- | --- | --- | --- | --- |
 | /api/auth/register      | POST        | { "login": "username", "email: "test@test.com","password": "password",}                           |                                                                                                                         | Should return error if account has been activated (based on email). Should return error if account is not in the list of approved emails. User's role is based on email (i.e., only certain emails will be assigned ROLE_MANGER). username is already in use password is not strong enoughempty fields  |
 | /api/auth/login         | POST        | { "username": "username", "password": "password",}                                                | {}                                                                                                                      | To return bearer token (i.e., JWT) in response header.                                                                                                                                                                                                                                                  |
 | /api/auth/logout        | POST        | { "username": "username", "password": "password",}                                                |                                                                                                                         |                                                                                                                                                                                                                                                                                                         |     |     |
@@ -18,8 +18,8 @@
 
 # Inventory
 
-| **API**                   | **Method** | **Request Body**               | **Response Body**              | **Remarks**                                               |
-| ------------------------- | ---------- | ------------------------------ | ------------------------------ | --------------------------------------------------------- |
+| **API**   | **Method** | **Request Body**  | **Response Body**  |**Remarks**                                               |
+| ---- | --- | ---- | --- | --- |
 | api/inventory/current     | GET        |                                | { payload: […inventory]}       | Same as GET /api/query/inventory without query parameters |
 | api/inventory/current     | POST       | { payload: […inventory]}       |                                |                                                           |
 | api/inventory/current/:id | GET        |                                | { payload: […inventory]}       |                                                           |
