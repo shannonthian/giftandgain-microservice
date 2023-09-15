@@ -20,8 +20,14 @@ services:
     image: listing-server:latest
     ports:
       - 16666:8080
+    depends_on:
+      - postgres
     networks:
       - spring-cloud-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
 
   inventory-management:
     container_name: inventory-management
@@ -33,6 +39,10 @@ services:
       - 16667:8080
     networks:
       - spring-cloud-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
 
   auth:
     container_name: auth
@@ -44,35 +54,20 @@ services:
       - 16668:8080
     networks:
       - spring-cloud-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
 
   postgres:
     image: postgres
+    container_name: postgres
     restart: always
+    networks:
+      - spring-cloud-network
     environment:
-      POSTGRES_PASSWORD: example
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-
-  mongo:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
 
 networks:
   spring-cloud-network:
