@@ -80,7 +80,9 @@ unit varchar(20)
 description varchar(100)
 ```
 
+# Architecture diagram
+![Architecture diagram](architecture/giftandgain-architecture-diagram.png)
+
 # Other references
 
-- [Architecture diagram](architecture/giftandgain-architecture-diagram.png)
 - [API tech specs](architecture/api-tech-specs.md)
