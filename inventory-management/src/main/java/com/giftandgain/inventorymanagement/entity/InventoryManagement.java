@@ -1,7 +1,7 @@
 package com.giftandgain.inventorymanagement.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,13 +27,13 @@ public class InventoryManagement {
 	private String unit;
 
 	@Column(name = "received_quantity")
-	private int receivedQuantity;
+	private BigDecimal receivedQuantity;
 
 	@Column(name = "expiry_date")
 	private LocalDate expiryDate;
 
 	@Column(name = "created_date")
-	private LocalDateTime createdDate;
+	private LocalDate createdDate;
 
 	@Column(name = "remarks")
 	private String remarks;
@@ -49,8 +49,8 @@ public class InventoryManagement {
 				+ createdDate + ", remarks=" + remarks + "]";
 	}
 
-	public InventoryManagement(Long InventoryId, String itemName, String category, String unit, int receivedQuantity,
-			LocalDate expiryDate, LocalDateTime createdDate, String remarks) {
+	public InventoryManagement(Long InventoryId, String itemName, String category, String unit, BigDecimal receivedQuantity,
+			LocalDate expiryDate, LocalDate createdDate, String remarks) {
 		super();
 		this.inventoryId = InventoryId;
 		this.itemName = itemName;
@@ -94,11 +94,11 @@ public class InventoryManagement {
 		this.unit = unit;
 	}
 
-	public int getReceivedQuantity() {
+	public BigDecimal getReceivedQuantity() {
 		return receivedQuantity;
 	}
 
-	public void setReceivedQuantity(int receivedQuantity) {
+	public void setReceivedQuantity(BigDecimal receivedQuantity) {
 		this.receivedQuantity = receivedQuantity;
 	}
 
@@ -110,12 +110,12 @@ public class InventoryManagement {
 		this.expiryDate = expiryDate;
 	}
 
-	public LocalDateTime getCreatedDate() {
+	public LocalDate getCreatedDate() {
 		return createdDate;
 	}
 
 	public void setCreatedDateToNow() {
-	    this.createdDate = LocalDateTime.now();
+	    this.createdDate = LocalDate.now();
 	}
 
 	public String getRemarks() {

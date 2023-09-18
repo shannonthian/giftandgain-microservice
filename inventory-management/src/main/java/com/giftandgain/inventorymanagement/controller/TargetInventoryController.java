@@ -1,13 +1,18 @@
 package com.giftandgain.inventorymanagement.controller;
 
+import java.math.BigDecimal;
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.giftandgain.inventorymanagement.entity.InventoryManagement;
 import com.giftandgain.inventorymanagement.entity.TargetInventory;
 import com.giftandgain.inventorymanagement.repository.TargetInventoryRepository;
+import com.giftandgain.inventorymanagement.specification.TargetInventorySpecification;
 
 @RestController
 public class TargetInventoryController {
@@ -35,31 +40,38 @@ public class TargetInventoryController {
 		this.targetRepo = targetRepo;
 	}
 
-	// Get all the category with pagination and sorting
 	@GetMapping("/giftandgain/category")
-	public List<TargetInventory> getCategoryList(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String sortBy,
-			@RequestParam(defaultValue = "asc") String direction) {
+	public ResponseEntity<List<TargetInventory>> getCategoryList(
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size,
+	        @RequestParam(required = false) String sort,
+	        @RequestParam(defaultValue = "asc") String direction) {
 
-		Pageable pageable;
+	    Pageable pageable;
 
-		// Check if sortBy parameter is provided
-		if (sortBy != null && !sortBy.trim().isEmpty()) {
-			if ("desc".equalsIgnoreCase(direction)) {
-				pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
-			} else {
-				pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-			}
-		} else {
-			pageable = PageRequest.of(page, size); // No sorting
-		}
+	    // Check if sortBy parameter is provided
+	    if (sort != null && !sort.trim().isEmpty()) {
+	        if ("desc".equalsIgnoreCase(direction)) {
+	            pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+	        } else {
+	            pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+	        }
+	    } else {
+	        pageable = PageRequest.of(page, size);  // No sorting
+	    }
 
-		return targetRepo.findAll(pageable).getContent();
+	    Page<TargetInventory> result = targetRepo.findAll(pageable);
+	    long totalItems = result.getTotalElements();  // Get total number of items
+	    
+	    HttpHeaders responseHeaders = new HttpHeaders();
+	    responseHeaders.set("x-total-count", String.valueOf(totalItems));
+
+	    return ResponseEntity.ok().headers(responseHeaders).body(result.getContent());
 	}
 
 	// Get selected category
 	@GetMapping("/giftandgain/category/{id}")
-	public ResponseEntity<TargetInventory> retrieveItem(@PathVariable Long id) {
+	public ResponseEntity<TargetInventory> retrieveCategory(@PathVariable Long id) {
 		Optional<TargetInventory> inventoryManagement = targetRepo.findById(id);
 
 		if (inventoryManagement.isEmpty()) {
@@ -68,10 +80,51 @@ public class TargetInventoryController {
 
 		return new ResponseEntity<>(inventoryManagement.get(), HttpStatus.OK);
 	}
+	
+	//Search 
+	@GetMapping("/giftandgain/category/search")
+	public ResponseEntity<List<TargetInventory>> searchInventory(
+	        @RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "10") int size,
+	        @RequestParam(required = false) String category,
+	        @RequestParam(required = false) String unit,
+	        @RequestParam(required = false) BigDecimal targetQuantity,
+	        @RequestParam(required = false) String targetMonthYearStr,
+	        @RequestParam(required = false) String sort,
+	        @RequestParam(defaultValue = "asc") String direction) {
+		
+		LocalDate targetMonthYear = targetMonthYearStr != null ? LocalDate.parse(targetMonthYearStr, DateTimeFormatter.ofPattern("yyyyMMdd")) : null;
+
+	    Specification<TargetInventory> spec = Specification.where(
+	            TargetInventorySpecification.hasCategory(category))
+	            .and(TargetInventorySpecification.hasUnit(unit))
+	            .and(TargetInventorySpecification.hasTargetQuantity(targetQuantity))
+	            .and(TargetInventorySpecification.hasTargetMonthYear(targetMonthYear));
+
+	    Pageable pageable;
+
+	    if (sort != null && !sort.trim().isEmpty()) {
+	        if ("desc".equalsIgnoreCase(direction)) {
+	            pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+	        } else {
+	            pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+	        }
+	    } else {
+	        pageable = PageRequest.of(page, size);
+	    }
+
+	    Page<TargetInventory> result = targetRepo.findAll(spec, pageable);
+	    long totalItems = result.getTotalElements();
+
+	    HttpHeaders responseHeaders = new HttpHeaders();
+	    responseHeaders.set("x-total-count", String.valueOf(totalItems));
+
+	    return ResponseEntity.ok().headers(responseHeaders).body(result.getContent());
+	}
 
 	// Create new category
 	@PostMapping("/giftandgain/category")
-	public ResponseEntity<TargetInventory> createItem(@RequestBody TargetInventory targetInventory) {
+	public ResponseEntity<TargetInventory> createCategory(@RequestBody TargetInventory targetInventory) {
 
 		// Save the record with the current date as the createdDate
 		TargetInventory savedItem = targetRepo.save(targetInventory);
@@ -81,10 +134,11 @@ public class TargetInventoryController {
 
 		return ResponseEntity.created(location).build();
 	}
+
 	
 	// Update existing category
 	@PutMapping("/giftandgain/category/{id}")
-	public ResponseEntity<TargetInventory> updateItem(@PathVariable Long id, @RequestBody TargetInventory updatedInventory) {
+	public ResponseEntity<TargetInventory> updateCategory(@PathVariable Long id, @RequestBody TargetInventory updatedInventory) {
 	    Optional<TargetInventory> existingItem = targetRepo.findById(id);
 
 	    if (existingItem.isEmpty()) {
@@ -96,7 +150,7 @@ public class TargetInventoryController {
 	    currentItem.setCategory(updatedInventory.getCategory());
 	    currentItem.setUnit(updatedInventory.getUnit());
 	    currentItem.setTargetQuantity(updatedInventory.getTargetQuantity());
-	    currentItem.setTargetMonth(updatedInventory.getTargetMonth());
+	    currentItem.setTargetMonthYear(updatedInventory.getTargetMonthYear());
 
 	    // Save the updated item
 	    TargetInventory updatedItem = targetRepo.save(currentItem);
@@ -106,7 +160,7 @@ public class TargetInventoryController {
 
 	// Delete selected category
 	@DeleteMapping("/giftandgain/category/{id}")
-	public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
 		try {
 			targetRepo.deleteById(id);
 			return ResponseEntity.noContent().build(); // HTTP 204 No Content
@@ -119,7 +173,7 @@ public class TargetInventoryController {
 	
 	// Download selected report
 	@GetMapping("giftandgain/download/report/{month}/{year}")
-	public ResponseEntity<byte[]> downloadReport(@PathVariable String month, @PathVariable String year) {
+	public ResponseEntity<byte[]> downloadReport(@PathVariable int month, @PathVariable int year) {
 	    
 	    // 1. Fetch the data
 	    List<Object[]> monthlyReport = targetRepo.getTotalQuantitiesByDate(month, year);
@@ -132,8 +186,8 @@ public class TargetInventoryController {
 	    for (Object[] row : monthlyReport) {
 	        String category = (String) row[0];
 	        String unit = (String) row[1];
-	        Long receivedQuantity = (Long) row[2];
-	        Integer targetQuantity = (Integer) row[3];
+	        BigDecimal receivedQuantity = (BigDecimal) row[2];
+	        BigDecimal targetQuantity = (BigDecimal) row[3];
 
 	        reportCSV.append(category).append(",");
 	        reportCSV.append(unit).append(",");
