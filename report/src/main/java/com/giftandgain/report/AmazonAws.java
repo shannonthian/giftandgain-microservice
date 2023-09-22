@@ -13,8 +13,8 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 
 @Component
 public class AmazonAws {
-    String bucketName = "gift-and-gain-bucket";
-    String region = System.getenv("S3_BUCKET_NAME");
+    String bucketName = System.getenv("S3_BUCKET_NAME");
+    String region = System.getenv("S3_REGION");
     
     final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(region).build();
     
