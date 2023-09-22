@@ -11,10 +11,6 @@
         "targetInventory": "Target Inventory",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
-      "donateRight": {
-        "main": "Donate Right",
-        "checkMyItem": "Check My Item"
-      },
       "account": {
         "main": "Account",
         "settings": "Settings",
@@ -104,8 +100,7 @@
       "open": "Open",
       "save": "Save",
       "view": "View",
-      "show": "Show {{otherEntity}}",
-      "check": "Check"
+      "show": "Show {{otherEntity}}"
     },
     "detail": {
       "field": "Field",

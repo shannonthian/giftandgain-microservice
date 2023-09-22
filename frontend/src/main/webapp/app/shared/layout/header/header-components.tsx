@@ -30,14 +30,3 @@ export const Home = () => (
     </NavLink>
   </NavItem>
 );
-
-export const DonateRight = () => (
-  <NavItem>
-    <NavLink tag={Link} to="/donate-right" className="d-flex align-items-center">
-      <FontAwesomeIcon icon="gift" />
-      <span>
-        <Translate contentKey="global.menu.donateRight.main">Donate Right</Translate>
-      </span>
-    </NavLink>
-  </NavItem>
-);
