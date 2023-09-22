@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 import static javax.persistence.GenerationType.AUTO;
 
-@Entity
+@Entity(name = "tb_report")
 public class Report implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

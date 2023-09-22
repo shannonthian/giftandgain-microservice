@@ -9,4 +9,8 @@ import java.util.List;
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
     List<Report> findByMonthAndYear(String month, String year);
+
+    List<Report> findByMonth(String month);
+    
+    List<Report> findByYear(String year);
 }

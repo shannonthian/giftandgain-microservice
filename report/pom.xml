@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.giftandgain</groupId>
-	<artifactId>listing</artifactId>
+	<artifactId>report</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>listing</name>
-	<description>Demo project for Spring Boot</description>
+	<name>report</name>
+	<description>Generate and find reports on inventory</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -51,7 +51,23 @@
             <artifactId>spring-session-jdbc</artifactId>
             <version>3.1.2</version>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-bom</artifactId>
+                <version>1.11.1000</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 	<build>
 		<plugins>
