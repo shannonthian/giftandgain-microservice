@@ -29,6 +29,13 @@
 | email    |             |
 | role     |             |
 
+## Report
+| Field    | Description |
+| -------- | ----------- |
+| month |             |
+| year |             |
+| url    | Amazon S3 object url            |
+
 # ERD for relational DB
 
 Head to this link and paste the code in:

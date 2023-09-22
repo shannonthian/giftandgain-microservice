@@ -1,11 +1,3 @@
-# Query
-
-| **API**   | **Method**  | **Request Body**  | **Response Body** | **Remarks**  |
-| --- | ----------- | --- | --- | --- |
-| **/api/query/inventory**         | GET         |                   | { payload: […inventory]}                                                       |
-| **/api/query/target-quantities** | GET         |                   | { payload: […targetInventory]}                                                 |                                                                                                                                                                                                                                                                               |     |
-| **/api/query/wish-list**         | GET         | -                 | {"high": ["Item A", "Item B", "Item C"],"low": ["Item D", "Item E","Item F"]}  | "high" would contain the list of items where current_inventory is less than target_inventory, ordered from largest to smallest difference;"low" would contain the list of items where current_inventory exceeds target_inventory, ordered from smallest to largest difference |
-
 # Authentication
 
 | **API** | **Method**  | **Request Body**  | **Response Body**  | **Remarks** |
@@ -27,3 +19,8 @@
 | api/inventory/current/:id | DELETE     |                                | { payload: inventory.id}       |                                                           |
 | /api/inventory/target     | GET        |                                | { payload: […targetInventory]} |                                                           |
 | /api/inventory/target     | PUT        | { payload: […targetInventory]} | { payload: inventory.id}       |                                                           |
+#Report
+| **API**   | **Method** | **Request Body**  | **Response Body**  |**Remarks**                                               |
+| ---- | --- | ---- | --- | --- |
+| api/report?month={}&year={}     | GET        |                                | { message: payload: [...report] }       | both month & year query parameters optional |
+| api/report/download?month={}&year={}     | GET       | { message: payload: urlString }       |                                |  both month & year query parameters optional                                                         |
