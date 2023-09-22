@@ -1,6 +1,7 @@
-package com.giftandgain.inventorymanagement.controller;
+package com.giftandgain.inventorymanagement;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +17,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.giftandgain.inventorymanagement.entity.InventoryManagement;
-import com.giftandgain.inventorymanagement.repository.InventoryManagementRepository;
 
 
 
@@ -66,7 +64,7 @@ public class InventoryManagementController {
 	public ResponseEntity<InventoryManagement> retrieveItem(@PathVariable Long id) {
 	    Optional<InventoryManagement> inventoryManagement = inventoryRepo.findById(id);
 
-	    if (!inventoryManagement.isPresent()) {
+	    if (inventoryManagement.isEmpty()) {
 	        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found with id: " + id);
 	    }
 
@@ -82,31 +80,10 @@ public class InventoryManagementController {
 	    // Save the record with the current date as the createdDate
 	    InventoryManagement savedItem = inventoryRepo.save(inventoryManagement);
 	    
-	    URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedItem.getInventoryId()).toUri();
+	    URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedItem.getId()).toUri();
 	    
 	    return ResponseEntity.created(location).build();
 	}
-	
-	@PutMapping("/giftandgain/items/{id}")
-    public ResponseEntity<InventoryManagement> editItem(@PathVariable Long id, @RequestBody InventoryManagement updatedInventory) {
-        Optional<InventoryManagement> inventoryOpt = inventoryRepo.findById(id);
-
-        if (!inventoryOpt.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found with id: " + id);
-        }
-
-        InventoryManagement currentInventory = inventoryOpt.get();
-        currentInventory.setItemName(updatedInventory.getItemName());
-        currentInventory.setCategory(updatedInventory.getCategory());
-        currentInventory.setUnit(updatedInventory.getUnit());
-        currentInventory.setReceivedQuantity(updatedInventory.getReceivedQuantity());
-        currentInventory.setExpiryDate(updatedInventory.getExpiryDate());
-        currentInventory.setCreatedDateToNow();
-        inventoryRepo.save(currentInventory);
-
-        return new ResponseEntity<>(currentInventory, HttpStatus.OK);
-    }
-
 	
 	// Delete selected item
 	@DeleteMapping("/giftandgain/items/{id}")
@@ -120,19 +97,29 @@ public class InventoryManagementController {
 	    }
 	}
 	
-	// Get high priority category 
-	@GetMapping("giftandgain/category/highpriority/{month}/{year}")
-	public ResponseEntity<List<String>> getHighPriorityCategories(@PathVariable String month, @PathVariable String year) {
-	    List<String> highPriorityCategories = inventoryRepo.getHighPriorityList(month,year);
-	    return new ResponseEntity<>(highPriorityCategories, HttpStatus.OK);
+	// Download selected report
+	@GetMapping("giftandgain/download/report/{month}/{year}")
+	public ResponseEntity<byte[]> downloadReport(@PathVariable int month, @PathVariable int year) {
+	    List<InventoryManagement> monthlyReport = inventoryRepo.findByCreatedDate(month, year);
+	    
+	    // 2. Convert the report data to CSV format
+	    StringBuilder reportCSV = new StringBuilder();
+	    String[] header = {"Item Type", "Item Name", "Quantity"};
+	    reportCSV.append(String.join(",", header)).append("\n"); // Added this line to include header in CSV
+	    for(InventoryManagement item : monthlyReport) {
+	    	reportCSV.append(item.getTypeOfDonation()).append(",");
+	        reportCSV.append(item.getItemName()).append(",");
+	        reportCSV.append(item.getQuantity()).append("\n"); // Added newline character here
+	    }
+
+	    byte[] csvData = reportCSV.toString().getBytes();
+
+	    // 3. Set headers and return the file
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.set(HttpHeaders.CONTENT_TYPE, "text/plain");
+	    headers.setContentDispositionFormData("attachment", "report_" + month + "_" + year + ".csv");
+
+	    return new ResponseEntity<>(csvData, headers, HttpStatus.OK);
 	}
-	
-	// Get low priority category 
-		@GetMapping("giftandgain/category/lowpriority/{month}/{year}")
-		public ResponseEntity<List<String>> getLowPriorityCategories(@PathVariable String month, @PathVariable String year) {
-		    List<String> lowPriorityCategories = inventoryRepo.getLowPriorityList(month,year);
-		    return new ResponseEntity<>(lowPriorityCategories, HttpStatus.OK);
-		}
-	
 	
 }
