@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.giftandgain.inventorymanagement.entity.Category;
 import com.giftandgain.inventorymanagement.entity.InventoryManagement;
 import com.giftandgain.inventorymanagement.repository.InventoryManagementRepository;
 import com.giftandgain.inventorymanagement.specification.InventoryManagementSpecification;
@@ -80,95 +81,62 @@ public class InventoryManagementController {
 		return new ResponseEntity<>(inventoryManagement.get(), HttpStatus.OK);
 	}
 
-//	// Searching
-//	@GetMapping("/giftandgain/inventory/search")
-//	public ResponseEntity<List<InventoryManagement>> searchInventory(
-//	        @RequestParam(required = false) String category,
-//	        @RequestParam(required = false) Integer receivedQuantity,
-//	        @RequestParam(required = false) String expiryDateStr,
-//	        @RequestParam(required = false) String createdDateStr,
-//	        @RequestParam(defaultValue = "0") int page,
-//	        @RequestParam(defaultValue = "10") int size,
-//	        @RequestParam(required = false) String sort,
-//	        @RequestParam(defaultValue = "asc") String direction) {
-//
-//	    LocalDate expiryDate = expiryDateStr != null ? LocalDate.parse(expiryDateStr, DateTimeFormatter.ofPattern("yyyyMMdd")) : null;
-//	    LocalDateTime createdDate = createdDateStr != null ? LocalDateTime.parse(createdDateStr, DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) : null;
-//
-//	    Specification<InventoryManagement> spec = Specification
-//	            .where(InventoryManagementSpecification.hasCategory(category))
-//	            .and(InventoryManagementSpecification.hasReceivedQuantity(receivedQuantity))
-//	            .and(InventoryManagementSpecification.hasExpiryDate(expiryDate))
-//	            .and(InventoryManagementSpecification.hasCreatedDate(createdDate));
-//
-//	    Pageable pageable;
-//
-//	    if (sort != null && !sort.trim().isEmpty()) {
-//	        if ("desc".equalsIgnoreCase(direction)) {
-//	            pageable = PageRequest.of(page, size, Sort.by(sort).descending());
-//	        } else {
-//	            pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
-//	        }
-//	    } else {
-//	        pageable = PageRequest.of(page, size);  // No sorting
-//	    }
-//
-//	    Page<InventoryManagement> result = inventoryRepo.findAll(spec, pageable);
-//	    long totalItems = result.getTotalElements();
-//
-//	    HttpHeaders responseHeaders = new HttpHeaders();
-//	    responseHeaders.set("x-total-count", String.valueOf(totalItems));
-//
-//	    return ResponseEntity.ok().headers(responseHeaders).body(result.getContent());
-//	}
-	
 	// Searching within the expiry date
-		@GetMapping("/giftandgain/inventory/search")
-		public ResponseEntity<List<InventoryManagement>> searchInventory(
-		        @RequestParam(required = false) String category,
-		        @RequestParam(required = false) BigDecimal receivedQuantity,
-		        @RequestParam(required = false) String expiryStartDateStr,
-		        @RequestParam(required = false) String expiryEndDateStr,
-		        @RequestParam(required = false) String createdDateStr,
-		        @RequestParam(defaultValue = "0") int page,
-		        @RequestParam(defaultValue = "10") int size,
-		        @RequestParam(required = false) String sort,
-		        @RequestParam(defaultValue = "asc") String direction) {
+	@GetMapping("/giftandgain/inventory/search")
+	public ResponseEntity<List<InventoryManagement>> searchInventory(@RequestParam(required = false) String itemName,
+			@RequestParam(required = false) Long categoryId,
+			@RequestParam(required = false) BigDecimal receivedQuantity,
+			@RequestParam(required = false) String expiryStartDateStr,
+			@RequestParam(required = false) String expiryEndDateStr,
+			@RequestParam(required = false) String createdStartDateStr,
+		    @RequestParam(required = false) String createdEndDateStr,
+		    @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String sort,
+			@RequestParam(defaultValue = "asc") String direction) {
 
-			LocalDate expiryStartDate = expiryStartDateStr != null ? LocalDate.parse(expiryStartDateStr, DateTimeFormatter.ofPattern("yyyyMMdd")) : null;
-		    LocalDate expiryEndDate = expiryEndDateStr != null ? LocalDate.parse(expiryEndDateStr, DateTimeFormatter.ofPattern("yyyyMMdd")) : null;
-		    LocalDate createdDate = createdDateStr != null ? LocalDate.parse(createdDateStr, DateTimeFormatter.ofPattern("yyyyMMdd")) : null;
+		LocalDate expiryStartDate = expiryStartDateStr != null
+				? LocalDate.parse(expiryStartDateStr, DateTimeFormatter.ofPattern("yyyyMMdd"))
+				: null;
+		LocalDate expiryEndDate = expiryEndDateStr != null
+				? LocalDate.parse(expiryEndDateStr, DateTimeFormatter.ofPattern("yyyyMMdd"))
+				: null;
+		LocalDate createdStartDate = createdStartDateStr != null
+	            ? LocalDate.parse(createdStartDateStr, DateTimeFormatter.ofPattern("yyyyMMdd"))
+	            : null;
+	    LocalDate createdEndDate = createdEndDateStr != null
+	            ? LocalDate.parse(createdEndDateStr, DateTimeFormatter.ofPattern("yyyyMMdd"))
+	            : null;
 
-		    Specification<InventoryManagement> spec = Specification
-		            .where(InventoryManagementSpecification.hasCategory(category))
-		            .and(InventoryManagementSpecification.hasReceivedQuantity(receivedQuantity))
-		            .and(InventoryManagementSpecification.isExpiryDateBetween(expiryStartDate, expiryEndDate))
-		            .and(InventoryManagementSpecification.hasCreatedDate(createdDate));
+	    Specification<InventoryManagement> spec = Specification
+	    	    .where(InventoryManagementSpecification.hasCategory(categoryId))
+				.and(InventoryManagementSpecification.hasItemName(itemName))
+				.and(InventoryManagementSpecification.hasReceivedQuantity(receivedQuantity))
+				.and(InventoryManagementSpecification.isExpiryDateBetween(expiryStartDate, expiryEndDate))
+				.and(InventoryManagementSpecification.isCreatedDateBetween(createdStartDate, createdEndDate));
 
-		    Pageable pageable;
+		Pageable pageable;
 
-		    if (sort != null && !sort.trim().isEmpty()) {
-		        if ("desc".equalsIgnoreCase(direction)) {
-		            pageable = PageRequest.of(page, size, Sort.by(sort).descending());
-		        } else {
-		            pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
-		        }
-		    } else {
-		        pageable = PageRequest.of(page, size);  // No sorting
-		    }
-
-		    Page<InventoryManagement> result = inventoryRepo.findAll(spec, pageable);
-		    long totalItems = result.getTotalElements();
-
-		    HttpHeaders responseHeaders = new HttpHeaders();
-		    responseHeaders.set("x-total-count", String.valueOf(totalItems));
-
-		    return ResponseEntity.ok().headers(responseHeaders).body(result.getContent());
+		if (sort != null && !sort.trim().isEmpty()) {
+			if ("desc".equalsIgnoreCase(direction)) {
+				pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+			} else {
+				pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+			}
+		} else {
+			pageable = PageRequest.of(page, size); // No sorting
 		}
 
+		Page<InventoryManagement> result = inventoryRepo.findAll(spec, pageable);
+		long totalItems = result.getTotalElements();
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("x-total-count", String.valueOf(totalItems));
+
+		return ResponseEntity.ok().headers(responseHeaders).body(result.getContent());
+	}
 
 	// Create new item
-	@PostMapping("/giftandgain/inventory")
+	@PostMapping("/giftandgain/inventory/create")
 	public ResponseEntity<InventoryManagement> createItem(@RequestBody InventoryManagement inventoryManagement) {
 		// Set the createdDate to the current date and time
 		inventoryManagement.setCreatedDateToNow();
@@ -182,7 +150,7 @@ public class InventoryManagementController {
 		return ResponseEntity.created(location).build();
 	}
 
-	@PutMapping("/giftandgain/inventory/{id}")
+	@PutMapping("/giftandgain/inventory/edit/{id}")
 	public ResponseEntity<InventoryManagement> editItem(@PathVariable Long id,
 			@RequestBody InventoryManagement updatedInventory) {
 		Optional<InventoryManagement> inventoryOpt = inventoryRepo.findById(id);
@@ -204,7 +172,7 @@ public class InventoryManagementController {
 	}
 
 	// Delete selected item
-	@DeleteMapping("/giftandgain/inventory/{id}")
+	@DeleteMapping("/giftandgain/inventory/delete/{id}")
 	public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
 		try {
 			inventoryRepo.deleteById(id);

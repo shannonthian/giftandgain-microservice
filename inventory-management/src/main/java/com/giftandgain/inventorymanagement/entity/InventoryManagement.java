@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity(name = "tb_inventory")
 public class InventoryManagement {
@@ -20,11 +22,13 @@ public class InventoryManagement {
 	@Column(name = "item_name")
 	private String itemName;
 
-	@Column(name = "category")
-	private String category;
+	@ManyToOne
+    @JoinColumn(name = "category_id")
+	private Category category;
 
-	@Column(name = "unit")
-	private String unit;
+	@ManyToOne
+    @JoinColumn(name = "unit_id")
+	private Unit unit;
 
 	@Column(name = "received_quantity")
 	private BigDecimal receivedQuantity;
@@ -49,7 +53,7 @@ public class InventoryManagement {
 				+ createdDate + ", remarks=" + remarks + "]";
 	}
 
-	public InventoryManagement(Long InventoryId, String itemName, String category, String unit, BigDecimal receivedQuantity,
+	public InventoryManagement(Long InventoryId, String itemName, Category category, Unit unit, BigDecimal receivedQuantity,
 			LocalDate expiryDate, LocalDate createdDate, String remarks) {
 		super();
 		this.inventoryId = InventoryId;
@@ -78,19 +82,19 @@ public class InventoryManagement {
 		this.itemName = itemName;
 	}
 
-	public String getCategory() {
+	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(Category category) {
 		this.category = category;
 	}
 
-	public String getUnit() {
+	public Unit getUnit() {
 		return unit;
 	}
 
-	public void setUnit(String unit) {
+	public void setUnit(Unit unit) {
 		this.unit = unit;
 	}
 

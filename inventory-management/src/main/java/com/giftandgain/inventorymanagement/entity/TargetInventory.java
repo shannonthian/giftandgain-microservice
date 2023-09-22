@@ -2,91 +2,89 @@ package com.giftandgain.inventorymanagement.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity(name = "tb_target_inventory")
 public class TargetInventory {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "target_id")
-	private Long targetId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "target_id")
+    private Long targetId;
 
-	@Column(name = "category")
-	private String category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-	@Column(name = "unit")
-	private String unit;
+    @ManyToOne
+    @JoinColumn(name = "unit_id")
+    private Unit unit;
 
-	@Column(name = "target_quantity")
-	private BigDecimal targetQuantity;
+    @Column(name = "target_quantity")
+    private BigDecimal targetQuantity;
 
-	@Column(name = "target_month_year")
-	private LocalDate targetMonthYear;
+    @Column(name = "target_month_year")
+    private LocalDate targetMonthYear;
 
-	public TargetInventory() {
+    public TargetInventory() {
+    }
 
-	}
+    public TargetInventory(Long targetId, Category category, Unit unit, BigDecimal targetQuantity, LocalDate targetMonthYear) {
+        this.targetId = targetId;
+        this.category = category;
+        this.unit = unit;
+        this.targetQuantity = targetQuantity;
+        this.targetMonthYear = targetMonthYear;
+    }
 
-	@Override
-	public String toString() {
-		return "TargetInventory [targetId=" + targetId + ", category=" + category + ", unit=" + unit
-				+ ", targetQuantity=" + targetQuantity + ", targetMonthYear=" + targetMonthYear + "]";
-	}
+    @Override
+    public String toString() {
+        return "TargetInventory [targetId=" + targetId + ", category=" + category + ", unit=" + unit + ", targetQuantity=" + targetQuantity + ", targetMonthYear=" + targetMonthYear + "]";
+    }
 
-	public TargetInventory(Long targetId, String category, String unit, BigDecimal targetQuantity,
-			LocalDate targetMonthYear) {
-		super();
-		this.targetId = targetId;
-		this.category = category;
-		this.unit = unit;
-		this.targetQuantity = targetQuantity;
-		this.targetMonthYear = targetMonthYear;
-	}
+    public Long getTargetId() {
+        return targetId;
+    }
 
-	public Long getTargetId() {
-		return targetId;
-	}
+    public void setTargetId(Long targetId) {
+        this.targetId = targetId;
+    }
 
-	public void setTargetId(Long targetId) {
-		this.targetId = targetId;
-	}
+    public Category getCategory() {
+        return category;
+    }
 
-	public String getCategory() {
-		return category;
-	}
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+    public Unit getUnit() {
+        return unit;
+    }
 
-	public String getUnit() {
-		return unit;
-	}
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+    }
 
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
+    public BigDecimal getTargetQuantity() {
+        return targetQuantity;
+    }
 
-	public BigDecimal getTargetQuantity() {
-		return targetQuantity;
-	}
+    public void setTargetQuantity(BigDecimal targetQuantity) {
+        this.targetQuantity = targetQuantity;
+    }
 
-	public void setTargetQuantity(BigDecimal targetQuantity) {
-		this.targetQuantity = targetQuantity;
-	}
+    public LocalDate getTargetMonthYear() {
+        return targetMonthYear;
+    }
 
-	public LocalDate getTargetMonthYear() {
-		return targetMonthYear;
-	}
-
-	public void setTargetMonthYear(LocalDate targetMonthYear) {
-		this.targetMonthYear = targetMonthYear;
-	}
-
+    public void setTargetMonthYear(LocalDate targetMonthYear) {
+        this.targetMonthYear = targetMonthYear;
+    }
 }

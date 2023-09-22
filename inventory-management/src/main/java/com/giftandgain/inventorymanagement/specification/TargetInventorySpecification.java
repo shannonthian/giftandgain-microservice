@@ -9,12 +9,14 @@ import com.giftandgain.inventorymanagement.entity.TargetInventory;
 
 public class TargetInventorySpecification {
 
-	public static Specification<TargetInventory> hasCategory(String category) {
-		return (root, cq, cb) -> category == null ? null : cb.equal(root.get("category"), category);
-	}
-
-	public static Specification<TargetInventory> hasUnit(String unit) {
-		return (root, cq, cb) -> unit == null ? null : cb.equal(root.get("unit"), unit);
+	public static Specification<TargetInventory> hasCategory(Long categoryId) {
+		return (root, cq, cb) -> {
+			if (categoryId != null) {
+				return cb.equal(root.get("category").get("id"), categoryId);
+			} else {
+				return null;
+			}
+		};
 	}
 
 	public static Specification<TargetInventory> hasTargetQuantity(BigDecimal targetQuantity) {
