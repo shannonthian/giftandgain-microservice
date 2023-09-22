@@ -1,6 +1,8 @@
 package com.giftandgain.report.controller;
 
 import com.giftandgain.report.AmazonAws;
+import com.giftandgain.report.manager.ReportManager;
+import com.giftandgain.report.model.CustomResponse;
 import com.giftandgain.report.model.InventoryManagement;
 import com.giftandgain.report.model.Report;
 import com.giftandgain.report.model.TargetInventory;
@@ -24,13 +26,15 @@ public class ReportController {
     private final TargetInventoryRepository targetInventoryRepository;
     private final InventoryManagementRepository inventoryManagementRepository;
     private final AmazonAws amazonAws;
+    private final ReportManager reportManager;
 
     @Autowired
-    public ReportController(ReportRepository reportRepository, TargetInventoryRepository targetInventoryRepository, InventoryManagementRepository inventoryManagementRepository, AmazonAws amazonAws) {
+    public ReportController(ReportRepository reportRepository, TargetInventoryRepository targetInventoryRepository, InventoryManagementRepository inventoryManagementRepository, AmazonAws amazonAws, ReportManager reportManager) {
         this.reportRepository = reportRepository;
         this.targetInventoryRepository = targetInventoryRepository;
         this.inventoryManagementRepository = inventoryManagementRepository;
         this.amazonAws = amazonAws;
+        this.reportManager = reportManager;
     }
 
     @GetMapping
@@ -57,53 +61,42 @@ public class ReportController {
         return new ResponseEntity<>(reports, HttpStatus.OK);
     }
 
-    @GetMapping("/inventory")
-    public @ResponseBody ResponseEntity<List<InventoryManagement>> getAllInventory() {
-        List<InventoryManagement> inventoryList= inventoryManagementRepository.findAll();
-        return new ResponseEntity<>(inventoryList, HttpStatus.OK);
-    }
+    @GetMapping("/download")
+	public ResponseEntity<CustomResponse> downloadReport(
+        @RequestParam(required = false) String month,
+        @RequestParam(required = false) String year
+    ) { 
+        if (!amazonAws.doesBucketExist()) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.CONTENT_TYPE, "text/plain");
+            CustomResponse response = new CustomResponse();
+            response.setMessage("Bucket does not exist.");
+        }
+        
+        String objectKey = "InventoryReport_" + month + "_" + year + ".csv";       
 
-        @GetMapping("/target-inventory")
-    public @ResponseBody ResponseEntity<List<TargetInventory>> getAllTargetInventory() {
-        List<TargetInventory> targetInventoryList= targetInventoryRepository.findAll();
-        return new ResponseEntity<>(targetInventoryList, HttpStatus.OK);
-    }
+        if (amazonAws.listObjects().contains(objectKey)) {
+            
+            String objectUrl = amazonAws.getObjectUrl(objectKey);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
+            CustomResponse response = new CustomResponse();
+            response.setMessage("Retrieved existing report.");
+            response.setPayload(objectUrl);
+            return new ResponseEntity<>(response, headers, HttpStatus.OK);
+        }
 
-    @GetMapping("/download/{month}/{year}")
-	public ResponseEntity<byte[]> downloadReport(@PathVariable String month, @PathVariable String year) {        
-	    // 1. Fetch the data
-	    List<Object[]> monthlyReport = targetInventoryRepository.getTotalQuantitiesByDate(month, year);
-	    
-	    // 2. Convert the report data to CSV format
-	    StringBuilder reportCSV = new StringBuilder();
-	    String[] header = {"Category", "Unit", "Received Quantity", "Target Quantity"};
-	    reportCSV.append(String.join(",", header)).append("\n"); // Added this line to include header in CSV
+        byte[] csvData = reportManager.generateCsv(month, year);
+        amazonAws.uploadFile(objectKey, csvData);
 
-	    for (Object[] row : monthlyReport) {
-	        String category = (String) row[0];
-	        String unit = (String) row[1];
-	        Long receivedQuantity = (Long) row[2];
-	        Integer targetQuantity = (Integer) row[3];
-
-	        reportCSV.append(category).append(",");
-	        reportCSV.append(unit).append(",");
-	        reportCSV.append(receivedQuantity).append(",");
-	        reportCSV.append(targetQuantity).append("\n");
-	    }
-
-	    byte[] csvData = reportCSV.toString().getBytes();
-
-	    // 3. Set headers and return the file
+        String objectUrl = amazonAws.getObjectUrl(objectKey);
+	   
 	    HttpHeaders headers = new HttpHeaders();
-        String objectKey = "InventoryReport_" + month + "_" + year + ".csv";
-	    headers.set(HttpHeaders.CONTENT_TYPE, "text/plain");
-	    headers.setContentDispositionFormData("attachment", objectKey);
+	    headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
 
-        // TODO: enable when bucket is up
-        // if (amazonAws.doesBucketExist()) {
-        //     amazonAws.uploadFile(objectKey, csvData);
-        // }
-
-	    return new ResponseEntity<>(csvData, headers, HttpStatus.OK);
+        CustomResponse response = new CustomResponse();
+        response.setMessage("Successfully uploaded report.");
+        response.setPayload(objectUrl);
+	    return new ResponseEntity<>(response, headers, HttpStatus.OK);
 	}
 }
