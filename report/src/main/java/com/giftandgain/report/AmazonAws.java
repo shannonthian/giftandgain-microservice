@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.amazonaws.AmazonServiceException;
@@ -21,7 +22,8 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 @Component
 public class AmazonAws {
     String bucketName = System.getenv("S3_BUCKET_NAME");;
-    String region = System.getenv("S3_REGION");;
+
+    String region = "ap-southeast-1";
 
     AWSCredentialsProvider credentialsProvider = new EnvironmentVariableCredentialsProvider();
     
