@@ -20,8 +20,8 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 @Component
 public class AmazonAws {
-    String bucketName = System.getenv("S3_BUCKET_NAME");
-    String region = System.getenv("S3_REGION");
+    String bucketName = System.getenv("S3_BUCKET_NAME");;
+    String region = System.getenv("S3_REGION");;
 
     AWSCredentialsProvider credentialsProvider = new EnvironmentVariableCredentialsProvider();
     

@@ -59,7 +59,7 @@ services:
   #     SPRING_DATASOURCE_USERNAME: user
   #     SPRING_DATASOURCE_PASSWORD: password
 
-  item-server:
+  report:
     container_name: report
     build:
       context: report
@@ -75,6 +75,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
+      S3_REGION: ap-southeast-1
+      S3_BUCKET_NAME: gift-and-gain-bucket
+      AWS_ACCESS_KEY_ID: 
+      AWS_SECRET_ACCESS_KEY: 
 
   postgres:
     image: postgres

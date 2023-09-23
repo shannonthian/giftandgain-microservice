@@ -44,13 +44,13 @@ public class ReportController {
     ) {
         List<Report> reports;
     
-        if (month != null && year != null) {
+        if (isValidMonth(month) && isValidYear(year)) {
             // Both month and year parameters are provided
             reports = reportRepository.findByMonthAndYear(month, year);
-        } else if (month != null) {
+        } else if (isValidMonth(month)) {
             // Only month parameter is provided
             reports = reportRepository.findByMonth(month);
-        } else if (year != null) {
+        } else if (isValidYear(year)) {
             // Only year parameter is provided
             reports = reportRepository.findByYear(year);
         } else {
@@ -65,7 +65,15 @@ public class ReportController {
 	public ResponseEntity<CustomResponse> downloadReport(
         @RequestParam(required = false) String month,
         @RequestParam(required = false) String year
-    ) { 
+    ) {
+        if (!isValidMonth(month) || !isValidYear(year)) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.CONTENT_TYPE, "text/plain");
+            CustomResponse response = new CustomResponse();
+            response.setMessage("Invalid month or year format.");
+            return new ResponseEntity<>(response, headers, HttpStatus.BAD_REQUEST);
+        }
+
         if (!amazonAws.doesBucketExist()) {
             HttpHeaders headers = new HttpHeaders();
             headers.set(HttpHeaders.CONTENT_TYPE, "text/plain");
@@ -99,4 +107,21 @@ public class ReportController {
         response.setPayload(objectUrl);
 	    return new ResponseEntity<>(response, headers, HttpStatus.OK);
 	}
+
+    private boolean isValidMonth(String month) {
+        return month != null && month.length() == 2 && isInteger(month);
+    }
+
+    private boolean isValidYear(String year) {
+        return year != null && year.length() == 4 && isInteger(year);
+    }
+
+    private boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }
