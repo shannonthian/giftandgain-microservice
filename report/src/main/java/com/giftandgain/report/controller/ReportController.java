@@ -84,7 +84,6 @@ public class ReportController {
         String objectKey = "InventoryReport_" + month + "_" + year + ".csv";       
 
         if (amazonAws.listObjects().contains(objectKey)) {
-            
             String objectUrl = amazonAws.getObjectUrl(objectKey);
             HttpHeaders headers = new HttpHeaders();
             headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -98,6 +97,8 @@ public class ReportController {
         amazonAws.uploadFile(objectKey, csvData);
 
         String objectUrl = amazonAws.getObjectUrl(objectKey);
+
+        reportRepository.save(new Report(month, year, objectUrl));
 	   
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
