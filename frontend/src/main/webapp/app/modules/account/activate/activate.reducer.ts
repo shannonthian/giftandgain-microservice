@@ -2,6 +2,7 @@ import axios from 'axios';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { serializeAxiosError } from 'app/shared/reducers/reducer.utils';
+import { API_ACTIVATE_ACCOUNT } from 'app/config/constants';
 
 const initialState = {
   activationSuccess: false,
@@ -12,7 +13,7 @@ export type ActivateState = Readonly<typeof initialState>;
 
 // Actions
 
-export const activateAction = createAsyncThunk('activate/activate_account', async (key: string) => axios.get(`api/activate?key=${key}`), {
+export const activateAction = createAsyncThunk('activate/activate_account', async (key: string) => axios.get(API_ACTIVATE_ACCOUNT(key)), {
   serializeError: serializeAxiosError,
 });
 
