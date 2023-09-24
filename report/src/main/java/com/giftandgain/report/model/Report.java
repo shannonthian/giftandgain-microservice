@@ -1,35 +1,29 @@
 package com.giftandgain.report.model;
 
 import javax.persistence.*;
-
 import java.io.Serializable;
 
-import static javax.persistence.GenerationType.AUTO;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity(name = "tb_report")
+@Document("report")
 public class Report implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    // Omit the @Id annotation and id field entirely
     private String month;
     private String year;
-    private String url;
+    private String data;
 
     public Report() {
         // Default constructor for JPA
     }
 
-    public Report(String month, String year, String url) {
+    public Report(String month, String year, String data) {
         this.month = month;
         this.year = year;
-        this.url = url;
+        this.data = data;
     }
 
     // Getters and setters (if needed)
-
-    public Long getId() {
-        return id;
-    }
 
     public String getMonth() {
         return month;
@@ -47,21 +41,21 @@ public class Report implements Serializable {
         this.year = year;
     }
 
-    public String getUrl() {
-        return url;
+    public String getData() {
+        return data;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setData(String url) {
+        this.data = url;
     }
 
     @Override
     public String toString() {
         return "Report{" +
-                "id=" + id +
+                // Remove id from the toString representation
                 ", month='" + month + '\'' +
                 ", year='" + year + '\'' +
-                ", url='" + url + '\'' +
+                ", url='" + data + '\'' +
                 '}';
     }
 }

@@ -1,9 +1,11 @@
 package com.giftandgain.report.model;
 
-public class CustomResponse {
+import java.util.List;
+
+public class CustomResponse<T> {
     private String message;
 
-    private String payload;
+    private List<T> payload;
 
     public String getMessage() {
         return message;
@@ -13,11 +15,11 @@ public class CustomResponse {
         this.message = message;
     }
 
-    public String getPayload() {
+    public List<T> getPayload() {
         return payload;
     }
 
-    public void setPayload(String payload) {
+    public void setPayload(List<T> payload) {
         this.payload = payload;
     }
 }

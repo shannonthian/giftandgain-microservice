@@ -1,6 +1,7 @@
 package com.giftandgain.report.manager;
 
 import java.util.List;
+import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,7 @@ public class ReportManager {
     this.targetInventoryRepository = targetInventoryRepository;
     }
 
-    public byte[] generateCsv(String month, String year) {
+    public String generateCsv(String month, String year) {
          // 1. Fetch the data
 	    List<Object[]> monthlyReport = targetInventoryRepository.getTotalQuantitiesByDate(month, year);
 	    
@@ -38,6 +39,9 @@ public class ReportManager {
 	    }
 
 	    byte[] csvData = reportCSV.toString().getBytes();
-        return csvData;
+
+		// 3. Encode the CSV data as a base64 string
+		String base64Csv = Base64.getEncoder().encodeToString(csvData);
+        return base64Csv;
     }
 }
