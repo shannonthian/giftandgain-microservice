@@ -9,6 +9,7 @@
         "main": "Entités",
         "currentInventory": "Current Inventory",
         "targetInventory": "Target Inventory",
+        "category": "Category",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

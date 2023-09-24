@@ -34,7 +34,8 @@ import { faWrench } from '@fortawesome/free-solid-svg-icons/faWrench';
 import { faBoxesStacked } from '@fortawesome/free-solid-svg-icons/faBoxesStacked';
 import { faBullseye } from '@fortawesome/free-solid-svg-icons/faBullseye';
 import { faGift } from '@fortawesome/free-solid-svg-icons/faGift';
-import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons/faCircleCheck';
+import { faLayerGroup } from '@fortawesome/free-solid-svg-icons/faLayerGroup';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 
@@ -76,6 +77,7 @@ export const loadIcons = () => {
     faBoxesStacked,
     faBullseye,
     faGift,
-    faCircleCheck
+    faCircleCheck,
+    faLayerGroup
   );
 };

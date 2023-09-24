@@ -4,6 +4,17 @@ export const AUTHORITIES = {
   MANAGER: 'ROLE_MANAGER',
 };
 
+export const STATUS_LIST = [
+  {
+    code: "A",
+    desc: "Active"
+  },
+  {
+    code: "I",
+    desc: "Inactive"
+  }
+];
+
 export const messages = {
   DATA_ERROR_ALERT: 'Internal Error',
 };
