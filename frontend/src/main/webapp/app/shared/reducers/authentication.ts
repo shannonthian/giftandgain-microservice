@@ -5,6 +5,7 @@ import { serializeAxiosError } from './reducer.utils';
 
 import { AppThunk } from 'app/config/store';
 import { setLocale } from 'app/shared/reducers/locale';
+import { API_ACCOUNT, API_LOGIN } from 'app/config/constants';
 
 const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
 
@@ -35,19 +36,18 @@ export const getSession = (): AppThunk => async (dispatch, getState) => {
   }
 };
 
-export const getAccount = createAsyncThunk('authentication/get_account', async () => axios.get<any>('api/account'), {
+export const getAccount = createAsyncThunk('authentication/get_account', async () => axios.get<any>(API_ACCOUNT), {
   serializeError: serializeAxiosError,
 });
 
 interface IAuthParams {
   username: string;
   password: string;
-  rememberMe?: boolean;
 }
 
 export const authenticate = createAsyncThunk(
   'authentication/login',
-  async (auth: IAuthParams) => axios.post<any>('api/authenticate', auth),
+  async (auth: IAuthParams) => axios.post<any>(API_LOGIN, auth),
   {
     serializeError: serializeAxiosError,
   }
@@ -56,7 +56,7 @@ export const authenticate = createAsyncThunk(
 export const login: (username: string, password: string, rememberMe?: boolean) => AppThunk =
   (username, password, rememberMe = false) =>
     async dispatch => {
-      const result = await dispatch(authenticate({ username, password, rememberMe }));
+      const result = await dispatch(authenticate({ username, password }));
       const response = result.payload as AxiosResponse;
       const bearerToken = response?.headers?.authorization;
       if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
