@@ -18,7 +18,7 @@ export const Category = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [sortState, setSortState] = useState(overrideSortStateWithQueryParams(getSortState(location, 'id'), location.search));
+  const [sortState, setSortState] = useState(overrideSortStateWithQueryParams(getSortState(location, 'categoryId'), location.search));
 
   const categoryList: ICategory[] = useAppSelector(state => state.category.entities);
   const loading: boolean = useAppSelector(state => state.category.loading);
@@ -86,9 +86,9 @@ export const Category = () => {
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={sort('id')}>
+                <th className="hand" onClick={sort('categoryId')}>
                   <Translate contentKey="giftandgainFrontendApp.category.id">ID</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
+                  <FontAwesomeIcon icon={getSortIconByFieldName('categoryId')} />
                 </th>
                 <th className="hand" onClick={sort('category')}>
                   <Translate contentKey="giftandgainFrontendApp.category.category">Category</Translate>{' '}
