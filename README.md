@@ -4,21 +4,26 @@
 
 | Field       | Description |
 | ----------- | ----------- |
+| inventoryId |            |
+| itemName        |             |
 | category    |             |
-| name        |             |
-| quantity    |             |
 | unit        |             |
+| receivedQuantity    |             |
 | expiryDate  | date        |
 | createdDate | dateTime    |
+| remarks     | string      |
 
 ## Target inventory
 
 | Field    | Description                               |
 | -------- | ----------------------------------------- |
+| target_id |                                 |
 | category |                                           |
-| quantity |                                           |
 | unit     |                                           |
-| month    | date, so that month and year are included |
+| target_quantity |                                   |
+| target_month    | length 2 string |
+| target_year | length 4 string                |
+
 
 ## User
 
@@ -34,7 +39,7 @@
 | -------- | ----------- |
 | month |             |
 | year |             |
-| url    | Amazon S3 object url            |
+| reportString    | Base64 string representing report csv |
 
 # ERD for relational DB
 
