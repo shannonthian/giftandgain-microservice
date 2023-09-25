@@ -77,36 +77,47 @@ public class CategoryController {
 	@PostMapping("giftandgain/category/create")
 	public ResponseEntity<Category> createCategory(@RequestBody Category category) {
 
-	    // Check if category already exists
-	    if (categoryRepo.existsByCategory(category.getCategory())) {
-	        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category already exists: " + category.getCategory());
-	    }
+		// Check if category with the same name and unit already exists
+		if (categoryRepo.existsByCategoryAndUnit(category.getCategory(), category.getUnit())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Category with the same name and unit already exists: " + category.getCategory() + ", "
+							+ category.getUnit());
+		}
 
-	    Category savedItem = categoryRepo.save(category);
+		// Automatically set the status to 'A' for new categories
+		category.setStatus("A");
 
-	    URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-	            .buildAndExpand(savedItem.getCategoryId()).toUri();
+		Category savedItem = categoryRepo.save(category);
 
-	    return ResponseEntity.created(location).build();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(savedItem.getCategoryId()).toUri();
+
+		return ResponseEntity.created(location).build();
 	}
 
-	
 	// Update existing target
 	@PutMapping("/giftandgain/category/edit/{id}")
 	public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category updatedCategory){
+
 	    Optional<Category> existingCategory = categoryRepo.findById(id);
 	    
 	    if (existingCategory.isEmpty()) {
 	        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found with id: " + id);
 	    }
 
-	    // Check for duplication of category name with another record excluding the current one
-	    if (categoryRepo.existsByCategoryAndCategoryIdNot(updatedCategory.getCategory(), id)) {
-	        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Another category with the name exists: " + updatedCategory.getCategory());
+	    // Check for duplication of category name and unit with another record excluding the current one
+	    if (categoryRepo.existsByCategoryAndUnitAndCategoryIdNot(updatedCategory.getCategory(), updatedCategory.getUnit(), id)) {
+	        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Another category with the same name and unit exists: " + updatedCategory.getCategory() + ", " + updatedCategory.getUnit());
+	    }
+
+	 // Check if we're attempting to deactivate the only active category with that name
+	    if ("D".equals(updatedCategory.getStatus()) && categoryRepo.countByCategoryAndStatusAndCategoryIdNot(updatedCategory.getCategory(), "A", id) == 0) {
+	        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot deactivate the only active category with this name: " + updatedCategory.getCategory());
 	    }
 
 	    Category currentCategory = existingCategory.get();
 	    currentCategory.setCategory(updatedCategory.getCategory());
+	    currentCategory.setUnit(updatedCategory.getUnit());
 	    currentCategory.setStatus(updatedCategory.getStatus());
 	    
 	    Category updatedCategories = categoryRepo.save(currentCategory);
@@ -114,10 +125,10 @@ public class CategoryController {
 	    return ResponseEntity.ok(updatedCategories);
 	}
 
-	
-	//Delete selected target
+
+	// Delete selected target
 	@DeleteMapping("/giftandgain/category/delete/{id}")
-	public ResponseEntity<Void> deleteCategory(@PathVariable Long id){
+	public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
 		try {
 			categoryRepo.deleteById(id);
 			return ResponseEntity.noContent().build(); // HTTP 204 No Content

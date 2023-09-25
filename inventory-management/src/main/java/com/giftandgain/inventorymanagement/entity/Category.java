@@ -21,30 +21,35 @@ public class Category {
 	@Column(name = "category")
 	private String category;
 
+	@Column(name = "unit")
+	private String unit;
+
 	@Column(name = "status")
 	private String status;
-	
-	// Relationships
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<TargetInventory> targetInventories;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<InventoryManagement> inventories;
+	// Relationships
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+	private List<TargetInventory> targetInventories;
+
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+	private List<InventoryManagement> inventories;
 
 	public Category() {
 
 	}
 
-	public Category(Long categoryId, String category, String status) {
+	@Override
+	public String toString() {
+		return "Category [categoryId=" + categoryId + ", category=" + category + ", unit=" + unit + ", status=" + status
+				+ ", targetInventories=" + targetInventories + ", inventories=" + inventories + "]";
+	}
+
+	public Category(Long categoryId, String category, String unit, String status) {
 		super();
 		this.categoryId = categoryId;
 		this.category = category;
+		this.unit = unit;
 		this.status = status;
-	}
-
-	@Override
-	public String toString() {
-		return "Category [categoryId=" + categoryId + ", category=" + category + ", status=" + status + "]";
 	}
 
 	public Long getCategoryId() {
@@ -61,6 +66,14 @@ public class Category {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	public String getStatus() {

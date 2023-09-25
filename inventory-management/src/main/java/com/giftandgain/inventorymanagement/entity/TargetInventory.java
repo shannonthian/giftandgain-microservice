@@ -2,6 +2,7 @@ package com.giftandgain.inventorymanagement.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity(name = "tb_target_inventory")
 public class TargetInventory {
@@ -22,10 +25,6 @@ public class TargetInventory {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "unit_id")
-    private Unit unit;
-
     @Column(name = "target_quantity")
     private BigDecimal targetQuantity;
 
@@ -35,17 +34,16 @@ public class TargetInventory {
     public TargetInventory() {
     }
 
-    public TargetInventory(Long targetId, Category category, Unit unit, BigDecimal targetQuantity, LocalDate targetMonthYear) {
+    public TargetInventory(Long targetId, Category category, BigDecimal targetQuantity, LocalDate targetMonthYear) {
         this.targetId = targetId;
         this.category = category;
-        this.unit = unit;
         this.targetQuantity = targetQuantity;
         this.targetMonthYear = targetMonthYear;
     }
 
     @Override
     public String toString() {
-        return "TargetInventory [targetId=" + targetId + ", category=" + category + ", unit=" + unit + ", targetQuantity=" + targetQuantity + ", targetMonthYear=" + targetMonthYear + "]";
+        return "TargetInventory [targetId=" + targetId + ", category=" + category + ", targetQuantity=" + targetQuantity + ", targetMonthYear=" + targetMonthYear + "]";
     }
 
     public Long getTargetId() {
@@ -62,14 +60,6 @@ public class TargetInventory {
 
     public void setCategory(Category category) {
         this.category = category;
-    }
-
-    public Unit getUnit() {
-        return unit;
-    }
-
-    public void setUnit(Unit unit) {
-        this.unit = unit;
     }
 
     public BigDecimal getTargetQuantity() {

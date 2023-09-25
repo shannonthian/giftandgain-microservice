@@ -144,7 +144,6 @@ public class TargetInventoryController {
 		// Update the existing item's properties with the new values
 		TargetInventory currentItem = existingItem.get();
 		currentItem.setCategory(updatedInventory.getCategory());
-		currentItem.setUnit(updatedInventory.getUnit());
 		currentItem.setTargetQuantity(updatedInventory.getTargetQuantity());
 		currentItem.setTargetMonthYear(updatedInventory.getTargetMonthYear());
 

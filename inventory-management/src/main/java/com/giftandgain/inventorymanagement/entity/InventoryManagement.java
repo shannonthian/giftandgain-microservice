@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity(name = "tb_inventory")
 public class InventoryManagement {
 
@@ -26,10 +28,6 @@ public class InventoryManagement {
     @JoinColumn(name = "category_id")
 	private Category category;
 
-	@ManyToOne
-    @JoinColumn(name = "unit_id")
-	private Unit unit;
-
 	@Column(name = "received_quantity")
 	private BigDecimal receivedQuantity;
 
@@ -41,6 +39,9 @@ public class InventoryManagement {
 
 	@Column(name = "remarks")
 	private String remarks;
+	
+	@Column(name = "created_by")
+	private String createdBy;
 
 	public InventoryManagement() {
 
@@ -48,22 +49,21 @@ public class InventoryManagement {
 
 	@Override
 	public String toString() {
-		return "InventoryManagement [inventoryId=" + inventoryId + ", itemName=" + itemName + ", category=" + category + ", unit=" + unit
-				+ ", receivedQuantity=" + receivedQuantity + ", expiryDate=" + expiryDate + ", createdDate="
-				+ createdDate + ", remarks=" + remarks + "]";
+		return "InventoryManagement [inventoryId=" + inventoryId + ", itemName=" + itemName + ", category=" + category + ",  receivedQuantity=" + receivedQuantity + ", expiryDate=" + expiryDate + ", createdDate="
+				+ createdDate + ", remarks=" + remarks + ", createdBy=" + createdBy +",]";
 	}
 
-	public InventoryManagement(Long InventoryId, String itemName, Category category, Unit unit, BigDecimal receivedQuantity,
-			LocalDate expiryDate, LocalDate createdDate, String remarks) {
+	public InventoryManagement(Long InventoryId, String itemName, Category category, BigDecimal receivedQuantity,
+			LocalDate expiryDate, LocalDate createdDate, String remarks, String createdBy) {
 		super();
 		this.inventoryId = InventoryId;
 		this.itemName = itemName;
 		this.category = category;
-		this.unit = unit;
 		this.receivedQuantity = receivedQuantity;
 		this.expiryDate = expiryDate;
 		this.createdDate = createdDate;
 		this.remarks = remarks;
+		this.createdBy = createdBy;
 	}
 
 	public Long getInventoryId() {
@@ -88,14 +88,6 @@ public class InventoryManagement {
 
 	public void setCategory(Category category) {
 		this.category = category;
-	}
-
-	public Unit getUnit() {
-		return unit;
-	}
-
-	public void setUnit(Unit unit) {
-		this.unit = unit;
 	}
 
 	public BigDecimal getReceivedQuantity() {
@@ -128,6 +120,14 @@ public class InventoryManagement {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+	
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 }
