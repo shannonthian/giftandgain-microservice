@@ -72,7 +72,7 @@ public class TargetInventoryController {
 	public ResponseEntity<TargetInventory> retrieveTarget(@PathVariable Long id) {
 		Optional<TargetInventory> inventoryManagement = targetRepo.findById(id);
 
-		if (inventoryManagement.isEmpty()) {
+		if (!inventoryManagement.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found with id: " + id);
 		}
 
@@ -137,7 +137,7 @@ public class TargetInventoryController {
 			@RequestBody TargetInventory updatedInventory) {
 		Optional<TargetInventory> existingItem = targetRepo.findById(id);
 
-		if (existingItem.isEmpty()) {
+		if (!existingItem.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found with id: " + id);
 		}
 
@@ -160,8 +160,6 @@ public class TargetInventoryController {
 			targetRepo.deleteById(id);
 			return ResponseEntity.noContent().build(); // HTTP 204 No Content
 		} catch (EmptyResultDataAccessException e) {
-			// If the item with the provided id does not exist, you might want to handle it
-			// here
 			return ResponseEntity.notFound().build(); // HTTP 404 Not Found
 		}
 	}

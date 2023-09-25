@@ -67,7 +67,7 @@ public class CategoryController {
 	public ResponseEntity<Category> retrieveCategory(@PathVariable Long id) {
 		Optional<Category> category = categoryRepo.findById(id);
 
-		if (category.isEmpty()) {
+		if (!category.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found with id: " + id);
 		}
 		return new ResponseEntity<>(category.get(), HttpStatus.OK);
@@ -101,7 +101,7 @@ public class CategoryController {
 
 	    Optional<Category> existingCategory = categoryRepo.findById(id);
 	    
-	    if (existingCategory.isEmpty()) {
+	    if (!existingCategory.isPresent()) {
 	        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found with id: " + id);
 	    }
 
