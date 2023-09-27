@@ -2,16 +2,26 @@
   "changelogDate": "20230910065039",
   "fields": [
     {
-      "fieldName": "itemName",
+      "fieldName": "targetMonthYear",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "unique", "maxlength"],
-      "fieldValidateRulesMaxlength": "100"
+      "fieldValidateRules": ["required"]
     },
     {
-      "fieldName": "quantity",
+      "fieldName": "category",
       "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "targetQuantity",
+      "fieldType": "Float",
       "fieldValidateRules": ["required", "min"],
-      "fieldValidateRulesMin": "1"
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "unit",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "100"
     }
   ],
   "name": "TargetInventory",

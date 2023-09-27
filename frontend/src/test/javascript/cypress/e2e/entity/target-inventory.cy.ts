@@ -15,7 +15,7 @@ describe('TargetInventory e2e test', () => {
   const targetInventoryPageUrlPattern = new RegExp('/target-inventory(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const targetInventorySample = { itemName: 'Cambridgeshire', quantity: 9340 };
+  const targetInventorySample = { targetMonthYear: 'Southeast intangible', category: 8462, targetQuantity: 6130, unit: 'Oganesson huzzah' };
 
   let targetInventory;
 
@@ -159,11 +159,17 @@ describe('TargetInventory e2e test', () => {
     });
 
     it('should create an instance of TargetInventory', () => {
-      cy.get(`[data-cy="itemName"]`).type('Steel Principal Granite');
-      cy.get(`[data-cy="itemName"]`).should('have.value', 'Steel Principal Granite');
+      cy.get(`[data-cy="targetMonthYear"]`).type('Steel Principal Granite');
+      cy.get(`[data-cy="targetMonthYear"]`).should('have.value', 'Steel Principal Granite');
 
-      cy.get(`[data-cy="quantity"]`).type('15656');
-      cy.get(`[data-cy="quantity"]`).should('have.value', '15656');
+      cy.get(`[data-cy="category"]`).type('15656');
+      cy.get(`[data-cy="category"]`).should('have.value', '15656');
+
+      cy.get(`[data-cy="targetQuantity"]`).type('3727');
+      cy.get(`[data-cy="targetQuantity"]`).should('have.value', '3727');
+
+      cy.get(`[data-cy="unit"]`).type('generally');
+      cy.get(`[data-cy="unit"]`).should('have.value', 'generally');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

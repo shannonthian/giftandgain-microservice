@@ -18,8 +18,10 @@
         "title": "Target Inventory"
       },
       "id": "ID",
-      "itemName": "Item Name",
-      "quantity": "Quantity"
+      "targetMonthYear": "Target Month Year",
+      "category": "Category",
+      "targetQuantity": "Target Quantity",
+      "unit": "Unit"
     }
   }
 }

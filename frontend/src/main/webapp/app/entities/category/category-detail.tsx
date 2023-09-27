@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { ICategory } from 'app/shared/model/category.model';
 import { getEntity } from './category.reducer';
-import { STATUS_LIST } from 'app/config/constants';
+import { getStatusDesc } from 'app/config/constants';
 
 export const CategoryDetail = () => {
   const dispatch = useAppDispatch();
@@ -51,7 +51,7 @@ export const CategoryDetail = () => {
               <Translate contentKey="giftandgainFrontendApp.category.status">Status</Translate>
             </span>
           </dt>
-          <dd>{STATUS_LIST.find((item) => item.code === categoryEntity.status)?.desc}</dd>
+          <dd>{getStatusDesc(categoryEntity.status)}</dd>
         </dl>
         <Button tag={Link} to="/category" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

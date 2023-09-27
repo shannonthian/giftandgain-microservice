@@ -14,6 +14,7 @@ export const STATUS_LIST = [
     desc: "Inactive"
   }
 ];
+export const getStatusDesc = (statusCode: string) => STATUS_LIST.find((item) => item.code === statusCode)?.desc;
 
 export const messages = {
   DATA_ERROR_ALERT: 'Internal Error',
@@ -25,6 +26,9 @@ export const APP_LOCAL_DATE_FORMAT = 'DD/MM/YYYY';
 export const APP_LOCAL_DATETIME_FORMAT = 'YYYY-MM-DDTHH:mm';
 export const APP_WHOLE_NUMBER_FORMAT = '0,0';
 export const APP_TWO_DIGITS_AFTER_POINT_NUMBER_FORMAT = '0,0.[00]';
+
+export const DATE_FORMAT = 'YYYY-MM-DD';
+export const DATE_DISPLAY_FORMAT = 'MMMM YYYY';
 
 export const AUTH_MICROSERVICE = ""
 export const API_REGISTER = AUTH_MICROSERVICE + "/api/register"

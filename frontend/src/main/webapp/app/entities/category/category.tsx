@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { ICategory } from 'app/shared/model/category.model';
 import { getEntities } from './category.reducer';
-import { STATUS_LIST } from 'app/config/constants';
+import { getStatusDesc } from 'app/config/constants';
 
 export const Category = () => {
   const dispatch = useAppDispatch();
@@ -115,7 +115,7 @@ export const Category = () => {
                   </td>
                   <td>{category.category}</td>
                   <td>{category.unit}</td>
-                  <td>{STATUS_LIST.find((item) => item.code === category.status)?.desc}</td>
+                  <td>{getStatusDesc(category.status)}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/category/${category.categoryId}`} color="info" size="sm" data-cy="entityDetailsButton">
