@@ -14,5 +14,12 @@ pipeline {
                }
             }
         }
+         stage('Mvn build docker files') { 
+            steps {
+                dir('listing'){
+                  sh 'docker build -t listing:v3 .' 
+               }
+            }
+        }
     }
 }
