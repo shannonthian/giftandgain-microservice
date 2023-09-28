@@ -50,6 +50,7 @@ module.exports = async options =>
       static: {
         directory: './target/classes/static/',
       },
+      allowedHosts: 'all',
       port: 9060,
       proxy: [
         {
