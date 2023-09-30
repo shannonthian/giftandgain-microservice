@@ -25,7 +25,17 @@ pipeline {
          stage('Pushing image to AWS ECR') { 
             steps {
                 dir('listing'){
-                  sh 'echo $(aws ecr get-login-password --region us-east-1) | docker login -u AWS --password-stdin'
+                 script {
+                    def ecrLoginCommand = """\$(aws ecr get-login-password)"""
+                    def ecrRegistry = "150615723430.dkr.ecr.us-east-1.amazonaws.com"
+
+                    def loginCommand = "docker login -u AWS --password-stdin ${ecrRegistry}"
+                    def loginStatus = sh(script: loginCommand, returnStatus: true, input: ecrLoginCommand)
+
+                    if (loginStatus != 0) {
+                        error("Docker login failed")
+                    }
+                }
                   sh 'docker push 150615723430.dkr.ecr.us-east-1.amazonaws.com/listing-repository:listingv3' 
                }
             }
