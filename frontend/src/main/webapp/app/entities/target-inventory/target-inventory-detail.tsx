@@ -55,10 +55,10 @@ export const TargetInventoryDetail = () => {
           <dd>{targetInventoryEntity.targetQuantity}</dd>
           <dt>
             <span id="unit">
-              <Translate contentKey="giftandgainFrontendApp.targetInventory.unit">Unit</Translate>
+              <Translate contentKey="giftandgainFrontendApp.category.unit">Unit</Translate>
             </span>
           </dt>
-          <dd>{targetInventoryEntity.unit}</dd>
+          <dd>{targetInventoryEntity.category?.unit}</dd>
           <dt>
             <span id="status">
               <Translate contentKey="giftandgainFrontendApp.category.status">Status</Translate>

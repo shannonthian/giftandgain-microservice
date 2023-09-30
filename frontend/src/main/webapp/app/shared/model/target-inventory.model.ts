@@ -5,7 +5,6 @@ export interface ITargetInventory {
   targetMonthYear?: string;
   category?: ICategory;
   targetQuantity?: number;
-  unit?: string;
 }
 
 export const defaultValue: Readonly<ITargetInventory> = {};

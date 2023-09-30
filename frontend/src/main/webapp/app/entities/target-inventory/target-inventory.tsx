@@ -112,7 +112,7 @@ export const TargetInventory = () => {
                   <FontAwesomeIcon icon={getSortIconByFieldName('targetQuantity')} />
                 </th>
                 <th className="hand" onClick={sort('unit')}>
-                  <Translate contentKey="giftandgainFrontendApp.targetInventory.unit">Unit</Translate>{' '}
+                  <Translate contentKey="giftandgainFrontendApp.category.unit">Unit</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('unit')} />
                 </th>
                 <th className="hand" onClick={sort('status')}>
@@ -133,7 +133,7 @@ export const TargetInventory = () => {
                   {/* <td>{targetInventory.targetMonthYear}</td> */}
                   <td>{targetInventory.category.category}</td>
                   <td>{targetInventory.targetQuantity}</td>
-                  <td>{targetInventory.unit}</td>
+                  <td>{targetInventory.category.unit}</td>
                   <td>{getStatusDesc(targetInventory.category.status)}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
@@ -213,7 +213,7 @@ export const TargetInventory = () => {
                   <FontAwesomeIcon icon={getSortIconByFieldName('targetQuantity')} />
                 </th>
                 <th className="hand" onClick={sort('unit')}>
-                  <Translate contentKey="giftandgainFrontendApp.targetInventory.unit">Unit</Translate>{' '}
+                  <Translate contentKey="giftandgainFrontendApp.category.unit">Unit</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('unit')} />
                 </th>
                 <th className="hand" onClick={sort('status')}>
@@ -234,7 +234,7 @@ export const TargetInventory = () => {
                   {/* <td>{targetInventory.targetMonthYear}</td> */}
                   <td>{targetInventory.category.category}</td>
                   <td>{targetInventory.targetQuantity}</td>
-                  <td>{targetInventory.unit}</td>
+                  <td>{targetInventory.category.unit}</td>
                   <td>{getStatusDesc(targetInventory.category.status)}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

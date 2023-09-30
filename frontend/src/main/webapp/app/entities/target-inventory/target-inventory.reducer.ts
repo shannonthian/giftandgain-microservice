@@ -101,10 +101,8 @@ export const TargetInventorySlice = createEntitySlice({
             }
             const order = action.meta.arg.sort.split(',')[1];
             const predicate = action.meta.arg.sort.split(',')[0];
-            if (predicate === 'category') {
-              return order === ASC ? (a[predicate].category < b[predicate].category ? -1 : 1) : b[predicate].category < a[predicate].category ? -1 : 1;
-            } else if (predicate === 'status') {
-              return order === ASC ? (a.category.status < b.category.status ? -1 : 1) : b.category.status < a.category.status ? -1 : 1;
+            if (predicate === 'category' || predicate === 'unit' || predicate === 'status') {
+              return order === ASC ? (a.category[predicate] < b.category[predicate] ? -1 : 1) : b.category[predicate] < a.category[predicate] ? -1 : 1;
             } else {
               return order === ASC ? (a[predicate] < b[predicate] ? -1 : 1) : b[predicate] < a[predicate] ? -1 : 1;
             }

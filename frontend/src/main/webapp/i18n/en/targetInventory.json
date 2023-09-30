@@ -21,8 +21,7 @@
       "id": "ID",
       "targetMonthYear": "Target Month",
       "category": "Category",
-      "targetQuantity": "Target Quantity",
-      "unit": "Unit"
+      "targetQuantity": "Target Quantity"
     }
   }
 }

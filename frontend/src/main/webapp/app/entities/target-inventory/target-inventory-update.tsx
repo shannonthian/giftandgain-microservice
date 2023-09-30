@@ -47,7 +47,7 @@ export const TargetInventoryUpdate = () => {
       dispatch(getEntity(id))
         .then((response) => {
           const payload = response.payload as AxiosResponse;
-          setUnit(payload.data.unit);
+          setUnit(payload.data.category.unit);
         });
     }
   }, []);
@@ -95,7 +95,6 @@ export const TargetInventoryUpdate = () => {
       category: {
         categoryId: values.category,
       },
-      unit: unit,
     };
 
     if (isNew) {
@@ -181,17 +180,13 @@ export const TargetInventoryUpdate = () => {
               />
               {unit ? (
                 <ValidatedField
-                  label={translate('giftandgainFrontendApp.targetInventory.unit')}
+                  label={translate('giftandgainFrontendApp.category.unit')}
                   id="target-inventory-unit"
                   name="unit"
                   data-cy="unit"
                   type="text"
-                  readOnly
+                  disabled
                   value={unit}
-                  validate={{
-                    required: { value: true, message: translate('entity.validation.required') },
-                    maxLength: { value: 100, message: translate('entity.validation.maxlength', { max: 100 }) },
-                  }}
                 />
               ) : null}
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/target-inventory" replace color="info">

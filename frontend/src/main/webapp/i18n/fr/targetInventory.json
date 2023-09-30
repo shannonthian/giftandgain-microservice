@@ -20,8 +20,7 @@
       "id": "ID",
       "targetMonthYear": "Target Month Year",
       "category": "Category",
-      "targetQuantity": "Target Quantity",
-      "unit": "Unit"
+      "targetQuantity": "Target Quantity"
     }
   }
 }
