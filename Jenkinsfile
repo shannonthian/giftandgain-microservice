@@ -32,7 +32,7 @@ pipeline {
             steps {
                 dir('listing'){
                   sh 'docker build -t listing:v3 .'
-                  sh 'docker tag listing:v3 ${ECR_REGISTRY}/listing-repository:listingv3' 
+                  sh 'docker tag listing:v3 ${ECR_REGISTRY}/listing-repository:listing' 
                }
                 dir('inventory-management'){
                   sh 'docker build -t inventory:v3 .'
@@ -42,12 +42,16 @@ pipeline {
                   sh 'docker build -t report:v3 .'
                   sh 'docker tag report:v3 ${ECR_REGISTRY}/listing-repository:report' 
                }
+                dir('frontend'){
+                  sh 'docker build -t frontend:v4 .'
+                  sh 'docker tag frontend:v4 ${ECR_REGISTRY}/listing-repository:frontend' 
+               }
             }
         }
          stage('Pushing image to AWS ECR') { 
             steps {
                 dir('listing'){
-                       sh 'docker push ${ECR_REGISTRY}/listing-repository:listingv3' 
+                       sh 'docker push ${ECR_REGISTRY}/listing-repository:listing' 
             }
                 dir('inventory-management'){
                        sh 'docker push ${ECR_REGISTRY}/listing-repository:inventory' 
@@ -55,14 +59,18 @@ pipeline {
                 dir('report'){
                        sh 'docker push ${ECR_REGISTRY}/listing-repository:report' 
             }
+                dir('frontend'){
+                       sh 'docker push ${ECR_REGISTRY}/listing-repository:frontend' 
+            }
         }
       }
          stage ('Remove Image from Jenkins'){
         steps{
             script{
-                sh 'docker rmi ${ECR_REGISTRY}/listing-repository:listingv3'
+                sh 'docker rmi ${ECR_REGISTRY}/listing-repository:listing'
                 sh 'docker rmi ${ECR_REGISTRY}/listing-repository:inventory'
                 sh 'docker rmi ${ECR_REGISTRY}/listing-repository:report'
+                sh 'docker rmi ${ECR_REGISTRY}/listing-repository:frontend'
             }
         }
        }
