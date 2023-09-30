@@ -31,12 +31,26 @@ pipeline {
                   sh 'docker build -t listing:v3 .'
                   sh 'docker tag listing:v3 150615723430.dkr.ecr.us-east-1.amazonaws.com/listing-repository:listingv3' 
                }
+                dir('inventory-management'){
+                  sh 'docker build -t inventory:v3 .'
+                  sh 'docker tag inventory:v3 150615723430.dkr.ecr.us-east-1.amazonaws.com/listing-repository:inventory' 
+               }
+                dir('report'){
+                  sh 'docker build -t report:v3 .'
+                  sh 'docker tag report:v3 150615723430.dkr.ecr.us-east-1.amazonaws.com/listing-repository:report' 
+               }
             }
         }
          stage('Pushing image to AWS ECR') { 
             steps {
                 dir('listing'){
                        sh 'docker push 150615723430.dkr.ecr.us-east-1.amazonaws.com/listing-repository:listingv3' 
+            }
+                dir('inventory-management'){
+                       sh 'docker push 150615723430.dkr.ecr.us-east-1.amazonaws.com/listing-repository:inventory' 
+            }
+                dir('report'){
+                       sh 'docker push 150615723430.dkr.ecr.us-east-1.amazonaws.com/listing-repository:report' 
             }
         }
       }
