@@ -14,7 +14,7 @@ const initialState: EntityState<ICurrentInventory> = {
   updateSuccess: false,
 };
 
-const apiUrl = 'api/current-inventory';
+const apiUrl = 'giftandgain/inventory';
 
 // Actions
 
@@ -35,7 +35,7 @@ export const getEntity = createAsyncThunk(
 export const createEntity = createAsyncThunk(
   'currentInventory/create_entity',
   async (entity: ICurrentInventory, thunkAPI) => {
-    const result = await axios.post<ICurrentInventory>(apiUrl, cleanEntity(entity));
+    const result = await axios.post<ICurrentInventory>(`${apiUrl}/create`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -45,7 +45,7 @@ export const createEntity = createAsyncThunk(
 export const updateEntity = createAsyncThunk(
   'currentInventory/update_entity',
   async (entity: ICurrentInventory, thunkAPI) => {
-    const result = await axios.put<ICurrentInventory>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    const result = await axios.put<ICurrentInventory>(`${apiUrl}/edit/${entity.inventoryId}`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -55,7 +55,7 @@ export const updateEntity = createAsyncThunk(
 export const partialUpdateEntity = createAsyncThunk(
   'currentInventory/partial_update_entity',
   async (entity: ICurrentInventory, thunkAPI) => {
-    const result = await axios.patch<ICurrentInventory>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    const result = await axios.patch<ICurrentInventory>(`${apiUrl}/edit/${entity.inventoryId}`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -65,7 +65,7 @@ export const partialUpdateEntity = createAsyncThunk(
 export const deleteEntity = createAsyncThunk(
   'currentInventory/delete_entity',
   async (id: string | number, thunkAPI) => {
-    const requestUrl = `${apiUrl}/${id}`;
+    const requestUrl = `${apiUrl}/delete/${id}`;
     const result = await axios.delete<ICurrentInventory>(requestUrl);
     thunkAPI.dispatch(getEntities({}));
     return result;
@@ -91,6 +91,7 @@ export const CurrentInventorySlice = createEntitySlice({
       })
       .addMatcher(isFulfilled(getEntities), (state, action) => {
         const { data, headers } = action.payload;
+
         return {
           ...state,
           loading: false,

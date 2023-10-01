@@ -1,10 +1,14 @@
-import dayjs from 'dayjs';
+import { ICategory } from './category.model';
 
 export interface ICurrentInventory {
-  id?: number;
+  inventoryId?: number;
   itemName?: string;
+  category?: ICategory;
+  receivedQuantity?: number;
   expiryDate?: string;
-  quantity?: number;
+  createdBy?: string;
+  createdDate?: string;
+  remarks?: string | null;
 }
 
 export const defaultValue: Readonly<ICurrentInventory> = {};

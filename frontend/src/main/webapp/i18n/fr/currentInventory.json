@@ -19,8 +19,12 @@
       },
       "id": "ID",
       "itemName": "Item Name",
+      "category": "Category",
+      "receivedQuantity": "Received Quantity",
       "expiryDate": "Expiry Date",
-      "quantity": "Quantity"
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "remarks": "Remarks"
     }
   }
 }
