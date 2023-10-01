@@ -4,6 +4,23 @@ pipeline {
         ECR_REGISTRY = '150615723430.dkr.ecr.us-east-1.amazonaws.com'
     }
     stages {
+          stage('Check Network Access') {
+            steps {
+                script {
+                    def registryHost = 'registry.npmjs.org'
+                    def pingCommand = "ping -c 4 ${registryHost}"  // Adjust the ping command as needed
+
+                    // Run the ping command and capture the output
+                    def pingResult = sh(script: pingCommand, returnStatus: true, returnStdout: true)
+
+                    if (pingResult == 0) {
+                        echo "Network access to ${registryHost} is available."
+                    } else {
+                        error "Network access to ${registryHost} is not available."
+                    }
+                }
+            }
+        }
          stage('AWS ECR - Login') {
             steps {
                 script {
