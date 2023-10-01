@@ -56,7 +56,7 @@ export const App = () => {
         <div className="container-fluid view-container" id="app-view-container">
           <Card className="jh-card">
             <ErrorBoundary>
-              <AppRoutes />
+              <AppRoutes isManager={isManager} />
             </ErrorBoundary>
           </Card>
           <Footer />

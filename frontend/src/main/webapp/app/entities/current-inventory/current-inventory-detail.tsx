@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { ICurrentInventory } from 'app/shared/model/current-inventory.model';
 import { getEntity } from './current-inventory.reducer';
 
-export const CurrentInventoryDetail = () => {
+export const CurrentInventoryDetail = ({ isManager }) => {
   const dispatch = useAppDispatch();
 
   const { id } = useParams<'id'>();
@@ -97,12 +97,14 @@ export const CurrentInventoryDetail = () => {
           </span>
         </Button>
         &nbsp;
-        <Button tag={Link} to={`/current-inventory/${currentInventoryEntity.inventoryId}/edit`} replace color="primary">
-          <FontAwesomeIcon icon="pencil-alt" />{' '}
-          <span className="d-none d-md-inline">
-            <Translate contentKey="entity.action.edit">Edit</Translate>
-          </span>
-        </Button>
+        {isManager ? (
+          <Button tag={Link} to={`/current-inventory/${currentInventoryEntity.inventoryId}/edit`} replace color="primary">
+            <FontAwesomeIcon icon="pencil-alt" />{' '}
+            <span className="d-none d-md-inline">
+              <Translate contentKey="entity.action.edit">Edit</Translate>
+            </span>
+          </Button>
+        ) : null}
       </Col>
     </Row>
   );

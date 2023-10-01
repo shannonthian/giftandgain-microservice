@@ -27,7 +27,7 @@ const Admin = Loadable({
   loading: () => loading,
 });
 
-const AppRoutes = () => {
+const AppRoutes = ({ isManager }) => {
   return (
     <div className="view-routes">
       <ErrorBoundaryRoutes>
@@ -60,7 +60,7 @@ const AppRoutes = () => {
           path="*"
           element={
             <PrivateRoute hasAnyAuthorities={[AUTHORITIES.USER, AUTHORITIES.MANAGER]}>
-              <EntitiesRoutes />
+              <EntitiesRoutes isManager={isManager} />
             </PrivateRoute>
           }
         />

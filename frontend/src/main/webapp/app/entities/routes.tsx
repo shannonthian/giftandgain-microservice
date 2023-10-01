@@ -10,12 +10,12 @@ import TargetInventory from './target-inventory';
 import Category from './category';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
-export default () => {
+export default ({ isManager }) => {
   return (
     <div>
       <ErrorBoundaryRoutes>
         {/* prettier-ignore */}
-        <Route path="current-inventory/*" element={<CurrentInventory />} />
+        <Route path="current-inventory/*" element={<CurrentInventory isManager={isManager} />} />
         <Route
           path="target-inventory/*"
           element={
