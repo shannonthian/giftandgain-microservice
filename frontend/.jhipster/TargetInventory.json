@@ -1,0 +1,22 @@
+{
+  "changelogDate": "20230910065039",
+  "fields": [
+    {
+      "fieldName": "itemName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique", "maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "quantity",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "1"
+    }
+  ],
+  "name": "TargetInventory",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [],
+  "skipServer": true
+}
