@@ -1,26 +1,29 @@
-# giftandgain-backend
+# giftandgain-backend - Setting up and Running the Inventory Management App using Docker
+# Prerequisites: Ensure Docker and Docker Compose are installed on your machine.
 
-H2 Temp Database:
-http://localhost:8001/h2-console/login.do?jsessionid=7444250db2275732d45074b2ccb679be
+# Steps:
+1. **Pulling the Application Image from Docker Hub**:
+    - Run the following command to pull the `inventory-management-app` image from Docker Hub: 
+      docker pull shaowchin98/inventory-management-app:latest
 
-API listing: 
-http://localhost:8001/swagger-ui/index.html //for swagger ui
+2. **Get the Docker Compose File**:
+    - Obtain the `docker-compose.yml` file from git in 'shannon-inventory-management'
 
-Listing: 
-http://localhost:8001/giftandgain/items
-http://localhost:8001/giftandgain/category
+3.  **Starting the Services**:
+    - Open a terminal or command prompt and navigate to the directory containing the `docker-compose.yml`.
+    - Run the following command to start both the application and the database:
+      docker-compose up
 
-Download Report: 
-http://localhost:8001/giftandgain/download/report/09/2023
+4. **Accessing the Application**:
+    - Once the services are up and running, you can access the Inventory Management App on your web browser by navigating to:
+      http://localhost:8001/giftandgain/.....
 
-Sorting by expiryDate in descending order: 
-http://localhost:8001/giftandgain/items?page=0&size=10&sortBy=expiryDate&direction=desc
+5. **(Optional)Accessing the Database**:
+    - The MySQL database is accessible on port `3308` of the machine.
+    - connect using any MySQL client with the following credentials:
+      - **Username**: giftandgain
+      - **Password**: giftandgain123
+      - **Host**: localhost
+      - **Port**: 3308
 
-Sorting by itemName in ascending order:
-http://localhost:8001/giftandgain/items?page=0&size=10&sortBy=itemName&direction=asc
 
-Get low priority list for the selected month and year: 
-http://localhost:8001/giftandgain/category/lowpriority/09/2023
-
-Get high priority list for the selected month and year: 
-http://localhost:8001/giftandgain/category/highpriority/09/2023
