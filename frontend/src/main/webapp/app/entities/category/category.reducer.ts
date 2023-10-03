@@ -19,7 +19,7 @@ const apiUrl = 'giftandgain/category';
 // Actions
 
 export const getEntities = createAsyncThunk('category/fetch_entity_list', async ({ sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}?${sort ? `sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
+  const requestUrl = `${apiUrl}`;
   return axios.get<ICategory[]>(requestUrl);
 });
 
