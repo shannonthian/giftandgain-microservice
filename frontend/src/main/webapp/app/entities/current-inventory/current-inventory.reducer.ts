@@ -19,7 +19,8 @@ const apiUrl = 'giftandgain/inventory';
 // Actions
 
 export const getEntities = createAsyncThunk('currentInventory/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
+  const sortSplit = sort.split(',');
+  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sortSplit[0]}&direction=${sortSplit[1]}` : ''}`;
   return axios.get<ICurrentInventory[]>(requestUrl);
 });
 
