@@ -2,27 +2,30 @@
   "giftandgainFrontendApp": {
     "currentInventory": {
       "home": {
-        "title": "View Current Inventory",
+        "title": "Current Inventory",
         "refreshListLabel": "Refresh List",
-        "createBtnLabel": "Add Item",
-        "createLabel": "Add Current Inventory Item",
-        "editLabel": "Edit Current Inventory Item",
-        "createOrEditLabel": "Add or Edit Current Inventory Item",
+        "createLabel": "Add Item",
+        "editLabel": "Edit Item",
+        "createOrEditLabel": "Add or Edit Item",
         "notFound": "No Items Found"
       },
-      "created": "A new Current Inventory Item is successfully added with identifier {{ id }}.",
-      "updated": "Current Inventory Item {{ id }} is successfully updated.",
-      "deleted": "Current Inventory Item {{ id }} is successfully deleted.",
+      "created": "A new Item is successfully created with identifier {{ id }}.",
+      "updated": "Item {{ id }} is successfully updated.",
+      "deleted": "Item {{ id }} is successfully deleted.",
       "delete": {
-        "question": "Are you sure you want to delete Current Inventory Item {{ id }}?"
+        "question": "Are you sure you want to delete Item {{ id }}?"
       },
       "detail": {
         "title": "Current Inventory"
       },
       "id": "ID",
       "itemName": "Item Name",
+      "category": "Category",
+      "receivedQuantity": "Quantity",
       "expiryDate": "Expiry Date",
-      "quantity": "Quantity"
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "remarks": "Remarks"
     }
   }
 }

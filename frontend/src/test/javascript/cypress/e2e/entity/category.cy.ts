@@ -10,39 +10,39 @@ import {
   entityConfirmDeleteButtonSelector,
 } from '../../support/entity';
 
-describe('TargetInventory e2e test', () => {
-  const targetInventoryPageUrl = '/target-inventory';
-  const targetInventoryPageUrlPattern = new RegExp('/target-inventory(\\?.*)?$');
+describe('Category e2e test', () => {
+  const categoryPageUrl = '/category';
+  const categoryPageUrlPattern = new RegExp('/category(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const targetInventorySample = { targetMonthYear: 'Southeast intangible', category: 8462, targetQuantity: 6130, unit: 'Oganesson huzzah' };
+  const categorySample = { category: 'Bentley Sedan invoice', unit: 'Cordoba', status: 'w' };
 
-  let targetInventory;
+  let category;
 
   beforeEach(() => {
     cy.login(username, password);
   });
 
   beforeEach(() => {
-    cy.intercept('GET', '/api/target-inventories+(?*|)').as('entitiesRequest');
-    cy.intercept('POST', '/api/target-inventories').as('postEntityRequest');
-    cy.intercept('DELETE', '/api/target-inventories/*').as('deleteEntityRequest');
+    cy.intercept('GET', '/api/categories+(?*|)').as('entitiesRequest');
+    cy.intercept('POST', '/api/categories').as('postEntityRequest');
+    cy.intercept('DELETE', '/api/categories/*').as('deleteEntityRequest');
   });
 
   afterEach(() => {
-    if (targetInventory) {
+    if (category) {
       cy.authenticatedRequest({
         method: 'DELETE',
-        url: `/api/target-inventories/${targetInventory.id}`,
+        url: `/api/categories/${category.id}`,
       }).then(() => {
-        targetInventory = undefined;
+        category = undefined;
       });
     }
   });
 
-  it('TargetInventories menu should load TargetInventories page', () => {
+  it('Categories menu should load Categories page', () => {
     cy.visit('/');
-    cy.clickOnEntityMenuItem('target-inventory');
+    cy.clickOnEntityMenuItem('category');
     cy.wait('@entitiesRequest').then(({ response }) => {
       if (response.body.length === 0) {
         cy.get(entityTableSelector).should('not.exist');
@@ -50,27 +50,27 @@ describe('TargetInventory e2e test', () => {
         cy.get(entityTableSelector).should('exist');
       }
     });
-    cy.getEntityHeading('TargetInventory').should('exist');
-    cy.url().should('match', targetInventoryPageUrlPattern);
+    cy.getEntityHeading('Category').should('exist');
+    cy.url().should('match', categoryPageUrlPattern);
   });
 
-  describe('TargetInventory page', () => {
+  describe('Category page', () => {
     describe('create button click', () => {
       beforeEach(() => {
-        cy.visit(targetInventoryPageUrl);
+        cy.visit(categoryPageUrl);
         cy.wait('@entitiesRequest');
       });
 
-      it('should load create TargetInventory page', () => {
+      it('should load create Category page', () => {
         cy.get(entityCreateButtonSelector).click();
-        cy.url().should('match', new RegExp('/target-inventory/new$'));
-        cy.getEntityCreateUpdateHeading('TargetInventory');
+        cy.url().should('match', new RegExp('/category/new$'));
+        cy.getEntityCreateUpdateHeading('Category');
         cy.get(entityCreateSaveButtonSelector).should('exist');
         cy.get(entityCreateCancelButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response.statusCode).to.equal(200);
         });
-        cy.url().should('match', targetInventoryPageUrlPattern);
+        cy.url().should('match', categoryPageUrlPattern);
       });
     });
 
@@ -78,65 +78,65 @@ describe('TargetInventory e2e test', () => {
       beforeEach(() => {
         cy.authenticatedRequest({
           method: 'POST',
-          url: '/api/target-inventories',
-          body: targetInventorySample,
+          url: '/api/categories',
+          body: categorySample,
         }).then(({ body }) => {
-          targetInventory = body;
+          category = body;
 
           cy.intercept(
             {
               method: 'GET',
-              url: '/api/target-inventories+(?*|)',
+              url: '/api/categories+(?*|)',
               times: 1,
             },
             {
               statusCode: 200,
-              body: [targetInventory],
+              body: [category],
             }
           ).as('entitiesRequestInternal');
         });
 
-        cy.visit(targetInventoryPageUrl);
+        cy.visit(categoryPageUrl);
 
         cy.wait('@entitiesRequestInternal');
       });
 
-      it('detail button click should load details TargetInventory page', () => {
+      it('detail button click should load details Category page', () => {
         cy.get(entityDetailsButtonSelector).first().click();
-        cy.getEntityDetailsHeading('targetInventory');
+        cy.getEntityDetailsHeading('category');
         cy.get(entityDetailsBackButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response.statusCode).to.equal(200);
         });
-        cy.url().should('match', targetInventoryPageUrlPattern);
+        cy.url().should('match', categoryPageUrlPattern);
       });
 
-      it('edit button click should load edit TargetInventory page and go back', () => {
+      it('edit button click should load edit Category page and go back', () => {
         cy.get(entityEditButtonSelector).first().click();
-        cy.getEntityCreateUpdateHeading('TargetInventory');
+        cy.getEntityCreateUpdateHeading('Category');
         cy.get(entityCreateSaveButtonSelector).should('exist');
         cy.get(entityCreateCancelButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response.statusCode).to.equal(200);
         });
-        cy.url().should('match', targetInventoryPageUrlPattern);
+        cy.url().should('match', categoryPageUrlPattern);
       });
 
-      it('edit button click should load edit TargetInventory page and save', () => {
+      it('edit button click should load edit Category page and save', () => {
         cy.get(entityEditButtonSelector).first().click();
-        cy.getEntityCreateUpdateHeading('TargetInventory');
+        cy.getEntityCreateUpdateHeading('Category');
         cy.get(entityCreateSaveButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response.statusCode).to.equal(200);
         });
-        cy.url().should('match', targetInventoryPageUrlPattern);
+        cy.url().should('match', categoryPageUrlPattern);
       });
 
-      it('last delete button click should delete instance of TargetInventory', () => {
-        cy.intercept('GET', '/api/target-inventories/*').as('dialogDeleteRequest');
+      it('last delete button click should delete instance of Category', () => {
+        cy.intercept('GET', '/api/categories/*').as('dialogDeleteRequest');
         cy.get(entityDeleteButtonSelector).last().click();
         cy.wait('@dialogDeleteRequest');
-        cy.getEntityDeleteDialogHeading('targetInventory').should('exist');
+        cy.getEntityDeleteDialogHeading('category').should('exist');
         cy.get(entityConfirmDeleteButtonSelector).click();
         cy.wait('@deleteEntityRequest').then(({ response }) => {
           expect(response.statusCode).to.equal(204);
@@ -144,43 +144,40 @@ describe('TargetInventory e2e test', () => {
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response.statusCode).to.equal(200);
         });
-        cy.url().should('match', targetInventoryPageUrlPattern);
+        cy.url().should('match', categoryPageUrlPattern);
 
-        targetInventory = undefined;
+        category = undefined;
       });
     });
   });
 
-  describe('new TargetInventory page', () => {
+  describe('new Category page', () => {
     beforeEach(() => {
-      cy.visit(`${targetInventoryPageUrl}`);
+      cy.visit(`${categoryPageUrl}`);
       cy.get(entityCreateButtonSelector).click();
-      cy.getEntityCreateUpdateHeading('TargetInventory');
+      cy.getEntityCreateUpdateHeading('Category');
     });
 
-    it('should create an instance of TargetInventory', () => {
-      cy.get(`[data-cy="targetMonthYear"]`).type('Steel Principal Granite');
-      cy.get(`[data-cy="targetMonthYear"]`).should('have.value', 'Steel Principal Granite');
+    it('should create an instance of Category', () => {
+      cy.get(`[data-cy="category"]`).type('violet');
+      cy.get(`[data-cy="category"]`).should('have.value', 'violet');
 
-      cy.get(`[data-cy="category"]`).type('15656');
-      cy.get(`[data-cy="category"]`).should('have.value', '15656');
+      cy.get(`[data-cy="unit"]`).type('engineer Frozen');
+      cy.get(`[data-cy="unit"]`).should('have.value', 'engineer Frozen');
 
-      cy.get(`[data-cy="targetQuantity"]`).type('3727');
-      cy.get(`[data-cy="targetQuantity"]`).should('have.value', '3727');
-
-      cy.get(`[data-cy="unit"]`).type('generally');
-      cy.get(`[data-cy="unit"]`).should('have.value', 'generally');
+      cy.get(`[data-cy="status"]`).type('c');
+      cy.get(`[data-cy="status"]`).should('have.value', 'c');
 
       cy.get(entityCreateSaveButtonSelector).click();
 
       cy.wait('@postEntityRequest').then(({ response }) => {
         expect(response.statusCode).to.equal(201);
-        targetInventory = response.body;
+        category = response.body;
       });
       cy.wait('@entitiesRequest').then(({ response }) => {
         expect(response.statusCode).to.equal(200);
       });
-      cy.url().should('match', targetInventoryPageUrlPattern);
+      cy.url().should('match', categoryPageUrlPattern);
     });
   });
 });

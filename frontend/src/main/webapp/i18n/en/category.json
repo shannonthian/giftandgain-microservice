@@ -1,0 +1,27 @@
+{
+  "giftandgainFrontendApp": {
+    "category": {
+      "home": {
+        "title": "Category",
+        "refreshListLabel": "Refresh List",
+        "createLabel": "Add Category",
+        "editLabel": "Edit Category",
+        "createOrEditLabel": "Add or Edit Category",
+        "notFound": "No Categories Found"
+      },
+      "created": "A new Category is successfully created with identifier {{ id }}",
+      "updated": "Category {{ id }} is successfully updated",
+      "deleted": "Category {{ id }} is successfully deleted",
+      "delete": {
+        "question": "Are you sure you want to delete Category {{ id }}?"
+      },
+      "detail": {
+        "title": "Category"
+      },
+      "id": "ID",
+      "category": "Category",
+      "unit": "Unit",
+      "status": "Status"
+    }
+  }
+}

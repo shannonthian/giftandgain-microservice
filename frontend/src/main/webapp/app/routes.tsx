@@ -7,6 +7,8 @@ import Register from 'app/modules/account/register/register';
 import Activate from 'app/modules/account/activate/activate';
 import Logout from 'app/modules/login/logout';
 import Home from 'app/modules/home/home';
+import DonateRight from './modules/donate-right/donate-right';
+import CheckMyItem from './modules/donate-right/check-my-item';
 import EntitiesRoutes from 'app/entities/routes';
 import PrivateRoute from 'app/shared/auth/private-route';
 import ErrorBoundaryRoutes from 'app/shared/error/error-boundary-routes';
@@ -25,11 +27,13 @@ const Admin = Loadable({
   loading: () => loading,
 });
 
-const AppRoutes = () => {
+const AppRoutes = ({ isManager }) => {
   return (
     <div className="view-routes">
       <ErrorBoundaryRoutes>
         <Route index element={<Home />} />
+        <Route path="donate-right" element={<DonateRight />} />
+        <Route path="donate-right/check-my-item" element={<CheckMyItem />} />
         <Route path="login" element={<Login />} />
         <Route path="logout" element={<Logout />} />
         <Route path="account">
@@ -56,7 +60,7 @@ const AppRoutes = () => {
           path="*"
           element={
             <PrivateRoute hasAnyAuthorities={[AUTHORITIES.USER, AUTHORITIES.MANAGER]}>
-              <EntitiesRoutes />
+              <EntitiesRoutes isManager={isManager} />
             </PrivateRoute>
           }
         />

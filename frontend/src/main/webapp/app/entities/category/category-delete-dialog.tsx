@@ -6,10 +6,10 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { ICurrentInventory } from 'app/shared/model/current-inventory.model';
-import { getEntity, deleteEntity } from './current-inventory.reducer';
+import { ICategory } from 'app/shared/model/category.model';
+import { getEntity, deleteEntity } from './category.reducer';
 
-export const CurrentInventoryDeleteDialog = () => {
+export const CategoryDeleteDialog = () => {
   const dispatch = useAppDispatch();
 
   const location = useLocation();
@@ -23,33 +23,33 @@ export const CurrentInventoryDeleteDialog = () => {
     setLoadModal(true);
   }, []);
 
-  const currentInventoryEntity: ICurrentInventory = useAppSelector(state => state.currentInventory.entity);
-  const updateSuccess: boolean = useAppSelector(state => state.currentInventory.updateSuccess);
+  const categoryEntity: ICategory = useAppSelector(state => state.category.entity);
+  const updateSuccess: boolean = useAppSelector(state => state.category.updateSuccess);
 
   const handleClose = () => {
-    navigate('/current-inventory' + location.search);
+    navigate('/category');
   };
 
   useEffect(() => {
     if (updateSuccess && loadModal) {
-      toast.success(translate("giftandgainFrontendApp.currentInventory.deleted", { id }));
+      toast.success(translate("giftandgainFrontendApp.category.deleted", { id }));
       handleClose();
       setLoadModal(false);
     }
   }, [updateSuccess]);
 
   const confirmDelete = () => {
-    dispatch(deleteEntity(currentInventoryEntity.inventoryId));
+    dispatch(deleteEntity(categoryEntity.categoryId));
   };
 
   return (
     <Modal isOpen toggle={handleClose}>
-      <ModalHeader toggle={handleClose} data-cy="currentInventoryDeleteDialogHeading">
+      <ModalHeader toggle={handleClose} data-cy="categoryDeleteDialogHeading">
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
-      <ModalBody id="giftandgainFrontendApp.currentInventory.delete.question">
-        <Translate contentKey="giftandgainFrontendApp.currentInventory.delete.question" interpolate={{ id: currentInventoryEntity.inventoryId }}>
-          Are you sure you want to delete this CurrentInventory?
+      <ModalBody id="giftandgainFrontendApp.category.delete.question">
+        <Translate contentKey="giftandgainFrontendApp.category.delete.question" interpolate={{ id: categoryEntity.categoryId }}>
+          Are you sure you want to delete this Category?
         </Translate>
       </ModalBody>
       <ModalFooter>
@@ -58,7 +58,7 @@ export const CurrentInventoryDeleteDialog = () => {
           &nbsp;
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
-        <Button id="jhi-confirm-delete-currentInventory" data-cy="entityConfirmDeleteButton" color="danger" onClick={confirmDelete}>
+        <Button id="jhi-confirm-delete-category" data-cy="entityConfirmDeleteButton" color="danger" onClick={confirmDelete}>
           <FontAwesomeIcon icon="trash" />
           &nbsp;
           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -68,4 +68,4 @@ export const CurrentInventoryDeleteDialog = () => {
   );
 };
 
-export default CurrentInventoryDeleteDialog;
+export default CategoryDeleteDialog;

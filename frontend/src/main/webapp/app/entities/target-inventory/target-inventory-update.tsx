@@ -2,15 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Row, Col, FormText } from 'reactstrap';
 import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
+import { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
+import { addMonth, convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
+import { DATE_DISPLAY_FORMAT, DATE_FORMAT } from 'app/config/constants';
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { ITargetInventory } from 'app/shared/model/target-inventory.model';
 import { getEntity, updateEntity, createEntity, reset } from './target-inventory.reducer';
+import { ICategory } from 'app/shared/model/category.model';
+import { getEntities as getCategoryEntities } from '../category/category.reducer';
+import { ASC } from 'app/shared/util/pagination.constants';
 
 export const TargetInventoryUpdate = () => {
   const dispatch = useAppDispatch();
@@ -20,34 +25,76 @@ export const TargetInventoryUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const targetInventoryEntity = useAppSelector(state => state.targetInventory.entity);
-  const loading = useAppSelector(state => state.targetInventory.loading);
-  const updating = useAppSelector(state => state.targetInventory.updating);
-  const updateSuccess = useAppSelector(state => state.targetInventory.updateSuccess);
+  const targetInventoryEntity: ITargetInventory = useAppSelector(state => state.targetInventory.entity);
+  const loading: boolean = useAppSelector(state => state.targetInventory.loading);
+  const updating: boolean = useAppSelector(state => state.targetInventory.updating);
+  const updateSuccess: boolean = useAppSelector(state => state.targetInventory.updateSuccess);
+  const categoryList: ICategory[] = useAppSelector(state => state.category.entities);
 
   const handleClose = () => {
     navigate('/target-inventory');
   };
 
   useEffect(() => {
+    dispatch(
+      getCategoryEntities({
+        sort: `category,${ASC}`,
+      })
+    );
     if (isNew) {
       dispatch(reset());
     } else {
-      dispatch(getEntity(id));
+      dispatch(getEntity(id))
+        .then((response) => {
+          const payload = response.payload as AxiosResponse;
+          setUnit(payload.data.category.unit);
+        });
     }
   }, []);
 
   useEffect(() => {
     if (updateSuccess) {
-      toast.success(translate("giftandgainFrontendApp.targetInventory." + (isNew ? "created" : "updated"), { id: targetInventoryEntity.id }));
+      toast.success(translate("giftandgainFrontendApp.targetInventory." + (isNew ? "created" : "updated"), { id: targetInventoryEntity.targetId }));
       handleClose();
     }
   }, [updateSuccess]);
 
+  const [unit, setUnit] = useState("");
+
+  const targetMonthOptions = (noOfMonths: number) => {
+    const options: JSX.Element[] = [];
+    for (let i = 0; i < noOfMonths; i++) {
+      options.push(
+        <option key={`targetMonthYear-${i}`} value={addMonth(i, DATE_FORMAT)}>
+          {addMonth(i, DATE_DISPLAY_FORMAT)}
+        </option>
+      );
+    }
+    return options;
+  };
+
+  const categoryOptions = categoryList.map((item) => {
+    if (item.status === 'A')
+      return <option key={item.categoryId} value={item.categoryId}>{item.category}</option>
+  });
+
+  const onChangeCategory: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const categoryId = e.target.value;
+    if (categoryId) {
+      setUnit(categoryList.find((item) => item.categoryId === +categoryId)?.unit);
+    } else {
+      setUnit("");
+    }
+  };
+
   const saveEntity = values => {
-    const entity = {
+    console.log(values);
+    const entity: ITargetInventory = {
       ...targetInventoryEntity,
       ...values,
+      category: {
+        categoryId: values.category,
+      },
     };
 
     if (isNew) {
@@ -56,13 +103,6 @@ export const TargetInventoryUpdate = () => {
       dispatch(updateEntity(entity));
     }
   };
-
-  const defaultValues = () =>
-    isNew
-      ? {}
-      : {
-        ...targetInventoryEntity,
-      };
 
   return (
     <div>
@@ -80,41 +120,75 @@ export const TargetInventoryUpdate = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
+            <ValidatedForm onSubmit={saveEntity}>
               {!isNew ? (
                 <ValidatedField
-                  name="id"
-                  required
-                  readOnly
-                  disabled
-                  id="target-inventory-id"
                   label={translate('global.field.id')}
-                  validate={{ required: true }}
+                  id="target-inventory-id"
+                  name="targetId"
+                  data-cy="targetId"
+                  type='text'
+                  readOnly
+                  defaultValue={targetInventoryEntity.targetId}
+                  validate={{
+                    required: { value: true, message: translate('entity.validation.required') },
+                    validate: v => isNumber(v) || translate('entity.validation.number'),
+                  }}
                 />
               ) : null}
               <ValidatedField
-                label={translate('giftandgainFrontendApp.targetInventory.itemName')}
-                id="target-inventory-itemName"
-                name="itemName"
-                data-cy="itemName"
-                type="text"
+                label={translate('giftandgainFrontendApp.targetInventory.targetMonthYear')}
+                id="target-inventory-targetMonthYear"
+                name="targetMonthYear"
+                data-cy="targetMonthYear"
+                type="select"
+                defaultValue={!isNew ? targetInventoryEntity.targetMonthYear : ""}
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
-                  maxLength: { value: 100, message: translate('entity.validation.maxlength', { max: 100 }) },
                 }}
-              />
+              >
+                {targetMonthOptions(2)}
+              </ValidatedField>
               <ValidatedField
-                label={translate('giftandgainFrontendApp.targetInventory.quantity')}
-                id="target-inventory-quantity"
-                name="quantity"
-                data-cy="quantity"
-                type="text"
+                label={translate('giftandgainFrontendApp.targetInventory.category')}
+                id="target-inventory-category"
+                name="category"
+                data-cy="category"
+                type="select"
+                defaultValue={!isNew ? targetInventoryEntity.category?.categoryId : ""}
+                onChange={onChangeCategory}
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
-                  min: { value: 1, message: translate('entity.validation.min', { min: 1 }) },
+                  validate: v => isNumber(v) || translate('entity.validation.number'),
+                }}
+              >
+                <option></option>
+                {categoryOptions}
+              </ValidatedField>
+              <ValidatedField
+                label={translate('giftandgainFrontendApp.targetInventory.targetQuantity')}
+                id="target-inventory-targetQuantity"
+                name="targetQuantity"
+                data-cy="targetQuantity"
+                type="text"
+                defaultValue={!isNew ? targetInventoryEntity.targetQuantity : ""}
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  min: { value: 0, message: translate('entity.validation.min', { min: 0 }) },
                   validate: v => isNumber(v) || translate('entity.validation.number'),
                 }}
               />
+              {unit ? (
+                <ValidatedField
+                  label={translate('giftandgainFrontendApp.category.unit')}
+                  id="target-inventory-unit"
+                  name="unit"
+                  data-cy="unit"
+                  type="text"
+                  disabled
+                  value={unit}
+                />
+              ) : null}
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/target-inventory" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
