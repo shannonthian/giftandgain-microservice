@@ -20,7 +20,8 @@ public class User {
     private String name;
     private String username;
     private String password;
+    private String email;
     // this loads the roles each time a user is loaded
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Collection<Authorities> authorities = new ArrayList<>();
 }

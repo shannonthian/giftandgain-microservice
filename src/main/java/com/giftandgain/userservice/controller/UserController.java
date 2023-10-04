@@ -5,16 +5,12 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.giftandgain.userservice.models.Role;
+import com.giftandgain.userservice.models.Authorities;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import com.giftandgain.userservice.models.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.giftandgain.userservice.service.UserService;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -38,6 +34,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UserController {
     private final UserService userService;
 
+    @GetMapping("/account")
+    public ResponseEntity <User> getUser(@RequestBody AccountForm accountForm) { return ResponseEntity.ok().body(userService.getUser(accountForm.getUsername()));}
+
     @GetMapping("/users")
     public ResponseEntity <List<User>> getUsers() {
         return  ResponseEntity.ok().body(userService.getUsers());
@@ -50,9 +49,9 @@ public class UserController {
     }
 
     @PostMapping("/role/save")
-    public ResponseEntity <Role> saveRole(@RequestBody Role role) {
+    public ResponseEntity <Authorities> saveRole(@RequestBody Authorities authorities) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
-        return  ResponseEntity.created(uri).body(userService.saveRole(role));
+        return  ResponseEntity.created(uri).body(userService.saveRole(authorities));
     }
 
     @PostMapping("/role/addtouser")
@@ -89,7 +88,7 @@ public class UserController {
                         // Issuer - can be company name / author
                         .withIssuer(request.getRequestURL().toString())
                         // roles
-                        .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                        .withClaim("roles", user.getAuthorities().stream().map(Authorities::getName).collect(Collectors.toList()))
                         .sign(algorithm);
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("access_token", access_token);
@@ -118,4 +117,9 @@ public class UserController {
 class RoleToUserForm {
     private String username;
     private String roleName;
+}
+
+@Data
+class AccountForm {
+    private String username;
 }

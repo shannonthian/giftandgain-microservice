@@ -2,14 +2,12 @@ package com.giftandgain.userservice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.giftandgain.userservice.models.Role;
+import com.giftandgain.userservice.models.Authorities;
 import com.giftandgain.userservice.models.User;
-import net.bytebuddy.build.Plugin;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.giftandgain.userservice.repository.RoleRepo;
@@ -38,7 +36,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         // need to return GrantedAuthority type for spring User model
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> { authorities.add(new SimpleGrantedAuthority(role.getName()));
+        user.getAuthorities().forEach(role -> { authorities.add(new SimpleGrantedAuthority(role.getName()));
         });
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities );
     }
@@ -51,18 +49,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Role saveRole(Role role) {
-        log.info("Saving new role {} to the database", role.getName());
-        return roleRepo.save(role);
+    public Authorities saveRole(Authorities authorities) {
+        log.info("Saving new role {} to the database", authorities.getName());
+        return roleRepo.save(authorities);
     }
 
     @Override
     public void addRoleToUser(String username, String roleName) {
         log.info("Adding role {} to user {}", roleName, username );
         User user = userRepo.findByUsername(username);
-        Role role = roleRepo.findByName(roleName);
+        Authorities authorities = roleRepo.findByName(roleName);
         // Because we have @transactional, don't need to user.save again
-        user.getRoles().add(role);
+        user.getAuthorities().add(authorities);
     }
 
     @Override
