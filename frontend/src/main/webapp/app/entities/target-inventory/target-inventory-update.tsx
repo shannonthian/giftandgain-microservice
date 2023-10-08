@@ -65,8 +65,8 @@ export const TargetInventoryUpdate = () => {
     const options: JSX.Element[] = [];
     for (let i = 0; i < noOfMonths; i++) {
       options.push(
-        <option key={`targetMonthYear-${i}`} value={addMonth(i, DATE_FORMAT)}>
-          {addMonth(i, DATE_DISPLAY_FORMAT)}
+        <option key={`targetMonthYear-${i}`} value={addMonth(1, i, DATE_FORMAT)}>
+          {addMonth(1, i, DATE_DISPLAY_FORMAT)}
         </option>
       );
     }

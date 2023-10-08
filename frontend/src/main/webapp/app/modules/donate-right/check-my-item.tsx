@@ -1,15 +1,69 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 import { Alert, Button, Col, Row } from 'reactstrap';
 import { Translate, ValidatedField, ValidatedForm, translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { WishListState, getHighPriorityWishList } from 'app/shared/reducers/wish-list';
+import { ICategory } from 'app/shared/model/category.model';
+import { getEntities as getCategoryEntities } from 'app/entities/category/category.reducer';
+import { ASC } from 'app/shared/util/pagination.constants';
+
+import { DATE_FORMAT } from 'app/config/constants';
+import { addMonth } from 'app/shared/util/date-utils';
 
 export const CheckMyItem = () => {
-  const [showResult, setShowResult] = useState(false);
+  const dispatch = useAppDispatch();
 
-  const checkItem = () => {
-    setShowResult(true);
+  const { highPriorityWishList }: WishListState = useAppSelector(state => state.wishList);
+  const categoryList: ICategory[] = useAppSelector(state => state.category.entities);
+
+  useEffect(() => {
+    dispatch(
+      getCategoryEntities({
+        sort: `category,${ASC}`,
+      })
+    );
+    const today = new Date();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+    dispatch(
+      getHighPriorityWishList({
+        month,
+        year,
+      })
+    );
+  }, []);
+
+  const categoryOptions = categoryList.map((item) => {
+    if (item.status === 'A')
+      return <option key={item.categoryId} value={item.categoryId}>{item.category}</option>
+  });
+
+  const [result, setResult] = useState("");
+
+  const getCategoryName = (categoryId: number) => {
+    return categoryList.find((item) => item.categoryId === categoryId)?.category;
+  }
+
+  const checkItem = (values) => {
+    const category = getCategoryName(+values.itemCategory);
+    const expiryDate = new Date(values.expiryDate);
+
+    const month3 = new Date(addMonth(null, 3, DATE_FORMAT));
+    const month6 = new Date(addMonth(null, 6, DATE_FORMAT));
+
+    if (expiryDate >= month6) {
+      setResult("P");
+    } else if (expiryDate < month3) {
+      setResult("F");
+    } else if (highPriorityWishList.includes(category)) {
+      setResult("P");
+    } else {
+      setResult("A");
+    }
   };
 
   return (
@@ -25,18 +79,29 @@ export const CheckMyItem = () => {
       </Row>
       <Row className="justify-content-center">
         <Col md="8">
+
+        </Col>
+      </Row>
+      <Row className="justify-content-center">
+        <Col md="8">
           <ValidatedForm onSubmit={checkItem}>
             <ValidatedField
-              label={translate('giftandgainFrontendApp.currentInventory.itemName')}
-              id="itemName"
-              name="itemName"
-              data-cy="itemName"
-              type="text"
+              label={"Item " + translate('giftandgainFrontendApp.currentInventory.category')}
+              id="itemCategory"
+              name="itemCategory"
+              data-cy="itemCategory"
+              type="select"
               validate={{
                 required: { value: true, message: translate('entity.validation.required') },
-                maxLength: { value: 255, message: translate('entity.validation.maxlength', { max: 255 }) },
               }}
-            />
+            >
+              <option></option>
+              {categoryOptions}
+            </ValidatedField>
+            <Alert color="secondary">
+              If your item does not belong to any category listed above, we are unfortunately not accepting such items.
+              You may check out our beneficiaries wish list <HashLink to="/donate-right#wish-list">here</HashLink>.
+            </Alert>
             <ValidatedField
               label={translate('giftandgainFrontendApp.currentInventory.expiryDate')}
               id="expiryDate"
@@ -64,7 +129,7 @@ export const CheckMyItem = () => {
         </Col>
       </Row>
       <br />
-      {showResult ? (
+      {result === "P" ? (
         <Row className="justify-content-center">
           <Col md="8">
             <Alert color="success">
@@ -74,27 +139,32 @@ export const CheckMyItem = () => {
           </Col>
         </Row>
       ) : null}
-      {showResult ? (
+      {result === "A" ? (
         <Row className="justify-content-center">
           <Col md="8">
             <Alert color="warning">
               As we have sufficient stock of similar items, we would prefer an expiry date of 6 months and beyond for such items.
-              Do check out the items on our high priority list <Link to="/donate-right">here</Link>.
+              {highPriorityWishList.length ? (
+                <>
+                  {' '}Do check out the items currently on our beneficiaries wish list <HashLink to="/donate-right#wish-list">here</HashLink>.
+                </>
+              ) : null}
             </Alert>
           </Col>
         </Row>
       ) : null}
-      {showResult ? (
+      {result === "F" ? (
         <Row className="justify-content-center">
           <Col md="8">
             <Alert color="danger">
               This item is <u>NOT</u> suitable for donation as the expiry date is less than 3 months away.
-              We need to account for the time taken for donation items to reach our beneficiaries, and the time they take to finish them.
+              We need to account for the time taken for donation items to reach our beneficiaries,
+              and the time they take to finish the food.
             </Alert>
           </Col>
         </Row>
       ) : null}
-      {showResult ? (
+      {/* result === "N" ? (
         <Row className="justify-content-center">
           <Col md="8">
             <Alert color="danger">
@@ -103,7 +173,7 @@ export const CheckMyItem = () => {
             </Alert>
           </Col>
         </Row>
-      ) : null}
+      ) : null */}
     </div>
   );
 };

@@ -25,8 +25,8 @@ export const TargetInventory = () => {
   const targetInventoryList: ITargetInventory[] = useAppSelector(state => state.targetInventory.entities);
   const loading: boolean = useAppSelector(state => state.targetInventory.loading);
 
-  const currentMonthTargets = targetInventoryList.filter((item) => item.targetMonthYear === addMonth(0, DATE_FORMAT));
-  const nextMonthTargets = targetInventoryList.filter((item) => item.targetMonthYear === addMonth(1, DATE_FORMAT));
+  const currentMonthTargets = targetInventoryList.filter((item) => item.targetMonthYear === addMonth(1, 0, DATE_FORMAT));
+  const nextMonthTargets = targetInventoryList.filter((item) => item.targetMonthYear === addMonth(1, 1, DATE_FORMAT));
 
   const getAllEntities = () => {
     dispatch(
@@ -87,7 +87,7 @@ export const TargetInventory = () => {
         </div>
       </h2>
       <br />
-      <h4>{addMonth(0, DATE_DISPLAY_FORMAT)}</h4>
+      <h4>{addMonth(1, 0, DATE_DISPLAY_FORMAT)}</h4>
       <div className="table-responsive">
         {currentMonthTargets && currentMonthTargets.length > 0 ? (
           <Table responsive>
@@ -188,7 +188,7 @@ export const TargetInventory = () => {
         )}
       </div>
       <br />
-      <h4>{addMonth(1, DATE_DISPLAY_FORMAT)}</h4>
+      <h4>{addMonth(1, 1, DATE_DISPLAY_FORMAT)}</h4>
       <div className="table-responsive">
         {nextMonthTargets && nextMonthTargets.length > 0 ? (
           <Table responsive>
