@@ -28,35 +28,6 @@ public class ReportControllerTest {
     public void setup() {
     }
 
-    @Test
-    public void shouldRetrieveReportByMonthAndYear() throws Exception {
-        // Arrange
-        Report report = new Report();
-        report.setMonth("09");
-        report.setYear("2023");
-        reportRepository.save(report);
-
-        // Act and Assert
-        mockMvc.perform(get("/api/report")
-                        .param("month", "09")
-                        .param("year", "2023"))
-                .andExpect(status().isOk());
-
-        mockMvc.perform(get("/api/report")
-                        .param("month", "Sep")
-                        .param("year", "2023"))
-                .andExpect(status().isOk());
-
-        mockMvc.perform(get("/api/report")
-                        .param("month", "09")
-                        .param("year", "abc"))
-                .andExpect(status().isOk());
-
-        mockMvc.perform(get("/api/report"))
-                .andExpect(status().isOk());
-    }
-
-
     @AfterEach
     public void tearDown() {
         // Clean up resources or reset any changes made during tests

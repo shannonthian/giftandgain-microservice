@@ -17,7 +17,7 @@ public class ReportManager {
     this.targetInventoryRepository = targetInventoryRepository;
     }
 
-    public String generateCsv(String month, String year) {
+    public String generateCsv(int month, int year) {
          // 1. Fetch the data
 	    List<Object[]> monthlyReport = targetInventoryRepository.getTotalQuantitiesByDate(month, year);
 	    

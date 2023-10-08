@@ -9,15 +9,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("report")
 public class Report implements Serializable {
     // Omit the @Id annotation and id field entirely
-    private String month;
-    private String year;
+    private int month;
+    private int year;
     private String data;
 
     public Report() {
         // Default constructor for JPA
     }
 
-    public Report(String month, String year, String data) {
+    public Report(int month, int year, String data) {
         this.month = month;
         this.year = year;
         this.data = data;
@@ -25,19 +25,19 @@ public class Report implements Serializable {
 
     // Getters and setters (if needed)
 
-    public String getMonth() {
+    public int getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(int month) {
         this.month = month;
     }
 
-    public String getYear() {
+    public int getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(int year) {
         this.year = year;
     }
 
