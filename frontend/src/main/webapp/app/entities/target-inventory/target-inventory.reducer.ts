@@ -4,6 +4,7 @@ import { ASC } from 'app/shared/util/pagination.constants';
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { ITargetInventory, defaultValue } from 'app/shared/model/target-inventory.model';
+import { URL_TARGET_INVENTORY } from 'app/config/constants';
 
 const initialState: EntityState<ITargetInventory> = {
   loading: false,
@@ -14,19 +15,17 @@ const initialState: EntityState<ITargetInventory> = {
   updateSuccess: false,
 };
 
-const apiUrl = 'giftandgain/target';
-
 // Actions
 
 export const getEntities = createAsyncThunk('targetInventory/fetch_entity_list', async ({ sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}`;
+  const requestUrl = `${URL_TARGET_INVENTORY}`;
   return axios.get<ITargetInventory[]>(requestUrl);
 });
 
 export const getEntity = createAsyncThunk(
   'targetInventory/fetch_entity',
   async (id: string | number) => {
-    const requestUrl = `${apiUrl}/${id}`;
+    const requestUrl = `${URL_TARGET_INVENTORY}/${id}`;
     return axios.get<ITargetInventory>(requestUrl);
   },
   { serializeError: serializeAxiosError }
@@ -35,7 +34,7 @@ export const getEntity = createAsyncThunk(
 export const createEntity = createAsyncThunk(
   'targetInventory/create_entity',
   async (entity: ITargetInventory, thunkAPI) => {
-    const result = await axios.post<ITargetInventory>(`${apiUrl}/create`, cleanEntity(entity));
+    const result = await axios.post<ITargetInventory>(`${URL_TARGET_INVENTORY}/create`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -45,7 +44,7 @@ export const createEntity = createAsyncThunk(
 export const updateEntity = createAsyncThunk(
   'targetInventory/update_entity',
   async (entity: ITargetInventory, thunkAPI) => {
-    const result = await axios.put<ITargetInventory>(`${apiUrl}/edit/${entity.targetId}`, cleanEntity(entity));
+    const result = await axios.put<ITargetInventory>(`${URL_TARGET_INVENTORY}/edit/${entity.targetId}`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -55,7 +54,7 @@ export const updateEntity = createAsyncThunk(
 export const partialUpdateEntity = createAsyncThunk(
   'targetInventory/partial_update_entity',
   async (entity: ITargetInventory, thunkAPI) => {
-    const result = await axios.patch<ITargetInventory>(`${apiUrl}/edit/${entity.targetId}`, cleanEntity(entity));
+    const result = await axios.patch<ITargetInventory>(`${URL_TARGET_INVENTORY}/edit/${entity.targetId}`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -65,7 +64,7 @@ export const partialUpdateEntity = createAsyncThunk(
 export const deleteEntity = createAsyncThunk(
   'targetInventory/delete_entity',
   async (id: string | number, thunkAPI) => {
-    const requestUrl = `${apiUrl}/delete/${id}`;
+    const requestUrl = `${URL_TARGET_INVENTORY}/delete/${id}`;
     const result = await axios.delete<ITargetInventory>(requestUrl);
     thunkAPI.dispatch(getEntities({}));
     return result;
@@ -102,7 +101,13 @@ export const TargetInventorySlice = createEntitySlice({
             const order = action.meta.arg.sort.split(',')[1];
             const predicate = action.meta.arg.sort.split(',')[0];
             if (predicate === 'category' || predicate === 'unit' || predicate === 'status') {
-              return order === ASC ? (a.category[predicate] < b.category[predicate] ? -1 : 1) : b.category[predicate] < a.category[predicate] ? -1 : 1;
+              return order === ASC
+                ? a.category[predicate] < b.category[predicate]
+                  ? -1
+                  : 1
+                : b.category[predicate] < a.category[predicate]
+                ? -1
+                : 1;
             } else {
               return order === ASC ? (a[predicate] < b[predicate] ? -1 : 1) : b[predicate] < a[predicate] ? -1 : 1;
             }

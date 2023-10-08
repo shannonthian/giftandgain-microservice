@@ -11,22 +11,36 @@ services:
       - 3001:9060
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - INVENTORY_MICROSERVICE_URL=http://localhost:16667
       - AUTH_MICROSERVICE_URL=http://localhost:16668
 
-  # inventory-management:
-  #   container_name: inventory-management
-  #   build:
-  #     context: inventory-management
-  #     dockerfile: Dockerfile
-  #   image: inventory-management:latest
-  #   ports:
-  #     - 16667:8080
-  #   networks:
-  #     - spring-cloud-network
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
-  #     SPRING_DATASOURCE_USERNAME: user
-  #     SPRING_DATASOURCE_PASSWORD: password
+  inventory-management:
+    container_name: inventory-management
+    build:
+      context: inventory-management
+    image: inventory-management:latest
+    ports:
+      - 16667:8080
+    networks:
+      - spring-cloud-network
+    depends_on:
+      - postgres
+    # command:
+    #   [
+    #     "./wait-for-it.sh",
+    #     "giftandgain-db:3306",
+    #     "java",
+    #     "-jar",
+    #     "/app/app.jar",
+    #   ]
+    environment:
+      # SPRING_DATASOURCE_URL: jdbc:mysql://giftandgain-db:3306/giftandgain
+      # SPRING_DATASOURCE_USERNAME: giftandgain
+      # SPRING_DATASOURCE_PASSWORD: giftandgain123
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      CORS_ALLOWED_ORIGINS: http://localhost:3001
 
   auth:
     container_name: auth
@@ -42,6 +56,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
+      CORS_ALLOWED_ORIGINS: http://localhost:3001
 
   # report:
   #   container_name: report

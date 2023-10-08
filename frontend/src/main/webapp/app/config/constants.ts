@@ -30,10 +30,15 @@ export const APP_TWO_DIGITS_AFTER_POINT_NUMBER_FORMAT = '0,0.[00]';
 export const DATE_FORMAT = 'YYYY-MM-DD';
 export const DATE_DISPLAY_FORMAT = 'MMMM YYYY';
 
-export const AUTH_MICROSERVICE_URL = process.env.AUTH_MICROSERVICE_URL;
-export const API_REGISTER = AUTH_MICROSERVICE_URL + '/api/register';
-export const API_UPDATE_ACCOUNT = AUTH_MICROSERVICE_URL + '/api/account';
-export const API_ACTIVATE_ACCOUNT = (key: string) => `${AUTH_MICROSERVICE_URL}/api/activate?key=${key}`;
-export const API_CHANGE_PASSWORD = AUTH_MICROSERVICE_URL + '/api/change-password';
-export const API_LOGIN = AUTH_MICROSERVICE_URL + '/api/login';
-export const API_ACCOUNT = AUTH_MICROSERVICE_URL + '/api/account';
+export const URL_AUTH_MICROSERVICE = process.env.AUTH_MICROSERVICE_URL;
+export const API_REGISTER = URL_AUTH_MICROSERVICE + '/api/register';
+export const API_UPDATE_ACCOUNT = URL_AUTH_MICROSERVICE + '/api/account';
+export const API_ACTIVATE_ACCOUNT = (key: string) => `${URL_AUTH_MICROSERVICE}/api/activate?key=${key}`;
+export const API_CHANGE_PASSWORD = URL_AUTH_MICROSERVICE + '/api/change-password';
+export const API_LOGIN = URL_AUTH_MICROSERVICE + '/api/login';
+export const API_ACCOUNT = URL_AUTH_MICROSERVICE + '/api/account';
+
+export const INVENTORY_MICROSERVICE_URL = process.env.INVENTORY_MICROSERVICE_URL;
+export const URL_CATEGORY = `${INVENTORY_MICROSERVICE_URL}/giftandgain/category`;
+export const URL_CURRENT_INVENTORY = `${INVENTORY_MICROSERVICE_URL}/giftandgain/inventory`;
+export const URL_TARGET_INVENTORY = `${INVENTORY_MICROSERVICE_URL}/giftandgain/target`;

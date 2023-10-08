@@ -109,6 +109,7 @@ module.exports = async options =>
         contentImage: path.join(__dirname, 'logo-charity.png'),
       }),
       new webpack.DefinePlugin({
+        'process.env.INVENTORY_MICROSERVICE_URL': JSON.stringify(process.env.INVENTORY_MICROSERVICE_URL),
         'process.env.AUTH_MICROSERVICE_URL': JSON.stringify(process.env.AUTH_MICROSERVICE_URL),
       }),
     ].filter(Boolean),
