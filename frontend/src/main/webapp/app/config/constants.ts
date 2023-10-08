@@ -30,10 +30,10 @@ export const APP_TWO_DIGITS_AFTER_POINT_NUMBER_FORMAT = '0,0.[00]';
 export const DATE_FORMAT = 'YYYY-MM-DD';
 export const DATE_DISPLAY_FORMAT = 'MMMM YYYY';
 
-export const AUTH_MICROSERVICE = 'http://localhost:16668';
-export const API_REGISTER = AUTH_MICROSERVICE + '/api/register';
-export const API_UPDATE_ACCOUNT = AUTH_MICROSERVICE + '/api/account';
-export const API_ACTIVATE_ACCOUNT = (key: string) => `${AUTH_MICROSERVICE}/api/activate?key=${key}`;
-export const API_CHANGE_PASSWORD = AUTH_MICROSERVICE + '/api/change-password';
-export const API_LOGIN = AUTH_MICROSERVICE + '/api/login';
-export const API_ACCOUNT = AUTH_MICROSERVICE + '/api/account';
+export const AUTH_MICROSERVICE_URL = process.env.AUTH_MICROSERVICE_URL;
+export const API_REGISTER = AUTH_MICROSERVICE_URL + '/api/register';
+export const API_UPDATE_ACCOUNT = AUTH_MICROSERVICE_URL + '/api/account';
+export const API_ACTIVATE_ACCOUNT = (key: string) => `${AUTH_MICROSERVICE_URL}/api/activate?key=${key}`;
+export const API_CHANGE_PASSWORD = AUTH_MICROSERVICE_URL + '/api/change-password';
+export const API_LOGIN = AUTH_MICROSERVICE_URL + '/api/login';
+export const API_ACCOUNT = AUTH_MICROSERVICE_URL + '/api/account';

@@ -1,16 +1,17 @@
 services:
-  # frontend:
-  #   container_name: frontend
-  #   build:
-  #     context: frontend
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - ".:/frontend"
-  #     - "/frontend/node_modules"
-  #   ports:
-  #     - 3001:9060
-  #   environment:
-  #     - CHOKIDAR_USEPOLLING=true
+  frontend:
+    container_name: frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ".:/frontend"
+      - "/frontend/node_modules"
+    ports:
+      - 3001:9060
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - AUTH_MICROSERVICE_URL=http://localhost:16668
 
   # inventory-management:
   #   container_name: inventory-management
