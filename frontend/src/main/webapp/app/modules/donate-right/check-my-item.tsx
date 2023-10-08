@@ -42,6 +42,7 @@ export const CheckMyItem = () => {
       return <option key={item.categoryId} value={item.categoryId}>{item.category}</option>
   });
 
+  const [category, setCategory] = useState("");
   const [result, setResult] = useState("");
 
   const getCategoryName = (categoryId: number) => {
@@ -91,6 +92,7 @@ export const CheckMyItem = () => {
               name="itemCategory"
               data-cy="itemCategory"
               type="select"
+              onChange={(e) => setCategory(e.target.value)}
               validate={{
                 required: { value: true, message: translate('entity.validation.required') },
               }}
@@ -98,10 +100,12 @@ export const CheckMyItem = () => {
               <option></option>
               {categoryOptions}
             </ValidatedField>
-            <Alert color="secondary">
-              If your item does not belong to any category listed above, we are unfortunately not accepting such items.
-              You may check out our beneficiaries wish list <HashLink to="/donate-right#wish-list">here</HashLink>.
-            </Alert>
+            {!category ? (
+              <Alert color="secondary">
+                If your item does not belong to any category listed above, we are unfortunately not accepting such items.
+                You may check out our beneficiaries wish list <HashLink to="/donate-right#wish-list">here</HashLink>.
+              </Alert>
+            ) : null}
             <ValidatedField
               label={translate('giftandgainFrontendApp.currentInventory.expiryDate')}
               id="expiryDate"
