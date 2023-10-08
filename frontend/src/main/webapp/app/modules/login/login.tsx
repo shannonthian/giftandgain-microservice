@@ -18,7 +18,15 @@ export const Login = () => {
     setShowModal(true);
   }, []);
 
-  const handleLogin = (username, password, rememberMe = false) => dispatch(login(username, password, rememberMe));
+  const handleLogin = (username, password, rememberMe = false) => {
+    dispatch(login(username, password, rememberMe));
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated]);
 
   const handleClose = () => {
     setShowModal(false);
