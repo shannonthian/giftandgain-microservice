@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { ITargetInventory } from 'app/shared/model/target-inventory.model';
 import { getEntity, deleteEntity } from './target-inventory.reducer';
 
 export const TargetInventoryDeleteDialog = () => {
@@ -22,8 +23,8 @@ export const TargetInventoryDeleteDialog = () => {
     setLoadModal(true);
   }, []);
 
-  const targetInventoryEntity = useAppSelector(state => state.targetInventory.entity);
-  const updateSuccess = useAppSelector(state => state.targetInventory.updateSuccess);
+  const targetInventoryEntity: ITargetInventory = useAppSelector(state => state.targetInventory.entity);
+  const updateSuccess: boolean = useAppSelector(state => state.targetInventory.updateSuccess);
 
   const handleClose = () => {
     navigate('/target-inventory');
@@ -38,7 +39,7 @@ export const TargetInventoryDeleteDialog = () => {
   }, [updateSuccess]);
 
   const confirmDelete = () => {
-    dispatch(deleteEntity(targetInventoryEntity.id));
+    dispatch(deleteEntity(targetInventoryEntity.targetId));
   };
 
   return (
@@ -47,7 +48,7 @@ export const TargetInventoryDeleteDialog = () => {
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
       <ModalBody id="giftandgainFrontendApp.targetInventory.delete.question">
-        <Translate contentKey="giftandgainFrontendApp.targetInventory.delete.question" interpolate={{ id: targetInventoryEntity.id }}>
+        <Translate contentKey="giftandgainFrontendApp.targetInventory.delete.question" interpolate={{ id: targetInventoryEntity.targetId }}>
           Are you sure you want to delete this TargetInventory?
         </Translate>
       </ModalBody>

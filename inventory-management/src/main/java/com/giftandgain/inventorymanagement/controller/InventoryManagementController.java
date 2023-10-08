@@ -48,6 +48,9 @@ public class InventoryManagementController {
 			@RequestParam(defaultValue = "asc") String direction) {
 
 		Pageable pageable;
+		 if ("category".equalsIgnoreCase(sort)) {
+		        sort = "category.category";
+		    }
 
 		// Check if sortBy parameter is provided
 		if (sort != null && !sort.trim().isEmpty()) {

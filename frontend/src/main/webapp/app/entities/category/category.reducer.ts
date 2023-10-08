@@ -1,42 +1,41 @@
 import axios from 'axios';
 import { createAsyncThunk, isFulfilled, isPending, isRejected } from '@reduxjs/toolkit';
+import { ASC } from 'app/shared/util/pagination.constants';
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
-import { ICurrentInventory, defaultValue } from 'app/shared/model/current-inventory.model';
+import { ICategory, defaultValue } from 'app/shared/model/category.model';
 
-const initialState: EntityState<ICurrentInventory> = {
+const initialState: EntityState<ICategory> = {
   loading: false,
   errorMessage: null,
   entities: [],
   entity: defaultValue,
   updating: false,
-  totalItems: 0,
   updateSuccess: false,
 };
 
-const apiUrl = 'giftandgain/inventory';
+const apiUrl = 'giftandgain/category';
 
 // Actions
 
-export const getEntities = createAsyncThunk('currentInventory/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
-  const sortSplit = sort.split(',');
-  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sortSplit[0]}&direction=${sortSplit[1]}` : ''}`;
-  return axios.get<ICurrentInventory[]>(requestUrl);
+export const getEntities = createAsyncThunk('category/fetch_entity_list', async ({ sort }: IQueryParams) => {
+  const requestUrl = `${apiUrl}`;
+  return axios.get<ICategory[]>(requestUrl);
 });
 
 export const getEntity = createAsyncThunk(
-  'currentInventory/fetch_entity',
+  'category/fetch_entity',
   async (id: string | number) => {
     const requestUrl = `${apiUrl}/${id}`;
-    return axios.get<ICurrentInventory>(requestUrl);
+    return axios.get<ICategory>(requestUrl);
   },
   { serializeError: serializeAxiosError }
 );
 
 export const createEntity = createAsyncThunk(
-  'currentInventory/create_entity',
-  async (entity: ICurrentInventory, thunkAPI) => {
-    const result = await axios.post<ICurrentInventory>(`${apiUrl}/create`, cleanEntity(entity));
+  'category/create_entity',
+  async (entity: ICategory, thunkAPI) => {
+    const result = await axios.post<ICategory>(`${apiUrl}/create`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -44,9 +43,9 @@ export const createEntity = createAsyncThunk(
 );
 
 export const updateEntity = createAsyncThunk(
-  'currentInventory/update_entity',
-  async (entity: ICurrentInventory, thunkAPI) => {
-    const result = await axios.put<ICurrentInventory>(`${apiUrl}/edit/${entity.inventoryId}`, cleanEntity(entity));
+  'category/update_entity',
+  async (entity: ICategory, thunkAPI) => {
+    const result = await axios.put<ICategory>(`${apiUrl}/edit/${entity.categoryId}`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -54,9 +53,9 @@ export const updateEntity = createAsyncThunk(
 );
 
 export const partialUpdateEntity = createAsyncThunk(
-  'currentInventory/partial_update_entity',
-  async (entity: ICurrentInventory, thunkAPI) => {
-    const result = await axios.patch<ICurrentInventory>(`${apiUrl}/edit/${entity.inventoryId}`, cleanEntity(entity));
+  'category/partial_update_entity',
+  async (entity: ICategory, thunkAPI) => {
+    const result = await axios.patch<ICategory>(`${apiUrl}/edit/${entity.categoryId}`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -64,10 +63,10 @@ export const partialUpdateEntity = createAsyncThunk(
 );
 
 export const deleteEntity = createAsyncThunk(
-  'currentInventory/delete_entity',
+  'category/delete_entity',
   async (id: string | number, thunkAPI) => {
     const requestUrl = `${apiUrl}/delete/${id}`;
-    const result = await axios.delete<ICurrentInventory>(requestUrl);
+    const result = await axios.delete<ICategory>(requestUrl);
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -76,8 +75,8 @@ export const deleteEntity = createAsyncThunk(
 
 // slice
 
-export const CurrentInventorySlice = createEntitySlice({
-  name: 'currentInventory',
+export const CategorySlice = createEntitySlice({
+  name: 'category',
   initialState,
   extraReducers(builder) {
     builder
@@ -91,13 +90,19 @@ export const CurrentInventorySlice = createEntitySlice({
         state.entity = {};
       })
       .addMatcher(isFulfilled(getEntities), (state, action) => {
-        const { data, headers } = action.payload;
+        const { data } = action.payload;
 
         return {
           ...state,
           loading: false,
-          entities: data,
-          totalItems: parseInt(headers['x-total-count'], 10),
+          entities: data.sort((a, b) => {
+            if (!action.meta?.arg?.sort) {
+              return 1;
+            }
+            const order = action.meta.arg.sort.split(',')[1];
+            const predicate = action.meta.arg.sort.split(',')[0];
+            return order === ASC ? (a[predicate] < b[predicate] ? -1 : 1) : b[predicate] < a[predicate] ? -1 : 1;
+          }),
         };
       })
       .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {
@@ -119,7 +124,7 @@ export const CurrentInventorySlice = createEntitySlice({
   },
 });
 
-export const { reset } = CurrentInventorySlice.actions;
+export const { reset } = CategorySlice.actions;
 
 // Reducer
-export default CurrentInventorySlice.reducer;
+export default CategorySlice.reducer;

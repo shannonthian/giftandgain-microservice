@@ -59,6 +59,12 @@ module.exports = async options =>
           secure: false,
           changeOrigin: options.tls,
         },
+        {
+          context: ['/giftandgain'],
+          target: `http${options.tls ? 's' : ''}://localhost:8001`,
+          secure: false,
+          changeOrigin: options.tls,
+        },
       ],
       https: options.tls,
       historyApiFallback: true,

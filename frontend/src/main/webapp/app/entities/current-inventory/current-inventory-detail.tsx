@@ -7,9 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
+import { ICurrentInventory } from 'app/shared/model/current-inventory.model';
 import { getEntity } from './current-inventory.reducer';
 
-export const CurrentInventoryDetail = () => {
+export const CurrentInventoryDetail = ({ isManager }) => {
   const dispatch = useAppDispatch();
 
   const { id } = useParams<'id'>();
@@ -18,7 +19,7 @@ export const CurrentInventoryDetail = () => {
     dispatch(getEntity(id));
   }, []);
 
-  const currentInventoryEntity = useAppSelector(state => state.currentInventory.entity);
+  const currentInventoryEntity: ICurrentInventory = useAppSelector(state => state.currentInventory.entity);
   return (
     <Row>
       <Col md="8">
@@ -31,13 +32,31 @@ export const CurrentInventoryDetail = () => {
               <Translate contentKey="global.field.id">ID</Translate>
             </span>
           </dt>
-          <dd>{currentInventoryEntity.id}</dd>
+          <dd>{currentInventoryEntity.inventoryId}</dd>
           <dt>
             <span id="itemName">
               <Translate contentKey="giftandgainFrontendApp.currentInventory.itemName">Item Name</Translate>
             </span>
           </dt>
           <dd>{currentInventoryEntity.itemName}</dd>
+          <dt>
+            <span id="category">
+              <Translate contentKey="giftandgainFrontendApp.currentInventory.category">Category</Translate>
+            </span>
+          </dt>
+          <dd>{currentInventoryEntity.category?.category}</dd>
+          <dt>
+            <span id="receivedQuantity">
+              <Translate contentKey="giftandgainFrontendApp.currentInventory.receivedQuantity">Received Quantity</Translate>
+            </span>
+          </dt>
+          <dd>{currentInventoryEntity.receivedQuantity}</dd>
+          <dt>
+            <span id="unit">
+              <Translate contentKey="giftandgainFrontendApp.category.unit">Unit</Translate>
+            </span>
+          </dt>
+          <dd>{currentInventoryEntity.category?.unit}</dd>
           <dt>
             <span id="expiryDate">
               <Translate contentKey="giftandgainFrontendApp.currentInventory.expiryDate">Expiry Date</Translate>
@@ -49,11 +68,27 @@ export const CurrentInventoryDetail = () => {
             ) : null}
           </dd>
           <dt>
-            <span id="quantity">
-              <Translate contentKey="giftandgainFrontendApp.currentInventory.quantity">Quantity</Translate>
+            <span id="createdBy">
+              <Translate contentKey="giftandgainFrontendApp.currentInventory.createdBy">Created By</Translate>
             </span>
           </dt>
-          <dd>{currentInventoryEntity.quantity}</dd>
+          <dd>{currentInventoryEntity.createdBy}</dd>
+          <dt>
+            <span id="createdDate">
+              <Translate contentKey="giftandgainFrontendApp.currentInventory.createdDate">Created Date</Translate>
+            </span>
+          </dt>
+          <dd>
+            {currentInventoryEntity.createdDate ? (
+              <TextFormat value={currentInventoryEntity.createdDate} type="date" format={APP_LOCAL_DATE_FORMAT} />
+            ) : null}
+          </dd>
+          <dt>
+            <span id="remarks">
+              <Translate contentKey="giftandgainFrontendApp.currentInventory.remarks">Remarks</Translate>
+            </span>
+          </dt>
+          <dd>{currentInventoryEntity.remarks}</dd>
         </dl>
         <Button tag={Link} to="/current-inventory" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
@@ -62,12 +97,14 @@ export const CurrentInventoryDetail = () => {
           </span>
         </Button>
         &nbsp;
-        <Button tag={Link} to={`/current-inventory/${currentInventoryEntity.id}/edit`} replace color="primary">
-          <FontAwesomeIcon icon="pencil-alt" />{' '}
-          <span className="d-none d-md-inline">
-            <Translate contentKey="entity.action.edit">Edit</Translate>
-          </span>
-        </Button>
+        {isManager ? (
+          <Button tag={Link} to={`/current-inventory/${currentInventoryEntity.inventoryId}/edit`} replace color="primary">
+            <FontAwesomeIcon icon="pencil-alt" />{' '}
+            <span className="d-none d-md-inline">
+              <Translate contentKey="entity.action.edit">Edit</Translate>
+            </span>
+          </Button>
+        ) : null}
       </Col>
     </Row>
   );

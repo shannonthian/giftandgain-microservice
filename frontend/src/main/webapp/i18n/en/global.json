@@ -6,10 +6,15 @@
       "home": "Home",
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
-        "main": "Entities",
+        "main": "Management",
         "currentInventory": "Current Inventory",
         "targetInventory": "Target Inventory",
+        "category": "Category",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
+      },
+      "donateRight": {
+        "main": "Donate Right",
+        "checkMyItem": "Check My Item"
       },
       "account": {
         "main": "Account",
@@ -100,7 +105,8 @@
       "open": "Open",
       "save": "Save",
       "view": "View",
-      "show": "Show {{otherEntity}}"
+      "show": "Show {{otherEntity}}",
+      "check": "Check"
     },
     "detail": {
       "field": "Field",
@@ -115,6 +121,8 @@
       "maxlength": "This field cannot be longer than {{ max }} characters.",
       "min": "This field should be at least {{ min }}.",
       "max": "This field cannot be more than {{ max }}.",
+      "minDate": "This field cannot be before {{ minDate }}.",
+      "maxDate": "This field cannot be after {{ maxDate }}.",
       "minbytes": "This field should be at least {{ min }} bytes.",
       "maxbytes": "This field cannot be more than {{ max }} bytes.",
       "pattern": "This field should follow pattern for {{ pattern }}.",

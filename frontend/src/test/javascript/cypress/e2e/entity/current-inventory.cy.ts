@@ -15,7 +15,15 @@ describe('CurrentInventory e2e test', () => {
   const currentInventoryPageUrlPattern = new RegExp('/current-inventory(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const currentInventorySample = { itemName: 'quicker Usability', expiryDate: '2023-09-03', quantity: 20611 };
+  const currentInventorySample = {
+    itemName: 'Transmasculine payment structure',
+    category: 31632,
+    receivedQuantity: 14545,
+    unit: 'Jewelery redundant',
+    expiryDate: '2023-09-02',
+    createdBy: 5074,
+    createdDate: '2023-09-03',
+  };
 
   let currentInventory;
 
@@ -165,12 +173,28 @@ describe('CurrentInventory e2e test', () => {
       cy.get(`[data-cy="itemName"]`).type('dry Haven');
       cy.get(`[data-cy="itemName"]`).should('have.value', 'dry Haven');
 
+      cy.get(`[data-cy="category"]`).type('7769');
+      cy.get(`[data-cy="category"]`).should('have.value', '7769');
+
+      cy.get(`[data-cy="receivedQuantity"]`).type('5102');
+      cy.get(`[data-cy="receivedQuantity"]`).should('have.value', '5102');
+
+      cy.get(`[data-cy="unit"]`).type('quicker Usability');
+      cy.get(`[data-cy="unit"]`).should('have.value', 'quicker Usability');
+
       cy.get(`[data-cy="expiryDate"]`).type('2023-09-03');
       cy.get(`[data-cy="expiryDate"]`).blur();
       cy.get(`[data-cy="expiryDate"]`).should('have.value', '2023-09-03');
 
-      cy.get(`[data-cy="quantity"]`).type('5103');
-      cy.get(`[data-cy="quantity"]`).should('have.value', '5103');
+      cy.get(`[data-cy="createdBy"]`).type('20610');
+      cy.get(`[data-cy="createdBy"]`).should('have.value', '20610');
+
+      cy.get(`[data-cy="createdDate"]`).type('2023-09-02');
+      cy.get(`[data-cy="createdDate"]`).blur();
+      cy.get(`[data-cy="createdDate"]`).should('have.value', '2023-09-02');
+
+      cy.get(`[data-cy="remarks"]`).type('Cheese Visionary');
+      cy.get(`[data-cy="remarks"]`).should('have.value', 'Cheese Visionary');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

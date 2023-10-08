@@ -9,21 +9,22 @@ import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.cons
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
+import { ICurrentInventory } from 'app/shared/model/current-inventory.model';
 import { getEntities } from './current-inventory.reducer';
 
-export const CurrentInventory = () => {
+export const CurrentInventory = ({ isManager }) => {
   const dispatch = useAppDispatch();
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const [paginationState, setPaginationState] = useState(
-    overridePaginationStateWithQueryParams(getPaginationState(location, ITEMS_PER_PAGE, 'id'), location.search)
+    overridePaginationStateWithQueryParams(getPaginationState(location, ITEMS_PER_PAGE, 'inventoryId'), location.search)
   );
 
-  const currentInventoryList = useAppSelector(state => state.currentInventory.entities);
-  const loading = useAppSelector(state => state.currentInventory.loading);
-  const totalItems = useAppSelector(state => state.currentInventory.totalItems);
+  const currentInventoryList: ICurrentInventory[] = useAppSelector(state => state.currentInventory.entities);
+  const loading: boolean = useAppSelector(state => state.currentInventory.loading);
+  const totalItems: number = useAppSelector(state => state.currentInventory.totalItems);
 
   const getAllEntities = () => {
     dispatch(
@@ -102,7 +103,7 @@ export const CurrentInventory = () => {
           <Link to="/current-inventory/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
             <FontAwesomeIcon icon="plus" />
             &nbsp;
-            <Translate contentKey="giftandgainFrontendApp.currentInventory.home.createBtnLabel">Create new Current Inventory</Translate>
+            <Translate contentKey="giftandgainFrontendApp.currentInventory.home.createLabel">Create new Current Inventory</Translate>
           </Link>
         </div>
       </h2>
@@ -111,21 +112,40 @@ export const CurrentInventory = () => {
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={sort('id')}>
+                <th className="hand" onClick={sort('inventoryId')}>
                   <Translate contentKey="giftandgainFrontendApp.currentInventory.id">ID</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
+                  <FontAwesomeIcon icon={getSortIconByFieldName('inventoryId')} />
                 </th>
                 <th className="hand" onClick={sort('itemName')}>
                   <Translate contentKey="giftandgainFrontendApp.currentInventory.itemName">Item Name</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('itemName')} />
                 </th>
+                <th className="hand" onClick={sort('category')}>
+                  <Translate contentKey="giftandgainFrontendApp.currentInventory.category">Category</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('category')} />
+                </th>
+                <th className="hand" onClick={sort('receivedQuantity')}>
+                  <Translate contentKey="giftandgainFrontendApp.currentInventory.receivedQuantity">Received Quantity</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('receivedQuantity')} />
+                </th>
+                <th className="hand">
+                  <Translate contentKey="giftandgainFrontendApp.category.unit">Unit</Translate>{' '}
+                </th>
                 <th className="hand" onClick={sort('expiryDate')}>
                   <Translate contentKey="giftandgainFrontendApp.currentInventory.expiryDate">Expiry Date</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('expiryDate')} />
                 </th>
-                <th className="hand" onClick={sort('quantity')}>
-                  <Translate contentKey="giftandgainFrontendApp.currentInventory.quantity">Quantity</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('quantity')} />
+                <th className="hand" onClick={sort('createdBy')}>
+                  <Translate contentKey="giftandgainFrontendApp.currentInventory.createdBy">Created By</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('createdBy')} />
+                </th>
+                <th className="hand" onClick={sort('createdDate')}>
+                  <Translate contentKey="giftandgainFrontendApp.currentInventory.createdDate">Created Date</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('createdDate')} />
+                </th>
+                <th className="hand" onClick={sort('remarks')}>
+                  <Translate contentKey="giftandgainFrontendApp.currentInventory.remarks">Remarks</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('remarks')} />
                 </th>
                 <th />
               </tr>
@@ -134,22 +154,31 @@ export const CurrentInventory = () => {
               {currentInventoryList.map((currentInventory, i) => (
                 <tr key={`entity-${i}`} data-cy="entityTable">
                   <td>
-                    <Button tag={Link} to={`/current-inventory/${currentInventory.id}`} color="link" size="sm">
-                      {currentInventory.id}
+                    <Button tag={Link} to={`/current-inventory/${currentInventory.inventoryId}`} color="link" size="sm">
+                      {currentInventory.inventoryId}
                     </Button>
                   </td>
                   <td>{currentInventory.itemName}</td>
+                  <td>{currentInventory.category.category}</td>
+                  <td>{currentInventory.receivedQuantity}</td>
+                  <td>{currentInventory.category.unit}</td>
                   <td>
                     {currentInventory.expiryDate ? (
                       <TextFormat type="date" value={currentInventory.expiryDate} format={APP_LOCAL_DATE_FORMAT} />
                     ) : null}
                   </td>
-                  <td>{currentInventory.quantity}</td>
+                  <td>{currentInventory.createdBy}</td>
+                  <td>
+                    {currentInventory.createdDate ? (
+                      <TextFormat type="date" value={currentInventory.createdDate} format={APP_LOCAL_DATE_FORMAT} />
+                    ) : null}
+                  </td>
+                  <td>{currentInventory.remarks}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button
                         tag={Link}
-                        to={`/current-inventory/${currentInventory.id}`}
+                        to={`/current-inventory/${currentInventory.inventoryId}`}
                         color="info"
                         size="sm"
                         data-cy="entityDetailsButton"
@@ -159,30 +188,34 @@ export const CurrentInventory = () => {
                           <Translate contentKey="entity.action.view">View</Translate>
                         </span>
                       </Button>
-                      <Button
-                        tag={Link}
-                        to={`/current-inventory/${currentInventory.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                        color="primary"
-                        size="sm"
-                        data-cy="entityEditButton"
-                      >
-                        <FontAwesomeIcon icon="pencil-alt" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.edit">Edit</Translate>
-                        </span>
-                      </Button>
-                      <Button
-                        tag={Link}
-                        to={`/current-inventory/${currentInventory.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                        color="danger"
-                        size="sm"
-                        data-cy="entityDeleteButton"
-                      >
-                        <FontAwesomeIcon icon="trash" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.delete">Delete</Translate>
-                        </span>
-                      </Button>
+                      {isManager ? (
+                        <Button
+                          tag={Link}
+                          to={`/current-inventory/${currentInventory.inventoryId}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                          color="primary"
+                          size="sm"
+                          data-cy="entityEditButton"
+                        >
+                          <FontAwesomeIcon icon="pencil-alt" />{' '}
+                          <span className="d-none d-md-inline">
+                            <Translate contentKey="entity.action.edit">Edit</Translate>
+                          </span>
+                        </Button>
+                      ) : null}
+                      {isManager ? (
+                        <Button
+                          tag={Link}
+                          to={`/current-inventory/${currentInventory.inventoryId}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                          color="danger"
+                          size="sm"
+                          data-cy="entityDeleteButton"
+                        >
+                          <FontAwesomeIcon icon="trash" />{' '}
+                          <span className="d-none d-md-inline">
+                            <Translate contentKey="entity.action.delete">Delete</Translate>
+                          </span>
+                        </Button>
+                      ) : null}
                     </div>
                   </td>
                 </tr>

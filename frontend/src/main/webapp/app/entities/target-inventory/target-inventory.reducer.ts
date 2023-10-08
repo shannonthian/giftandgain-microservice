@@ -14,12 +14,12 @@ const initialState: EntityState<ITargetInventory> = {
   updateSuccess: false,
 };
 
-const apiUrl = 'api/target-inventory';
+const apiUrl = 'giftandgain/target';
 
 // Actions
 
 export const getEntities = createAsyncThunk('targetInventory/fetch_entity_list', async ({ sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}?${sort ? `sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
+  const requestUrl = `${apiUrl}`;
   return axios.get<ITargetInventory[]>(requestUrl);
 });
 
@@ -35,7 +35,7 @@ export const getEntity = createAsyncThunk(
 export const createEntity = createAsyncThunk(
   'targetInventory/create_entity',
   async (entity: ITargetInventory, thunkAPI) => {
-    const result = await axios.post<ITargetInventory>(apiUrl, cleanEntity(entity));
+    const result = await axios.post<ITargetInventory>(`${apiUrl}/create`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -45,7 +45,7 @@ export const createEntity = createAsyncThunk(
 export const updateEntity = createAsyncThunk(
   'targetInventory/update_entity',
   async (entity: ITargetInventory, thunkAPI) => {
-    const result = await axios.put<ITargetInventory>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    const result = await axios.put<ITargetInventory>(`${apiUrl}/edit/${entity.targetId}`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -55,7 +55,7 @@ export const updateEntity = createAsyncThunk(
 export const partialUpdateEntity = createAsyncThunk(
   'targetInventory/partial_update_entity',
   async (entity: ITargetInventory, thunkAPI) => {
-    const result = await axios.patch<ITargetInventory>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    const result = await axios.patch<ITargetInventory>(`${apiUrl}/edit/${entity.targetId}`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -65,7 +65,7 @@ export const partialUpdateEntity = createAsyncThunk(
 export const deleteEntity = createAsyncThunk(
   'targetInventory/delete_entity',
   async (id: string | number, thunkAPI) => {
-    const requestUrl = `${apiUrl}/${id}`;
+    const requestUrl = `${apiUrl}/delete/${id}`;
     const result = await axios.delete<ITargetInventory>(requestUrl);
     thunkAPI.dispatch(getEntities({}));
     return result;
@@ -91,6 +91,7 @@ export const TargetInventorySlice = createEntitySlice({
       })
       .addMatcher(isFulfilled(getEntities), (state, action) => {
         const { data } = action.payload;
+
         return {
           ...state,
           loading: false,
@@ -100,7 +101,11 @@ export const TargetInventorySlice = createEntitySlice({
             }
             const order = action.meta.arg.sort.split(',')[1];
             const predicate = action.meta.arg.sort.split(',')[0];
-            return order === ASC ? (a[predicate] < b[predicate] ? -1 : 1) : b[predicate] < a[predicate] ? -1 : 1;
+            if (predicate === 'category' || predicate === 'unit' || predicate === 'status') {
+              return order === ASC ? (a.category[predicate] < b.category[predicate] ? -1 : 1) : b.category[predicate] < a.category[predicate] ? -1 : 1;
+            } else {
+              return order === ASC ? (a[predicate] < b[predicate] ? -1 : 1) : b[predicate] < a[predicate] ? -1 : 1;
+            }
           }),
         };
       })
