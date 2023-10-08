@@ -92,7 +92,10 @@ export const CheckMyItem = () => {
               name="itemCategory"
               data-cy="itemCategory"
               type="select"
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                setResult("");
+              }}
               validate={{
                 required: { value: true, message: translate('entity.validation.required') },
               }}
@@ -112,6 +115,9 @@ export const CheckMyItem = () => {
               name="expiryDate"
               data-cy="expiryDate"
               type="date"
+              onChange={(e) => {
+                setResult("");
+              }}
               validate={{
                 required: { value: true, message: translate('entity.validation.required') },
               }}
