@@ -16,7 +16,21 @@ export const Login = () => {
 
   useEffect(() => {
     setShowModal(true);
+    fetch('http://localhost:8003/api/login', {
+      credentials: 'include',
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body:new URLSearchParams({
+        'username': 'arnold',
+        'password': '1234',
+    })
+    })
+      .then(response => response.json())
+      .then(data => console.log(data));
   }, []);
+
 
   const handleLogin = (username, password, rememberMe = false) => dispatch(login(username, password, rememberMe));
 
