@@ -1,6 +1,5 @@
 package com.giftandgain.report.model;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 import org.springframework.data.annotation.Id;

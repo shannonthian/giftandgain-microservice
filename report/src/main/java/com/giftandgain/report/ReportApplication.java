@@ -1,17 +1,10 @@
 package com.giftandgain.report;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
-import com.giftandgain.report.model.InventoryManagement;
-import com.giftandgain.report.model.TargetInventory;
-import com.giftandgain.report.repository.InventoryManagementRepository;
-import com.giftandgain.report.repository.TargetInventoryRepository;
 @SpringBootApplication
 public class ReportApplication {
 
@@ -19,4 +12,8 @@ public class ReportApplication {
 		SpringApplication.run(ReportApplication.class, args);
 	}
 
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 }

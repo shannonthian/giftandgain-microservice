@@ -1,18 +1,18 @@
 services:
-  frontend:
-    container_name: frontend
-    build:
-      context: frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ".:/frontend"
-      - "/frontend/node_modules"
-    ports:
-      - 3001:9060
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - INVENTORY_MICROSERVICE_URL=http://localhost:16667
-      - AUTH_MICROSERVICE_URL=http://localhost:16668
+  # frontend:
+  #   container_name: frontend
+  #   build:
+  #     context: frontend
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ".:/frontend"
+  #     - "/frontend/node_modules"
+  #   ports:
+  #     - 3001:9060
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #     - INVENTORY_MICROSERVICE_URL=http://localhost:16667
+  #     - AUTH_MICROSERVICE_URL=http://localhost:16668
 
   inventory-management:
     container_name: inventory-management
@@ -24,41 +24,38 @@ services:
     networks:
       - spring-cloud-network
     depends_on:
-      - postgres
-    # command:
-    #   [
-    #     "./wait-for-it.sh",
-    #     "giftandgain-db:3306",
-    #     "java",
-    #     "-jar",
-    #     "/app/app.jar",
-    #   ]
+      - giftandgain-db
+    command:
+      [
+        "./wait-for-it.sh",
+        "giftandgain-db:3306",
+        "java",
+        "-jar",
+        "/app/app.jar",
+      ]
     environment:
-      # SPRING_DATASOURCE_URL: jdbc:mysql://giftandgain-db:3306/giftandgain
-      # SPRING_DATASOURCE_USERNAME: giftandgain
-      # SPRING_DATASOURCE_PASSWORD: giftandgain123
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_URL: jdbc:mysql://giftandgain-db:3306/giftandgain
+      SPRING_DATASOURCE_USERNAME: giftandgain
+      SPRING_DATASOURCE_PASSWORD: giftandgain123
       CORS_ALLOWED_ORIGINS: http://localhost:3001
 
-  auth:
-    container_name: auth
-    build:
-      context: auth
-      dockerfile: Dockerfile
-    image: auth:latest
-    ports:
-      - 16668:8080
-    depends_on:
-      - postgres
-    networks:
-      - spring-cloud-network
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: password
-      CORS_ALLOWED_ORIGINS: http://localhost:3001
+  # auth:
+  #   container_name: auth
+  #   build:
+  #     context: auth
+  #     dockerfile: Dockerfile
+  #   image: auth:latest
+  #   ports:
+  #     - 16668:8080
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - spring-cloud-network
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+  #     SPRING_DATASOURCE_USERNAME: user
+  #     SPRING_DATASOURCE_PASSWORD: password
+  #     CORS_ALLOWED_ORIGINS: http://localhost:3001
 
   report:
     container_name: report
@@ -69,24 +66,34 @@ services:
     ports:
       - 16669:8080
     depends_on:
-      - postgres
+      - giftandgain-db
     networks:
       - spring-cloud-network
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: password
+      REPORT_GENERATION_BASE_URL: http://localhost:16667/giftandgain/target/generate-report
       SPRING_DATA_MONGODB_URI:
 
-  postgres:
-    image: postgres
-    container_name: postgres
-    restart: always
+  # postgres:
+  #   image: postgres
+  #   container_name: postgres
+  #   restart: always
+  #   networks:
+  #     - spring-cloud-network
+  #   environment:
+  #     POSTGRES_USER: user
+  #     POSTGRES_PASSWORD: password
+
+  giftandgain-db:
+    image: mysql:8-oracle
     networks:
       - spring-cloud-network
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: giftandgain123
+      MYSQL_USER: giftandgain
+      MYSQL_PASSWORD: giftandgain123
+      MYSQL_DATABASE: giftandgain
+    ports:
+      - "3306:3306"
 
 networks:
   spring-cloud-network:

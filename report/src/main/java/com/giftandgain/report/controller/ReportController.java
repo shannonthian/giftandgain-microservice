@@ -3,9 +3,7 @@ package com.giftandgain.report.controller;
 import com.giftandgain.report.manager.ReportManager;
 import com.giftandgain.report.model.CustomResponse;
 import com.giftandgain.report.model.Report;
-import com.giftandgain.report.repository.InventoryManagementRepository;
 import com.giftandgain.report.repository.ReportRepository;
-import com.giftandgain.report.repository.TargetInventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,16 +16,11 @@ import java.util.List;
 @RestController
 @RequestMapping(path="/api/report")
 public class ReportController {
-
-    private final TargetInventoryRepository targetInventoryRepository;
-    private final InventoryManagementRepository inventoryManagementRepository;
     private final ReportManager reportManager;
     private final ReportRepository reportRepository;
 
     @Autowired
-    public ReportController(TargetInventoryRepository targetInventoryRepository, InventoryManagementRepository inventoryManagementRepository, ReportManager reportManager, ReportRepository reportRepository) {
-        this.targetInventoryRepository = targetInventoryRepository;
-        this.inventoryManagementRepository = inventoryManagementRepository;
+    public ReportController(ReportManager reportManager, ReportRepository reportRepository) {
         this.reportManager = reportManager;
         this.reportRepository = reportRepository;
     }
