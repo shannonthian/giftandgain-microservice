@@ -3,9 +3,7 @@ package com.giftandgain.report.controller;
 import com.giftandgain.report.manager.ReportManager;
 import com.giftandgain.report.model.CustomResponse;
 import com.giftandgain.report.model.Report;
-import com.giftandgain.report.repository.InventoryManagementRepository;
 import com.giftandgain.report.repository.ReportRepository;
-import com.giftandgain.report.repository.TargetInventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,28 +16,28 @@ import java.util.List;
 @RestController
 @RequestMapping(path="/api/report")
 public class ReportController {
-
-    private final TargetInventoryRepository targetInventoryRepository;
-    private final InventoryManagementRepository inventoryManagementRepository;
     private final ReportManager reportManager;
     private final ReportRepository reportRepository;
 
     @Autowired
-    public ReportController(TargetInventoryRepository targetInventoryRepository, InventoryManagementRepository inventoryManagementRepository, ReportManager reportManager, ReportRepository reportRepository) {
-        this.targetInventoryRepository = targetInventoryRepository;
-        this.inventoryManagementRepository = inventoryManagementRepository;
+    public ReportController(ReportManager reportManager, ReportRepository reportRepository) {
         this.reportManager = reportManager;
         this.reportRepository = reportRepository;
     }
 
     @GetMapping
     public @ResponseBody ResponseEntity<CustomResponse<Report>> findByMonthAndYear(
-        @RequestParam(required = false) String month,
-        @RequestParam(required = false) String year
+            @RequestParam(required = false) String month,
+            @RequestParam(required = false) String year
     ) {
-        List<Report> reports = Arrays.asList();
-    
-        if ((month != null && !isValidMonth(month)) || (year != null && !isValidYear(year))) {
+        int parsedMonth;
+        int parsedYear;
+
+        try {
+            // Attempt to parse the month and year into integers
+            parsedMonth = month != null ? Integer.parseInt(month) : -1;
+            parsedYear = year != null ? Integer.parseInt(year) : -1;
+        } catch (NumberFormatException ex) {
             HttpHeaders headers = new HttpHeaders();
             headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
             CustomResponse<Report> response = new CustomResponse<>();
@@ -47,16 +45,18 @@ public class ReportController {
             return new ResponseEntity<>(response, headers, HttpStatus.BAD_REQUEST);
         }
 
-        if (month == null && year == null) {
+        List<Report> reports = Arrays.asList();
+
+        if (parsedMonth == -1 && parsedYear == -1) {
             reports = reportRepository.findAll();
-        } else if (month != null && isValidMonth(month) && year == null) {
-            reports = reportRepository.findByMonth(month);
-        } else if (year != null && isValidYear(year) && month == null) {
-            reports = reportRepository.findByYear(year);
-        } else if (month != null && isValidMonth(month) && year != null && isValidYear(year)) {
-            reports = reportRepository.findByMonthAndYear(month, year);
+        } else if (parsedMonth != -1 && parsedYear == -1) {
+            reports = reportRepository.findByMonth(parsedMonth);
+        } else if (parsedYear != -1 && parsedMonth == -1) {
+            reports = reportRepository.findByYear(parsedYear);
+        } else if (parsedMonth != -1 && parsedYear != -1) {
+            reports = reportRepository.findByMonthAndYear(parsedMonth, parsedYear);
         }
-    
+
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
         CustomResponse<Report> response = new CustomResponse<>();
@@ -64,6 +64,7 @@ public class ReportController {
         response.setPayload(reports);
         return new ResponseEntity<>(response, headers, HttpStatus.OK);
     }
+
 
     @GetMapping("/download")
 	public ResponseEntity<CustomResponse<String>> downloadReport(
@@ -79,7 +80,22 @@ public class ReportController {
             return new ResponseEntity<>(response, headers, HttpStatus.BAD_REQUEST);
         }
 
-        List<Report> retrievedReports = reportRepository.findByMonthAndYear(month, year);
+        int parsedMonth;
+        int parsedYear;
+
+        try {
+            parsedMonth = Integer.parseInt(month);
+            parsedYear = Integer.parseInt(year);
+        } catch (NumberFormatException ex) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
+            CustomResponse<String> response = new CustomResponse<>();
+            response.setMessage("Invalid month or year format.");
+            response.setPayload(Arrays.asList());
+            return new ResponseEntity<>(response, headers, HttpStatus.BAD_REQUEST);
+        }
+
+        List<Report> retrievedReports = reportRepository.findByMonthAndYear(parsedMonth, parsedYear);
         
         if (retrievedReports.size() != 0) {
             HttpHeaders headers = new HttpHeaders();
@@ -93,9 +109,9 @@ public class ReportController {
             return new ResponseEntity<>(response, headers, HttpStatus.OK);
         }
 
-        String csvString = reportManager.generateCsv(month, year);
+        String csvString = reportManager.generateCsv(parsedMonth, parsedYear);
 
-        reportRepository.save(new Report(month, year, csvString));
+        reportRepository.save(new Report(parsedMonth, parsedYear, csvString));
 	   
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.set(HttpHeaders.CONTENT_TYPE, "application/json");

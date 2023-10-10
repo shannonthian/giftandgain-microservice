@@ -1,141 +1,117 @@
 package com.giftandgain.report.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity(name = "tb_inventory")
 public class InventoryManagement {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "inventory_id")
-	private Long inventoryId;
 
-	@Column(name = "item_name")
-	private String itemName;
+    private Long inventoryId;
 
-	@Column(name = "category")
-	private String category;
+    private String itemName;
 
-	@Column(name = "unit")
-	private String unit;
+    private Category category;
 
-	@Column(name = "received_quantity")
-	private int receivedQuantity;
 
-	@Column(name = "expiry_date")
-	private LocalDate expiryDate;
+    private BigDecimal receivedQuantity;
 
-	@Column(name = "created_date")
-	private LocalDateTime createdDate;
 
-	@Column(name = "remarks")
-	private String remarks;
+    private LocalDate expiryDate;
 
-	public InventoryManagement() {
 
-	}
+    private LocalDate createdDate;
 
-	@Override
-	public String toString() {
-		return "InventoryManagement [inventoryId=" + inventoryId + ", itemName=" + itemName + ", category=" + category + ", unit=" + unit
-				+ ", receivedQuantity=" + receivedQuantity + ", expiryDate=" + expiryDate + ", createdDate="
-				+ createdDate + ", remarks=" + remarks + "]";
-	}
 
-	public InventoryManagement(Long InventoryId, String itemName, String category, String unit, int receivedQuantity,
-			LocalDate expiryDate, LocalDateTime createdDate, String remarks) {
-		super();
-		this.inventoryId = InventoryId;
-		this.itemName = itemName;
-		this.category = category;
-		this.unit = unit;
-		this.receivedQuantity = receivedQuantity;
-		this.expiryDate = expiryDate;
-		this.createdDate = createdDate;
-		this.remarks = remarks;
-	}
+    private String remarks;
 
-		public InventoryManagement(String itemName, String category, String unit, int receivedQuantity,
-			LocalDate expiryDate, LocalDateTime createdDate, String remarks) {
-		super();
-		this.itemName = itemName;
-		this.category = category;
-		this.unit = unit;
-		this.receivedQuantity = receivedQuantity;
-		this.expiryDate = expiryDate;
-		this.createdDate = createdDate;
-		this.remarks = remarks;
-	}
 
-	public Long getInventoryId() {
-		return inventoryId;
-	}
+    private String createdBy;
 
-	public void setInventoryId(Long inventoryId) {
-		this.inventoryId = inventoryId;
-	}
+    public InventoryManagement() {
 
-	public String getItemName() {
-		return itemName;
-	}
+    }
 
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
+    @Override
+    public String toString() {
+        return "InventoryManagement [inventoryId=" + inventoryId + ", itemName=" + itemName + ", category=" + category + ",  receivedQuantity=" + receivedQuantity + ", expiryDate=" + expiryDate + ", createdDate="
+                + createdDate + ", remarks=" + remarks + ", createdBy=" + createdBy +",]";
+    }
 
-	public String getCategory() {
-		return category;
-	}
+    public InventoryManagement(Long InventoryId, String itemName, Category category, BigDecimal receivedQuantity,
+                               LocalDate expiryDate, LocalDate createdDate, String remarks, String createdBy) {
+        super();
+        this.inventoryId = InventoryId;
+        this.itemName = itemName;
+        this.category = category;
+        this.receivedQuantity = receivedQuantity;
+        this.expiryDate = expiryDate;
+        this.createdDate = createdDate;
+        this.remarks = remarks;
+        this.createdBy = createdBy;
+    }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+    public Long getInventoryId() {
+        return inventoryId;
+    }
 
-	public String getUnit() {
-		return unit;
-	}
+    public void setInventoryId(Long inventoryId) {
+        this.inventoryId = inventoryId;
+    }
 
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
+    public String getItemName() {
+        return itemName;
+    }
 
-	public int getReceivedQuantity() {
-		return receivedQuantity;
-	}
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
 
-	public void setReceivedQuantity(int receivedQuantity) {
-		this.receivedQuantity = receivedQuantity;
-	}
+    public Category getCategory() {
+        return category;
+    }
 
-	public LocalDate getExpiryDate() {
-		return expiryDate;
-	}
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
-	public void setExpiryDate(LocalDate expiryDate) {
-		this.expiryDate = expiryDate;
-	}
+    public BigDecimal getReceivedQuantity() {
+        return receivedQuantity;
+    }
 
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
-	}
+    public void setReceivedQuantity(BigDecimal receivedQuantity) {
+        this.receivedQuantity = receivedQuantity;
+    }
 
-	public void setCreatedDateToNow() {
-	    this.createdDate = LocalDateTime.now();
-	}
+    public LocalDate getExpiryDate() {
+        return expiryDate;
+    }
 
-	public String getRemarks() {
-		return remarks;
-	}
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
+    }
 
-	public void setRemarks(String remarks) {
-		this.remarks = remarks;
-	}
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDateToNow() {
+        this.createdDate = LocalDate.now();
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
 }
