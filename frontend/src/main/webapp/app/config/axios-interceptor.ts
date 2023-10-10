@@ -6,12 +6,10 @@ axios.defaults.timeout = TIMEOUT;
 axios.defaults.baseURL = SERVER_API_URL;
 
 const setupAxiosInterceptors = onUnauthenticated => {
-  console.log('setupAxiosInterceptors()');
   const onRequestSuccess = config => {
     const token = Storage.local.get('jhi-authenticationToken') || Storage.session.get('jhi-authenticationToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('Interceptor: Added Authorization header');
     }
     return config;
   };
