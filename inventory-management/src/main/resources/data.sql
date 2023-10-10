@@ -5,8 +5,8 @@ insert into tb_category (category_id, category, unit, status) values(103, 'Canne
 insert into tb_category (category_id, category, unit, status) values(104, 'Frozen Food', 'packs', 'A');
 
 -- Insert into tb_inventory
-insert into tb_inventory (inventory_id, item_name, category_id, received_quantity, expiry_date, created_date, remarks, created_by) values(10001, 'Rice', 101, 200, '2025-09-10','2023-09-10', 'this is a dry food', 'admin');
-insert into tb_inventory (inventory_id, item_name, category_id, received_quantity, expiry_date, created_date, remarks, created_by) values(10002, 'Noodles', 101, 30.5, '2025-09-11','2023-09-11', 'this is a dry food', 'admin');
+insert into tb_inventory (inventory_id, item_name, category_id, received_quantity, expiry_date, created_date, remarks, created_by) values(10001, 'Rice', 101, 200, '2025-09-10','2023-09-10', 'this is a dry food', 'admin123');
+insert into tb_inventory (inventory_id, item_name, category_id, received_quantity, expiry_date, created_date, remarks, created_by) values(10002, 'Noodles', 101, 30.5, '2025-09-11','2023-09-11', 'this is a dry food', 'admin123');
 insert into tb_inventory (inventory_id, item_name, category_id, received_quantity, expiry_date, created_date, remarks, created_by) values(10003, 'Tuna Can', 103, 500, '2025-09-12','2023-09-10', 'this is a dry food', 'admin');
 insert into tb_inventory (inventory_id, item_name, category_id, received_quantity, expiry_date, created_date, remarks, created_by) values(10004, 'Milk', 102, 300.89, '2025-10-10','2023-10-10', 'this is a dry food', 'admin');
 insert into tb_inventory (inventory_id, item_name, category_id, received_quantity, expiry_date, created_date, remarks, created_by) values(10005, 'Frozen Strawberries', 104, 10, '2025-09-20','2023-09-10', 'this is a dry food', 'admin');

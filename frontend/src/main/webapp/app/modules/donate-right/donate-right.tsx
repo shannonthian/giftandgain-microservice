@@ -10,6 +10,16 @@ export const DonateRight = () => {
 
   const { highPriorityWishList, lowPriorityWishList }: WishListState = useAppSelector(state => state.wishList);
 
+  /* uncomment section for cloud connection testing
+  useEffect(() => {
+    fetch('http://inventory-lb-internal-0a373638bf1c298a.elb.us-east-1.amazonaws.com/giftandgain/inventory', {
+      credentials: 'include',
+    })
+      .then(response => response.json())
+      .then(data => console.log(data));
+  }, []);
+  */
+
   useEffect(() => {
     const today = new Date();
     const month = today.getMonth() + 1;
