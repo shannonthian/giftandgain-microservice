@@ -124,6 +124,7 @@ export const Category = () => {
                           <Translate contentKey="entity.action.view">View</Translate>
                         </span>
                       </Button>
+                      &nbsp;
                       <Button tag={Link} to={`/category/${category.categoryId}/edit`} color="primary" size="sm" data-cy="entityEditButton">
                         <FontAwesomeIcon icon="pencil-alt" />{' '}
                         <span className="d-none d-md-inline">
@@ -131,6 +132,7 @@ export const Category = () => {
                         </span>
                       </Button>
                       {/*
+                      &nbsp;
                       <Button tag={Link} to={`/category/${category.categoryId}/delete`} color="danger" size="sm" data-cy="entityDeleteButton">
                         <FontAwesomeIcon icon="trash" />{' '}
                         <span className="d-none d-md-inline">

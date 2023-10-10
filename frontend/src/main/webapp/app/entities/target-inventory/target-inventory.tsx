@@ -149,6 +149,7 @@ export const TargetInventory = () => {
                           <Translate contentKey="entity.action.view">View</Translate>
                         </span>
                       </Button>
+                      &nbsp;
                       <Button
                         tag={Link}
                         to={`/target-inventory/${targetInventory.targetId}/edit`}
@@ -161,6 +162,7 @@ export const TargetInventory = () => {
                           <Translate contentKey="entity.action.edit">Edit</Translate>
                         </span>
                       </Button>
+                      &nbsp;
                       <Button
                         tag={Link}
                         to={`/target-inventory/${targetInventory.targetId}/delete`}
@@ -250,6 +252,7 @@ export const TargetInventory = () => {
                           <Translate contentKey="entity.action.view">View</Translate>
                         </span>
                       </Button>
+                      &nbsp;
                       <Button
                         tag={Link}
                         to={`/target-inventory/${targetInventory.targetId}/edit`}
@@ -262,6 +265,7 @@ export const TargetInventory = () => {
                           <Translate contentKey="entity.action.edit">Edit</Translate>
                         </span>
                       </Button>
+                      &nbsp;
                       <Button
                         tag={Link}
                         to={`/target-inventory/${targetInventory.targetId}/delete`}
