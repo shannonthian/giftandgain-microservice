@@ -128,9 +128,8 @@ export const CurrentInventory = ({ isManager }) => {
                   <Translate contentKey="giftandgainFrontendApp.currentInventory.receivedQuantity">Received Quantity</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('receivedQuantity')} />
                 </th>
-                <th className="hand" onClick={sort('unit')}>
+                <th className="hand">
                   <Translate contentKey="giftandgainFrontendApp.category.unit">Unit</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('unit')} />
                 </th>
                 <th className="hand" onClick={sort('expiryDate')}>
                   <Translate contentKey="giftandgainFrontendApp.currentInventory.expiryDate">Expiry Date</Translate>{' '}

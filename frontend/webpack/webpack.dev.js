@@ -50,6 +50,7 @@ module.exports = async options =>
       static: {
         directory: './target/classes/static/',
       },
+      allowedHosts: 'all',
       port: 9060,
       proxy: [
         {
@@ -73,8 +74,8 @@ module.exports = async options =>
       process.env.JHI_DISABLE_WEBPACK_LOGS
         ? null
         : new SimpleProgressWebpackPlugin({
-          format: options.stats === 'minimal' ? 'compact' : 'expanded',
-        }),
+            format: options.stats === 'minimal' ? 'compact' : 'expanded',
+          }),
       new BrowserSyncPlugin(
         {
           https: options.tls,
