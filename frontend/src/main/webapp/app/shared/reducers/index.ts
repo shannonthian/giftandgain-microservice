@@ -4,6 +4,7 @@ import { loadingBarReducer as loadingBar } from 'react-redux-loading-bar';
 import locale from './locale';
 import authentication from './authentication';
 import applicationProfile from './application-profile';
+import wishList from './wish-list';
 
 import administration from 'app/modules/administration/administration.reducer';
 import userManagement from 'app/modules/administration/user-management/user-management.reducer';
@@ -25,6 +26,7 @@ const rootReducer: ReducersMapObject = {
   password,
   settings,
   loadingBar,
+  wishList,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   ...entitiesReducers,
 };

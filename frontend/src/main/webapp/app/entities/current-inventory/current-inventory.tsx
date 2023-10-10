@@ -189,32 +189,38 @@ export const CurrentInventory = ({ isManager }) => {
                         </span>
                       </Button>
                       {isManager ? (
-                        <Button
-                          tag={Link}
-                          to={`/current-inventory/${currentInventory.inventoryId}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                          color="primary"
-                          size="sm"
-                          data-cy="entityEditButton"
-                        >
-                          <FontAwesomeIcon icon="pencil-alt" />{' '}
-                          <span className="d-none d-md-inline">
-                            <Translate contentKey="entity.action.edit">Edit</Translate>
-                          </span>
-                        </Button>
+                        <>
+                          &nbsp;
+                          <Button
+                            tag={Link}
+                            to={`/current-inventory/${currentInventory.inventoryId}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                            color="primary"
+                            size="sm"
+                            data-cy="entityEditButton"
+                          >
+                            <FontAwesomeIcon icon="pencil-alt" />{' '}
+                            <span className="d-none d-md-inline">
+                              <Translate contentKey="entity.action.edit">Edit</Translate>
+                            </span>
+                          </Button>
+                        </>
                       ) : null}
                       {isManager ? (
-                        <Button
-                          tag={Link}
-                          to={`/current-inventory/${currentInventory.inventoryId}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                          color="danger"
-                          size="sm"
-                          data-cy="entityDeleteButton"
-                        >
-                          <FontAwesomeIcon icon="trash" />{' '}
-                          <span className="d-none d-md-inline">
-                            <Translate contentKey="entity.action.delete">Delete</Translate>
-                          </span>
-                        </Button>
+                        <>
+                          &nbsp;
+                          <Button
+                            tag={Link}
+                            to={`/current-inventory/${currentInventory.inventoryId}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                            color="danger"
+                            size="sm"
+                            data-cy="entityDeleteButton"
+                          >
+                            <FontAwesomeIcon icon="trash" />{' '}
+                            <span className="d-none d-md-inline">
+                              <Translate contentKey="entity.action.delete">Delete</Translate>
+                            </span>
+                          </Button>
+                        </>
                       ) : null}
                     </div>
                   </td>

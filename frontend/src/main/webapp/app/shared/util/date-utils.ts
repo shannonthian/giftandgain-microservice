@@ -10,9 +10,11 @@ export const displayDefaultDateTime = () => dayjs().startOf('day').format(APP_LO
 
 export const convertDateToDateDisplay = (dateStr: string) => dayjs(new Date(dateStr)).format(DATE_DISPLAY_FORMAT);
 
-export const addMonth = (noOfMonths: number, dateFormat: string) => {
+export const addMonth = (startDate: number, noOfMonths: number, dateFormat: string) => {
   const date = new Date();
-  date.setDate(1);
+  if (startDate) {
+    date.setDate(startDate);
+  }
   date.setMonth(date.getMonth() + noOfMonths);
   const dateStr = dayjs(date).format(dateFormat);
   return dateStr;
