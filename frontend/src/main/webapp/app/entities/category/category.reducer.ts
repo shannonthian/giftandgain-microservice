@@ -4,7 +4,6 @@ import { ASC } from 'app/shared/util/pagination.constants';
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { ICategory, defaultValue } from 'app/shared/model/category.model';
-import { URL_CATEGORY } from 'app/config/constants';
 
 const initialState: EntityState<ICategory> = {
   loading: false,
@@ -15,17 +14,19 @@ const initialState: EntityState<ICategory> = {
   updateSuccess: false,
 };
 
+const apiUrl = 'giftandgain/category';
+
 // Actions
 
 export const getEntities = createAsyncThunk('category/fetch_entity_list', async ({ sort }: IQueryParams) => {
-  const requestUrl = `${URL_CATEGORY}`;
+  const requestUrl = `${apiUrl}`;
   return axios.get<ICategory[]>(requestUrl);
 });
 
 export const getEntity = createAsyncThunk(
   'category/fetch_entity',
   async (id: string | number) => {
-    const requestUrl = `${URL_CATEGORY}/${id}`;
+    const requestUrl = `${apiUrl}/${id}`;
     return axios.get<ICategory>(requestUrl);
   },
   { serializeError: serializeAxiosError }
@@ -34,7 +35,7 @@ export const getEntity = createAsyncThunk(
 export const createEntity = createAsyncThunk(
   'category/create_entity',
   async (entity: ICategory, thunkAPI) => {
-    const result = await axios.post<ICategory>(`${URL_CATEGORY}/create`, cleanEntity(entity));
+    const result = await axios.post<ICategory>(`${apiUrl}/create`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -44,7 +45,7 @@ export const createEntity = createAsyncThunk(
 export const updateEntity = createAsyncThunk(
   'category/update_entity',
   async (entity: ICategory, thunkAPI) => {
-    const result = await axios.put<ICategory>(`${URL_CATEGORY}/edit/${entity.categoryId}`, cleanEntity(entity));
+    const result = await axios.put<ICategory>(`${apiUrl}/edit/${entity.categoryId}`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -54,7 +55,7 @@ export const updateEntity = createAsyncThunk(
 export const partialUpdateEntity = createAsyncThunk(
   'category/partial_update_entity',
   async (entity: ICategory, thunkAPI) => {
-    const result = await axios.patch<ICategory>(`${URL_CATEGORY}/edit/${entity.categoryId}`, cleanEntity(entity));
+    const result = await axios.patch<ICategory>(`${apiUrl}/edit/${entity.categoryId}`, cleanEntity(entity));
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -64,7 +65,7 @@ export const partialUpdateEntity = createAsyncThunk(
 export const deleteEntity = createAsyncThunk(
   'category/delete_entity',
   async (id: string | number, thunkAPI) => {
-    const requestUrl = `${URL_CATEGORY}/delete/${id}`;
+    const requestUrl = `${apiUrl}/delete/${id}`;
     const result = await axios.delete<ICategory>(requestUrl);
     thunkAPI.dispatch(getEntities({}));
     return result;

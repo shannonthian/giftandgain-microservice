@@ -1,9 +1,6 @@
 package com.giftandgain.inventorymanagement.controller;
 
-import java.math.BigDecimal;
 import java.net.URI;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,38 +9,38 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.giftandgain.inventorymanagement.entity.Category;
-import com.giftandgain.inventorymanagement.entity.InventoryManagement;
-import com.giftandgain.inventorymanagement.repository.InventoryManagementRepository;
-import com.giftandgain.inventorymanagement.specification.InventoryManagementSpecification;
+import com.giftandgain.inventorymanagement.repository.CategoryRepository;
 
 @RestController
-public class InventoryManagementController {
+public class CategoryController {
 
-	private InventoryManagementRepository inventoryRepo;
+	private CategoryRepository categoryRepo;
 
-	public InventoryManagementController(InventoryManagementRepository inventoryRepo) {
-		this.inventoryRepo = inventoryRepo;
+	public CategoryController(CategoryRepository categoryRepo) {
+		this.categoryRepo = categoryRepo;
 	}
 
-	// Get all the items with pagination and sorting
-	@GetMapping("/giftandgain/inventory")
-	public ResponseEntity<List<InventoryManagement>> getInventoryList(@RequestParam(defaultValue = "0") int page,
+	@GetMapping("/giftandgain/category")
+	public ResponseEntity<List<Category>> getCategoryList(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String sort,
 			@RequestParam(defaultValue = "asc") String direction) {
 
 		Pageable pageable;
-		 if ("category".equalsIgnoreCase(sort)) {
-		        sort = "category.category";
-		    }
 
 		// Check if sortBy parameter is provided
 		if (sort != null && !sort.trim().isEmpty()) {
@@ -56,7 +53,7 @@ public class InventoryManagementController {
 			pageable = PageRequest.of(page, size); // No sorting
 		}
 
-		Page<InventoryManagement> result = inventoryRepo.findAll(pageable);
+		Page<Category> result = categoryRepo.findAll(pageable);
 		long totalItems = result.getTotalElements(); // Get total number of items
 
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -65,134 +62,81 @@ public class InventoryManagementController {
 		return ResponseEntity.ok().headers(responseHeaders).body(result.getContent());
 	}
 
-	// Get selected item
-	@GetMapping("/giftandgain/inventory/{id}")
-	public ResponseEntity<InventoryManagement> retrieveItem(@PathVariable Long id) {
-		Optional<InventoryManagement> inventoryManagement = inventoryRepo.findById(id);
+	// Get selected target
+	@GetMapping("giftandgain/category/{id}")
+	public ResponseEntity<Category> retrieveCategory(@PathVariable Long id) {
+		Optional<Category> category = categoryRepo.findById(id);
 
-		if (!inventoryManagement.isPresent()) {
+		if (!category.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found with id: " + id);
 		}
-
-		return new ResponseEntity<>(inventoryManagement.get(), HttpStatus.OK);
+		return new ResponseEntity<>(category.get(), HttpStatus.OK);
 	}
 
-	// Searching within the expiry date
-	@GetMapping("/giftandgain/inventory/search")
-	public ResponseEntity<List<InventoryManagement>> searchInventory(@RequestParam(required = false) String itemName,
-			@RequestParam(required = false) Long categoryId,
-			@RequestParam(required = false) BigDecimal receivedQuantity,
-			@RequestParam(required = false) String createdBy,
-			@RequestParam(required = false) String expiryStartDateStr,
-			@RequestParam(required = false) String expiryEndDateStr,
-			@RequestParam(required = false) String createdStartDateStr,
-		    @RequestParam(required = false) String createdEndDateStr,
-		    @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String sort,
-			@RequestParam(defaultValue = "asc") String direction) {
+	// Create new target
+	@PostMapping("giftandgain/category/create")
+	public ResponseEntity<Category> createCategory(@RequestBody Category category) {
 
-		LocalDate expiryStartDate = expiryStartDateStr != null
-				? LocalDate.parse(expiryStartDateStr, DateTimeFormatter.ofPattern("yyyyMMdd"))
-				: null;
-		LocalDate expiryEndDate = expiryEndDateStr != null
-				? LocalDate.parse(expiryEndDateStr, DateTimeFormatter.ofPattern("yyyyMMdd"))
-				: null;
-		LocalDate createdStartDate = createdStartDateStr != null
-	            ? LocalDate.parse(createdStartDateStr, DateTimeFormatter.ofPattern("yyyyMMdd"))
-	            : null;
-	    LocalDate createdEndDate = createdEndDateStr != null
-	            ? LocalDate.parse(createdEndDateStr, DateTimeFormatter.ofPattern("yyyyMMdd"))
-	            : null;
-
-	    Specification<InventoryManagement> spec = Specification
-	    	    .where(InventoryManagementSpecification.hasCategory(categoryId))
-				.and(InventoryManagementSpecification.hasItemName(itemName))
-				.and(InventoryManagementSpecification.hasReceivedQuantity(receivedQuantity))
-				.and(InventoryManagementSpecification.hasCreatedBy(createdBy))
-				.and(InventoryManagementSpecification.isExpiryDateBetween(expiryStartDate, expiryEndDate))
-				.and(InventoryManagementSpecification.isCreatedDateBetween(createdStartDate, createdEndDate));
-
-		Pageable pageable;
-
-		if (sort != null && !sort.trim().isEmpty()) {
-			if ("desc".equalsIgnoreCase(direction)) {
-				pageable = PageRequest.of(page, size, Sort.by(sort).descending());
-			} else {
-				pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
-			}
-		} else {
-			pageable = PageRequest.of(page, size); // No sorting
+		// Check if category with the same name and unit already exists
+		if (categoryRepo.existsByCategoryAndUnit(category.getCategory(), category.getUnit())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Category with the same name and unit already exists: " + category.getCategory() + ", "
+							+ category.getUnit());
 		}
 
-		Page<InventoryManagement> result = inventoryRepo.findAll(spec, pageable);
-		long totalItems = result.getTotalElements();
+		// Automatically set the status to 'A' for new categories
+		category.setStatus("A");
 
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("x-total-count", String.valueOf(totalItems));
-
-		return ResponseEntity.ok().headers(responseHeaders).body(result.getContent());
-	}
-
-	// Create new item
-	@PostMapping("/giftandgain/inventory/create")
-	public ResponseEntity<InventoryManagement> createItem(@RequestBody InventoryManagement inventoryManagement) {
-		// Set the createdDate to the current date and time
-		inventoryManagement.setCreatedDateToNow();
-
-		// Save the record with the current date as the createdDate
-		InventoryManagement savedItem = inventoryRepo.save(inventoryManagement);
+		Category savedItem = categoryRepo.save(category);
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(savedItem.getInventoryId()).toUri();
+				.buildAndExpand(savedItem.getCategoryId()).toUri();
 
 		return ResponseEntity.created(location).build();
 	}
 
-	@PutMapping("/giftandgain/inventory/edit/{id}")
-	public ResponseEntity<InventoryManagement> editItem(@PathVariable Long id,
-			@RequestBody InventoryManagement updatedInventory) {
-		Optional<InventoryManagement> inventoryOpt = inventoryRepo.findById(id);
+	// Update existing target
+	@PutMapping("/giftandgain/category/edit/{id}")
+	public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category updatedCategory){
 
-		if (!inventoryOpt.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found with id: " + id);
-		}
+	    Optional<Category> existingCategory = categoryRepo.findById(id);
+	    
+	    if (!existingCategory.isPresent()) {
+	        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found with id: " + id);
+	    }
 
-		InventoryManagement currentInventory = inventoryOpt.get();
-		currentInventory.setItemName(updatedInventory.getItemName());
-		currentInventory.setCategory(updatedInventory.getCategory());
-		currentInventory.setReceivedQuantity(updatedInventory.getReceivedQuantity());
-		currentInventory.setExpiryDate(updatedInventory.getExpiryDate());
-		currentInventory.setCreatedDateToNow();
-		inventoryRepo.save(currentInventory);
+	    // Check for duplication of category name and unit with another record excluding the current one
+	    if (categoryRepo.existsByCategoryAndUnitAndCategoryIdNot(updatedCategory.getCategory(), updatedCategory.getUnit(), id)) {
+	        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Another category with the same name and unit exists: " + updatedCategory.getCategory() + ", " + updatedCategory.getUnit());
+	    }
 
-		return new ResponseEntity<>(currentInventory, HttpStatus.OK);
+	 // Check if we're attempting to deactivate the only active category with that name
+	    if ("D".equals(updatedCategory.getStatus()) && categoryRepo.countByCategoryAndStatusAndCategoryIdNot(updatedCategory.getCategory(), "A", id) == 0) {
+	        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot deactivate the only active category with this name: " + updatedCategory.getCategory());
+	    }
+
+	    Category currentCategory = existingCategory.get();
+	    currentCategory.setCategory(updatedCategory.getCategory());
+	    currentCategory.setUnit(updatedCategory.getUnit());
+	    currentCategory.setStatus(updatedCategory.getStatus());
+	    
+	    Category updatedCategories = categoryRepo.save(currentCategory);
+	    
+	    return ResponseEntity.ok(updatedCategories);
 	}
 
-	// Delete selected item
-	@DeleteMapping("/giftandgain/inventory/delete/{id}")
-	public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
+
+	// Delete selected target
+	@DeleteMapping("/giftandgain/category/delete/{id}")
+	public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
 		try {
-			inventoryRepo.deleteById(id);
+			categoryRepo.deleteById(id);
 			return ResponseEntity.noContent().build(); // HTTP 204 No Content
 		} catch (EmptyResultDataAccessException e) {
 			// If the item with the provided id does not exist, you might want to handle it
 			// here
 			return ResponseEntity.notFound().build(); // HTTP 404 Not Found
 		}
-	}
-
-	// Get high priority category
-	@GetMapping("giftandgain/inventory/highpriority/{month}/{year}")
-	public ResponseEntity<List<String>> getHighPriorityCategories(@PathVariable int month, @PathVariable int year) {
-		List<String> highPriorityCategories = inventoryRepo.getHighPriorityList(month, year);
-		return new ResponseEntity<>(highPriorityCategories, HttpStatus.OK);
-	}
-
-	// Get low priority category
-	@GetMapping("giftandgain/inventory/lowpriority/{month}/{year}")
-	public ResponseEntity<List<String>> getLowPriorityCategories(@PathVariable int month, @PathVariable int year) {
-		List<String> lowPriorityCategories = inventoryRepo.getLowPriorityList(month, year);
-		return new ResponseEntity<>(lowPriorityCategories, HttpStatus.OK);
 	}
 
 }
