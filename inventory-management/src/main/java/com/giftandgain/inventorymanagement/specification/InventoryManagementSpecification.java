@@ -33,6 +33,16 @@ public class InventoryManagementSpecification {
 		return (root, cq, cb) -> receivedQuantity == null ? null
 				: cb.equal(root.get("receivedQuantity"), receivedQuantity);
 	}
+	
+	public static Specification<InventoryManagement> hasCreatedBy(String createdBy) {
+		return (root, cq, cb) -> {
+			if (createdBy != null && !createdBy.isEmpty()) {
+				return cb.like(cb.lower(root.get("createdBy")), "%" + createdBy.toLowerCase() + "%");
+			} else {
+				return null;
+			}
+		};
+	}
 
 	public static Specification<InventoryManagement> isExpiryDateBetween(LocalDate startDate, LocalDate endDate) {
 		return (root, cq, cb) -> {

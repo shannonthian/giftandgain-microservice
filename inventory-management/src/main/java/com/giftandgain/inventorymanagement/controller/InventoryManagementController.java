@@ -82,6 +82,7 @@ public class InventoryManagementController {
 	public ResponseEntity<List<InventoryManagement>> searchInventory(@RequestParam(required = false) String itemName,
 			@RequestParam(required = false) Long categoryId,
 			@RequestParam(required = false) BigDecimal receivedQuantity,
+			@RequestParam(required = false) String createdBy,
 			@RequestParam(required = false) String expiryStartDateStr,
 			@RequestParam(required = false) String expiryEndDateStr,
 			@RequestParam(required = false) String createdStartDateStr,
@@ -107,6 +108,7 @@ public class InventoryManagementController {
 	    	    .where(InventoryManagementSpecification.hasCategory(categoryId))
 				.and(InventoryManagementSpecification.hasItemName(itemName))
 				.and(InventoryManagementSpecification.hasReceivedQuantity(receivedQuantity))
+				.and(InventoryManagementSpecification.hasCreatedBy(createdBy))
 				.and(InventoryManagementSpecification.isExpiryDateBetween(expiryStartDate, expiryEndDate))
 				.and(InventoryManagementSpecification.isCreatedDateBetween(createdStartDate, createdEndDate));
 

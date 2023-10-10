@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export const DonateRight = () => {
+  useEffect(() => {
+    fetch('http://inventory-lb-internal-0a373638bf1c298a.elb.us-east-1.amazonaws.com/giftandgain/inventory', {
+      credentials: 'include',
+    })
+      .then(response => response.json())
+      .then(data => console.log(data));
+  }, []);
   return (
     <div className="p-5">
       <h3>DONATE RIGHT</h3>
       <br />
       <h4>
-        What is donating right?<br />
+        What is donating right?
+        <br />
         ...
       </h4>
       <br />
@@ -21,14 +29,16 @@ export const DonateRight = () => {
       <br />
       <br />
       <h5>
-        <u>High Priority Wish List</u><br />
+        <u>High Priority Wish List</u>
+        <br />
         1. <br />
         2. <br />
         3. <br />
       </h5>
       <br />
       <h5>
-        <u>Low Priority Wish List</u><br />
+        <u>Low Priority Wish List</u>
+        <br />
         1. <br />
         2. <br />
         3. <br />

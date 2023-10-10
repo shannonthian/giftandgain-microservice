@@ -14,7 +14,8 @@ public class InventoryManagementConfig {
 	            @Override
 	            public void addCorsMappings(CorsRegistry registry) {
 	                registry.addMapping("/**")
-	                        .allowedOrigins("http://localhost:3001")
+	                        .allowedOrigins("http://localhost:9001")
+							.allowedOrigins("http://frontend-balancer-601654883.us-east-1.elb.amazonaws.com:9060/")
 	                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 	                        .allowedHeaders("*")
 	                        .allowCredentials(true);
