@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export const DonateRight = () => {
   useEffect(() => {
-    fetch('https://ilvlzzz7b9.execute-api.us-east-1.amazonaws.com/inventory/giftandgain/inventory', {
+    fetch('https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory/giftandgain/inventory', {
       credentials: 'include',
     })
       .then(response => response.json())
