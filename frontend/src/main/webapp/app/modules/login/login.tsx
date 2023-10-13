@@ -16,7 +16,7 @@ export const Login = () => {
 
   useEffect(() => {
     setShowModal(true);
-    fetch('http://localhost:8003/api/login', {
+    fetch('https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice/api/login', {
       credentials: 'include',
       method: 'POST',
       headers: {
