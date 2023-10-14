@@ -61,7 +61,8 @@ module.exports = async options =>
         },
         {
           context: ['/giftandgain'],
-          target: `http${options.tls ? 's' : ''}://localhost:8001`,
+          //target: `http${options.tls ? 's' : ''}://localhost:8001`,
+          target: 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory',
           secure: false,
           changeOrigin: options.tls,
         },
