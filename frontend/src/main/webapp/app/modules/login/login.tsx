@@ -14,7 +14,7 @@ export const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  //uncomment section for cloud connection testing
+  /* uncomment section for cloud connection testing
   useEffect(() => {
     setShowModal(true);
     fetch('https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice/api/login', {
@@ -29,8 +29,12 @@ export const Login = () => {
       }),
     })
       .then(response => response.json())
-      .then(data => console.log(data));
+      .then(data => {
+        console.log(data);
+        sessionStorage.setItem('jhi-authenticationToken', data.access_token);
+      });
   }, []);
+  */
 
   useEffect(() => {
     setShowModal(true);

@@ -13,6 +13,10 @@ a {
   font-weight: bold;
 }
 
+.col-sm-6 .react-datepicker-wrapper {
+  display: block;
+}
+
 * {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
