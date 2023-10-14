@@ -43,6 +43,9 @@ pipeline {
                 dir('report'){
                   sh 'mvn clean install -DskipTests=true' 
                }
+                dir('userservice'){
+                  sh 'mvn clean install -DskipTests=true' 
+               }
             }
         }
          stage('Build docker image') { 
@@ -58,6 +61,10 @@ pipeline {
                 dir('report'){
                   sh 'docker build -t report:v3 .'
                   sh 'docker tag report:v3 ${ECR_REGISTRY}/listing-repository:report' 
+               }
+                dir('userservice'){
+                  sh 'docker build -t userservice:v3 .'
+                  sh 'docker tag userservice:v3 ${ECR_REGISTRY}/listing-repository:userservice' 
                }
                 dir('frontend'){
                   sh 'docker build -t frontend:v4 .'
@@ -76,6 +83,9 @@ pipeline {
                 dir('report'){
                        sh 'docker push ${ECR_REGISTRY}/listing-repository:report' 
             }
+                dir('userservice'){
+                       sh 'docker push ${ECR_REGISTRY}/listing-repository:userservice' 
+            }
                 dir('frontend'){
                        sh 'docker push ${ECR_REGISTRY}/listing-repository:frontend' 
             }
@@ -87,6 +97,7 @@ pipeline {
                 sh 'docker rmi ${ECR_REGISTRY}/listing-repository:listing'
                 sh 'docker rmi ${ECR_REGISTRY}/listing-repository:inventory'
                 sh 'docker rmi ${ECR_REGISTRY}/listing-repository:report'
+                sh 'docker rmi ${ECR_REGISTRY}/listing-repository:userservice'
                 sh 'docker rmi ${ECR_REGISTRY}/listing-repository:frontend'
             }
         }
