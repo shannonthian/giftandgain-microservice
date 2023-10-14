@@ -9,6 +9,25 @@ export const DonateRight = () => {
   const dispatch = useAppDispatch();
 
   const { highPriorityWishList, lowPriorityWishList }: WishListState = useAppSelector(state => state.wishList);
+  const data = {
+    inventoryId: "101",
+    itemName: "rice",
+    categoryId: "101",
+    receivedQuantity: 20,
+    expiryDate: "2025-10-10",
+    createdDate: "2025-10-10",
+    remarks: "hello",
+    createdBy: "admin"
+  };
+  
+  // Define the URL of the backend endpoint
+  const url = 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory/giftandgain/inventory/create';
+  
+  // Define the headers for the POST request
+  const headers = {
+    'Content-Type': 'application/json',
+    // You may need to include additional headers like authorization tokens, if required by your backend
+  };
 
 //uncomment section for cloud connection testing
   useEffect(() => {
@@ -17,6 +36,28 @@ export const DonateRight = () => {
     })
       .then(response => response.json())
       .then(data => console.log(data));
+    // Define the data to send
+
+// Create the POST request
+fetch(url, {
+  method: 'POST',
+  headers: headers,
+  body: JSON.stringify(data)
+})
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(responseData => {
+    // Handle the response from the server here
+    console.log('Response from server:', responseData);
+  })
+  .catch(error => {
+    // Handle any errors that occurred during the fetch
+    console.error('Error:', error);
+  });
   }, []);
  
  
