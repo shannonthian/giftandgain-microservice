@@ -10,7 +10,7 @@ export const DonateRight = () => {
 
   const { highPriorityWishList, lowPriorityWishList }: WishListState = useAppSelector(state => state.wishList);
 
-  /* uncomment section for cloud connection testing
+//uncomment section for cloud connection testing
   useEffect(() => {
     fetch('https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory/giftandgain/inventory', {
       credentials: 'include',
@@ -18,7 +18,8 @@ export const DonateRight = () => {
       .then(response => response.json())
       .then(data => console.log(data));
   }, []);
-  */
+ 
+ 
 
   useEffect(() => {
     const today = new Date();
