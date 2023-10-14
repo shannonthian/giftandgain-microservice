@@ -2,19 +2,36 @@ package com.giftandgain.report.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+@Entity(name = "tb_category")
 public class Category {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "category_id")
     private Long categoryId;
 
+    @Column(name = "category")
     private String category;
 
+    @Column(name = "unit")
     private String unit;
 
+    @Column(name = "status")
     private String status;
 
-
+    // Relationships
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<TargetInventory> targetInventories;
 
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<InventoryManagement> inventories;
 
     public Category() {
@@ -68,4 +85,5 @@ public class Category {
     }
 
 }
+
 

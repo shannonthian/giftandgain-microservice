@@ -1,30 +1,43 @@
 package com.giftandgain.report.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Entity(name = "tb_inventory")
 public class InventoryManagement {
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "inventory_id")
     private Long inventoryId;
 
+    @Column(name = "item_name")
     private String itemName;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
-
+    @Column(name = "received_quantity")
     private BigDecimal receivedQuantity;
 
-
+    @Column(name = "expiry_date")
     private LocalDate expiryDate;
 
-
+    @Column(name = "created_date")
     private LocalDate createdDate;
 
-
+    @Column(name = "remarks")
     private String remarks;
 
-
+    @Column(name = "created_by")
     private String createdBy;
 
     public InventoryManagement() {

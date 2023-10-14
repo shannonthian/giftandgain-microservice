@@ -3,18 +3,30 @@ package com.giftandgain.report.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity(name = "tb_target_inventory")
 public class TargetInventory {
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "target_id")
     private Long targetId;
 
-
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
-
+    @Column(name = "target_quantity")
     private BigDecimal targetQuantity;
 
-
+    @Column(name = "target_month_year")
     private LocalDate targetMonthYear;
 
     public TargetInventory() {

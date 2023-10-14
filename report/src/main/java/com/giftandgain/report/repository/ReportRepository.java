@@ -10,4 +10,7 @@ public interface ReportRepository extends MongoRepository<Report, String> {
     List<Report> findByMonthAndYear(int month, int year);
     List<Report> findByMonth(int month);
     List<Report> findByYear(int year);
+    void deleteByMonthAndYear(int month, int year);
+    void deleteByMonth(int month);
+    void deleteByYear(int year);
 }

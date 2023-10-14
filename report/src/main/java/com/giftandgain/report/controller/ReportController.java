@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -34,7 +35,6 @@ public class ReportController {
         int parsedYear;
 
         try {
-            // Attempt to parse the month and year into integers
             parsedMonth = month != null ? Integer.parseInt(month) : -1;
             parsedYear = year != null ? Integer.parseInt(year) : -1;
         } catch (NumberFormatException ex) {
@@ -71,27 +71,25 @@ public class ReportController {
         @RequestParam(required = false) String month,
         @RequestParam(required = false) String year
     ) {
-        if (month == null || year == null || !isValidMonth(month) || !isValidYear(year)) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
-            CustomResponse<String> response = new CustomResponse<>();
-            response.setMessage("Invalid month or year format.");
-            response.setPayload(Arrays.asList());
-            return new ResponseEntity<>(response, headers, HttpStatus.BAD_REQUEST);
-        }
-
         int parsedMonth;
         int parsedYear;
 
+        if (month == null || year == null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
+            CustomResponse<String> response = new CustomResponse<>();
+            response.setMessage("Month and year are required.");
+            return new ResponseEntity<>(response, headers, HttpStatus.BAD_REQUEST);
+        }
+
         try {
-            parsedMonth = Integer.parseInt(month);
-            parsedYear = Integer.parseInt(year);
+            parsedMonth = month != null ? Integer.parseInt(month) : -1;
+            parsedYear = year != null ? Integer.parseInt(year) : -1;
         } catch (NumberFormatException ex) {
             HttpHeaders headers = new HttpHeaders();
             headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
             CustomResponse<String> response = new CustomResponse<>();
             response.setMessage("Invalid month or year format.");
-            response.setPayload(Arrays.asList());
             return new ResponseEntity<>(response, headers, HttpStatus.BAD_REQUEST);
         }
 
@@ -105,22 +103,61 @@ public class ReportController {
 
             CustomResponse<String> response = new CustomResponse<>();
             response.setMessage("Report retrieved.");
-            response.setPayload(Arrays.asList(reportString));
+            response.setPayload(Collections.singletonList(reportString));
             return new ResponseEntity<>(response, headers, HttpStatus.OK);
         }
 
-        String csvString = reportManager.generateCsv(parsedMonth, parsedYear);
+        String csvDataString = reportManager.generateCsv(parsedMonth, parsedYear);
 
-        reportRepository.save(new Report(parsedMonth, parsedYear, csvString));
+        reportRepository.save(new Report(parsedMonth, parsedYear, csvDataString));
 	   
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
 
         CustomResponse<String> response = new CustomResponse<>();
         response.setMessage("Report generated.");
-        response.setPayload(Arrays.asList(csvString));
+        response.setPayload(Arrays.asList(csvDataString));
 	    return new ResponseEntity<>(response, headers, HttpStatus.OK);
 	}
+
+    @GetMapping("/delete")
+    public @ResponseBody ResponseEntity<CustomResponse<Report>> deleteByMonthAndYear(
+            @RequestParam(required = false) String month,
+            @RequestParam(required = false) String year
+    ) {
+        int parsedMonth;
+        int parsedYear;
+
+        try {
+            parsedMonth = month != null ? Integer.parseInt(month) : -1;
+            parsedYear = year != null ? Integer.parseInt(year) : -1;
+        } catch (NumberFormatException ex) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
+            CustomResponse<Report> response = new CustomResponse<>();
+            response.setMessage("Invalid month or year format.");
+            return new ResponseEntity<>(response, headers, HttpStatus.BAD_REQUEST);
+        }
+
+        List<Report> reports = Arrays.asList();
+
+        if (parsedMonth == -1 && parsedYear == -1) {
+            reportRepository.deleteAll();
+        } else if (parsedMonth != -1 && parsedYear == -1) {
+            reportRepository.deleteByMonth(parsedMonth);
+        } else if (parsedYear != -1 && parsedMonth == -1) {
+            reportRepository.deleteByYear(parsedYear);
+        } else if (parsedMonth != -1 && parsedYear != -1) {
+           reportRepository.deleteByMonthAndYear(parsedMonth, parsedYear);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
+        CustomResponse<Report> response = new CustomResponse<>();
+        response.setMessage("Reports deleted.");
+        response.setPayload(reports);
+        return new ResponseEntity<>(response, headers, HttpStatus.OK);
+    }
 
     private boolean isValidMonth(String month) {
         return month.length() == 2 && isInteger(month);

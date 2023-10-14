@@ -42,7 +42,7 @@ services:
   # auth:
   #   container_name: auth
   #   build:
-  #     context: auth
+  #     context: userservice
   #     dockerfile: Dockerfile
   #   image: auth:latest
   #   ports:
@@ -70,7 +70,9 @@ services:
     networks:
       - spring-cloud-network
     environment:
-      REPORT_GENERATION_BASE_URL: http://localhost:16667/giftandgain/target/generate-report
+      SPRING_DATASOURCE_URL: jdbc:mysql://giftandgain-db:3306/giftandgain
+      SPRING_DATASOURCE_USERNAME: giftandgain
+      SPRING_DATASOURCE_PASSWORD: giftandgain123
       SPRING_DATA_MONGODB_URI:
 
   # postgres:
