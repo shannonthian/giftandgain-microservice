@@ -37,9 +37,6 @@ pipeline {
                 dir('inventory-management'){
                   sh 'mvn clean install -DskipTests=true' 
                }
-                dir('listing'){
-                  sh 'mvn clean install -DskipTests=true' 
-               }
                 dir('report'){
                   sh 'mvn clean install -DskipTests=true' 
                }
@@ -50,10 +47,6 @@ pipeline {
         }
          stage('Build docker image') { 
             steps {
-                dir('listing'){
-                  sh 'docker build -t listing:v3 .'
-                  sh 'docker tag listing:v3 ${ECR_REGISTRY}/listing-repository:listing' 
-               }
                 dir('inventory-management'){
                   sh 'docker build -t inventory:v3 .'
                   sh 'docker tag inventory:v3 ${ECR_REGISTRY}/listing-repository:inventory' 
@@ -74,9 +67,6 @@ pipeline {
         }
          stage('Pushing image to AWS ECR') { 
             steps {
-                dir('listing'){
-                       sh 'docker push ${ECR_REGISTRY}/listing-repository:listing' 
-            }
                 dir('inventory-management'){
                        sh 'docker push ${ECR_REGISTRY}/listing-repository:inventory' 
             }
@@ -94,7 +84,6 @@ pipeline {
          stage ('Remove Image from Jenkins'){
         steps{
             script{
-                sh 'docker rmi ${ECR_REGISTRY}/listing-repository:listing'
                 sh 'docker rmi ${ECR_REGISTRY}/listing-repository:inventory'
                 sh 'docker rmi ${ECR_REGISTRY}/listing-repository:report'
                 sh 'docker rmi ${ECR_REGISTRY}/listing-repository:userservice'
