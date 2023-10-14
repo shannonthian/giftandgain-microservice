@@ -5,6 +5,7 @@ import locale from './locale';
 import authentication from './authentication';
 import applicationProfile from './application-profile';
 import wishList from './wish-list';
+import user from './user';
 
 import administration from 'app/modules/administration/administration.reducer';
 import userManagement from 'app/modules/administration/user-management/user-management.reducer';
@@ -27,6 +28,7 @@ const rootReducer: ReducersMapObject = {
   settings,
   loadingBar,
   wishList,
+  user,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   ...entitiesReducers,
 };
