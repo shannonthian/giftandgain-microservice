@@ -15,22 +15,22 @@ export const Login = () => {
   const location = useLocation();
 
   //uncomment section for cloud connection testing
-  useEffect(() => {
-    setShowModal(true);
-    fetch('https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice/api/login', {
-      credentials: 'include',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        username: 'arnold',
-        password: '1234',
-      }),
-    })
-      .then(response => response.json())
-      .then(data => console.log(data));
-  }, []);
+  // useEffect(() => {
+  //   setShowModal(true);
+  //   fetch('https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice/api/login', {
+  //     credentials: 'include',
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/x-www-form-urlencoded',
+  //     },
+  //     body: new URLSearchParams({
+  //       username: 'arnold',
+  //       password: '1234',
+  //     }),
+  //   })
+  //     .then(response => response.json())
+  //     .then(data => console.log(data));
+  // }, []);
 
   useEffect(() => {
     setShowModal(true);

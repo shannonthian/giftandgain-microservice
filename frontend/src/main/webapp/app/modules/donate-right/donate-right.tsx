@@ -30,35 +30,35 @@ export const DonateRight = () => {
   };
 
 //uncomment section for cloud connection testing
-  useEffect(() => {
-    fetch('https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory/giftandgain/inventory', {
-      credentials: 'include',
-    })
-      .then(response => response.json())
-      .then(data => console.log(data));
-    // Define the data to send
+//   useEffect(() => {
+//     fetch('https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory/giftandgain/inventory', {
+//       credentials: 'include',
+//     })
+//       .then(response => response.json())
+//       .then(data => console.log(data));
+//     // Define the data to send
 
-// Create the POST request
-fetch(url, {
-  method: 'POST',
-  headers: headers,
-  body: JSON.stringify(data)
-})
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return response.json();
-  })
-  .then(responseData => {
-    // Handle the response from the server here
-    console.log('Response from server:', responseData);
-  })
-  .catch(error => {
-    // Handle any errors that occurred during the fetch
-    console.error('Error:', error);
-  });
-  }, []);
+// // Create the POST request
+// fetch(url, {
+//   method: 'POST',
+//   headers: headers,
+//   body: JSON.stringify(data)
+// })
+//   .then(response => {
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! Status: ${response.status}`);
+//     }
+//     return response.json();
+//   })
+//   .then(responseData => {
+//     // Handle the response from the server here
+//     console.log('Response from server:', responseData);
+//   })
+//   .catch(error => {
+//     // Handle any errors that occurred during the fetch
+//     console.error('Error:', error);
+//   });
+//   }, []);
  
  
 
