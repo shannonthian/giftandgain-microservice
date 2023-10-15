@@ -19,7 +19,7 @@ export const Home = () => {
         <h2>
           <Translate contentKey="home.title">Gift & Gain</Translate>
         </h2>
-        <p className="lead " style={{ textAlign: "justify" }}>
+        <p className="lead" style={{ textAlign: "justify" }}>
           <b>
             Gift & Gain Application aims to be a leading user-friendly digital platform
             for food charity organizations and potential donors.

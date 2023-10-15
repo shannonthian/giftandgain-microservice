@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Translate } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { WishListState, getHighPriorityWishList, getLowPriorityWishList } from 'app/shared/reducers/wish-list';
 
@@ -55,16 +53,17 @@ export const DonateRight = () => {
       <h3>
         What is donating right?
       </h3>
-      <p className="lead " style={{ textAlign: "justify" }}>
+      <p className="lead" style={{ textAlign: "justify" }}>
         <b>
           The act of donating is one of goodwill and with the intention to help others.
           However, not all food items are suitable for donation, such as expired products and junk food.
           The best donations are those that are well-portioned, safe and easy to consume,
           and are nutrionally-appropriate for our beneficiaries.
           <br /> <br />
-          <u>Safe and Easy to Consume</u>
+          <u><b>Safe and Easy to Consume</b></u>
           <br />
-          As a rule of thumb, we only accept food items that have <b>expiry dates of 3 months and beyond</b>.
+          As a rule of thumb, we only accept food items that have
+          <b style={{ color: "red" }}> expiry dates of 3 months and beyond</b>.
           We need to account for the time taken for donation items to reach our beneficiaries,
           and the time they take to finish the food.
           Food items that have opened and damaged packaging are also unacceptable.
@@ -74,19 +73,11 @@ export const DonateRight = () => {
           If you are unsure about the suitability of your item for donation, do check it out <Link to="/donate-right/check-my-item">here</Link>.
         </b>
       </p>
-      {/*
-      <Link to="/donate-right/check-my-item" className="btn btn-primary">
-        <FontAwesomeIcon icon="search" />
-        &nbsp;
-        <Translate contentKey="global.menu.donateRight.checkMyItem">Check My Item</Translate>
-      </Link>
-      <br />
-      */}
       <br />
       <h3>
         What items do our beneficiaries need?
       </h3>
-      <p className="lead " style={{ textAlign: "justify" }}>
+      <p className="lead" style={{ textAlign: "justify" }}>
         <b>
           We actively update our wish list below according to donations we have already received.
           <br />
@@ -94,25 +85,11 @@ export const DonateRight = () => {
           <br /> <br />
           <u id="wish-list"><b>Food Donation Wish List</b></u>
           <br />
+          <span style={{ color: "red" }}>(ordered from highest to lowest priority)</span>
+          <br />
           {highPriorityWishList.length ? highPriorityListing : lowPriorityListing}
         </b>
       </p>
-      {/* 
-      <br />
-      <h5>
-        <u>High Priority Wish List</u><br />
-        1. <br />
-        2. <br />
-        3. <br />
-      </h5>
-      <br />
-      <h5 style={{ fontWeight: "normal" }}>
-        <u>Low Priority Wish List</u><br />
-        1. <br />
-        2. <br />
-        3. <br />
-      </h5>
-      */}
     </div>
   );
 };
