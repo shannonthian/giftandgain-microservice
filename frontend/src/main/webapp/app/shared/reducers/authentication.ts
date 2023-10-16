@@ -6,6 +6,7 @@ import { serializeAxiosError } from './reducer.utils';
 import { AppThunk } from 'app/config/store';
 import { setLocale } from 'app/shared/reducers/locale';
 import { API_ACCOUNT, API_LOGIN } from 'app/config/constants';
+import { convertStringToHtmlSafeString } from '../util/other-utils';
 
 const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
 
@@ -47,7 +48,13 @@ interface IAuthParams {
 
 export const authenticate = createAsyncThunk(
   'authentication/login',
-  async (auth: IAuthParams) => axios.post<any>(API_LOGIN, auth),
+  async ({ username, password }: IAuthParams) =>
+    axios.get<any>(API_LOGIN, {
+      params: {
+        username: convertStringToHtmlSafeString(username),
+        password: convertStringToHtmlSafeString(password),
+      },
+    }),
   {
     serializeError: serializeAxiosError,
   }
@@ -55,20 +62,20 @@ export const authenticate = createAsyncThunk(
 
 export const login: (username: string, password: string, rememberMe?: boolean) => AppThunk =
   (username, password, rememberMe = false) =>
-    async dispatch => {
-      const result = await dispatch(authenticate({ username, password }));
-      const response = result.payload as AxiosResponse;
-      const bearerToken = response?.headers?.authorization;
-      if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
-        const jwt = bearerToken.slice(7, bearerToken.length);
-        if (rememberMe) {
-          Storage.local.set(AUTH_TOKEN_KEY, jwt);
-        } else {
-          Storage.session.set(AUTH_TOKEN_KEY, jwt);
-        }
-      }
-      dispatch(getSession());
-    };
+  async dispatch => {
+    const result = await dispatch(authenticate({ username, password }));
+    const response = result.payload as AxiosResponse;
+    const access_token = response?.data?.access_token;
+    console.log('access_token', access_token);
+
+    if (rememberMe) {
+      Storage.local.set(AUTH_TOKEN_KEY, access_token);
+    } else {
+      Storage.session.set(AUTH_TOKEN_KEY, access_token);
+    }
+
+    dispatch(getSession());
+  };
 
 export const clearAuthToken = () => {
   if (Storage.local.get(AUTH_TOKEN_KEY)) {
@@ -140,7 +147,7 @@ export const AuthenticationSlice = createSlice({
         errorMessage: action.error.message,
       }))
       .addCase(getAccount.fulfilled, (state, action) => {
-        const isAuthenticated = action.payload && action.payload.data && action.payload.data.activated;
+        const isAuthenticated = action.payload && action.payload.data && action.payload.data.username;
         return {
           ...state,
           isAuthenticated,
