@@ -7,6 +7,7 @@ import { AppThunk } from 'app/config/store';
 import { setLocale } from 'app/shared/reducers/locale';
 import { API_ACCOUNT, API_LOGIN } from 'app/config/constants';
 import { convertStringToHtmlSafeString } from '../util/other-utils';
+import { IUser } from './user';
 
 const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
 
@@ -16,7 +17,7 @@ export const initialState = {
   loginSuccess: false,
   loginError: false, // Errors returned from server side
   showModalLogin: false,
-  account: {} as any,
+  account: {} as IUser,
   errorMessage: null as unknown as string, // Errors returned from server side
   redirectMessage: null as unknown as string,
   sessionHasBeenFetched: false,
@@ -62,20 +63,20 @@ export const authenticate = createAsyncThunk(
 
 export const login: (username: string, password: string, rememberMe?: boolean) => AppThunk =
   (username, password, rememberMe = false) =>
-  async dispatch => {
-    const result = await dispatch(authenticate({ username, password }));
-    const response = result.payload as AxiosResponse;
-    const access_token = response?.data?.access_token;
-    console.log('access_token', access_token);
+    async dispatch => {
+      const result = await dispatch(authenticate({ username, password }));
+      const response = result.payload as AxiosResponse;
+      const access_token = response?.data?.access_token;
+      console.log('access_token', access_token);
 
-    if (rememberMe) {
-      Storage.local.set(AUTH_TOKEN_KEY, access_token);
-    } else {
-      Storage.session.set(AUTH_TOKEN_KEY, access_token);
-    }
+      if (rememberMe) {
+        Storage.local.set(AUTH_TOKEN_KEY, access_token);
+      } else {
+        Storage.session.set(AUTH_TOKEN_KEY, access_token);
+      }
 
-    dispatch(getSession());
-  };
+      dispatch(getSession());
+    };
 
 export const clearAuthToken = () => {
   if (Storage.local.get(AUTH_TOKEN_KEY)) {

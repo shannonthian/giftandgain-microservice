@@ -6,9 +6,10 @@ import { Translate } from 'react-jhipster';
 import { Row, Col, Alert } from 'reactstrap';
 
 import { useAppSelector } from 'app/config/store';
+import { AuthenticationState } from 'app/shared/reducers/authentication';
 
 export const Home = () => {
-  const account = useAppSelector(state => state.authentication.account);
+  const { account }: AuthenticationState = useAppSelector(state => state.authentication);
 
   return (
     <Row>
@@ -33,11 +34,11 @@ export const Home = () => {
           <Translate contentKey="home.subtitle">This is your homepage</Translate>
         </p>
         */}
-        {account?.login ? (
+        {account?.username ? (
           <div>
             <Alert color="success">
-              <Translate contentKey="home.logged.message" interpolate={{ username: account.login }}>
-                You are logged in as user {account.login}.
+              <Translate contentKey="home.logged.message" interpolate={{ username: account.username }}>
+                You are logged in as user {account.username}.
               </Translate>
             </Alert>
           </div>
