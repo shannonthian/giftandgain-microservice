@@ -28,6 +28,7 @@ export const APP_WHOLE_NUMBER_FORMAT = '0,0';
 export const APP_TWO_DIGITS_AFTER_POINT_NUMBER_FORMAT = '0,0.[00]';
 
 export const DATE_FORMAT = 'YYYY-MM-DD';
+export const DATE_STR_FORMAT = 'YYYYMMDD';
 export const DATE_DISPLAY_FORMAT = 'MMMM YYYY';
 
 export const URL_AUTH_MICROSERVICE = process.env.AUTH_MICROSERVICE_URL;

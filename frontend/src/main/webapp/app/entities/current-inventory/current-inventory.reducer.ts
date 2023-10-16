@@ -4,6 +4,16 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { ICurrentInventory, defaultValue } from 'app/shared/model/current-inventory.model';
 
+interface ISearchParams extends IQueryParams {
+  itemName?: string;
+  categoryId?: number;
+  expiryStartDateStr?: string;
+  expiryEndDateStr?: string;
+  createdBy?: string;
+  createdStartDateStr?: string;
+  createdEndDateStr?: string;
+}
+
 const initialState: EntityState<ICurrentInventory> = {
   loading: false,
   errorMessage: null,
@@ -18,11 +28,20 @@ const apiUrl = 'giftandgain/inventory';
 
 // Actions
 
-export const getEntities = createAsyncThunk('currentInventory/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
-  const sortSplit = sort.split(',');
-  const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sortSplit[0]}&direction=${sortSplit[1]}` : ''}`;
-  return axios.get<ICurrentInventory[]>(requestUrl);
-});
+export const getEntities = createAsyncThunk('currentInventory/fetch_entity_list',
+  async ({ itemName, categoryId, expiryStartDateStr, expiryEndDateStr, createdBy, createdStartDateStr, createdEndDateStr, page, size, sort }: ISearchParams) => {
+    const sortSplit = sort?.split(',');
+    const requestUrl = `${apiUrl}/search?` +
+      `${itemName ? `itemName=${itemName}&` : ''}` +
+      `${categoryId ? `categoryId=${categoryId}&` : ''}` +
+      `${expiryStartDateStr ? `expiryStartDateStr=${expiryStartDateStr}&` : ''}` +
+      `${expiryEndDateStr ? `expiryEndDateStr=${expiryEndDateStr}&` : ''}` +
+      `${createdBy ? `createdBy=${createdBy}&` : ''}` +
+      `${createdStartDateStr ? `createdStartDateStr=${createdStartDateStr}&` : ''}` +
+      `${createdEndDateStr ? `createdEndDateStr=${createdEndDateStr}&` : ''}` +
+      `${sort ? `page=${page}&size=${size}&sort=${sortSplit[0]}&direction=${sortSplit[1]}` : ''}`;
+    return axios.get<ICurrentInventory[]>(requestUrl);
+  });
 
 export const getEntity = createAsyncThunk(
   'currentInventory/fetch_entity',

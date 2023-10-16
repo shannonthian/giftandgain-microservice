@@ -54,16 +54,31 @@ module.exports = async options =>
       port: 9060,
       proxy: [
         {
-          context: ['/api', '/services', '/management', '/v3/api-docs', '/h2-console', '/auth'],
+          context: ['/services', '/management', '/v3/api-docs', '/h2-console', '/auth'],
           target: `http${options.tls ? 's' : ''}://localhost:8080`,
           secure: false,
           changeOrigin: options.tls,
         },
         {
-          context: ['/giftandgain'],
-          target: `http${options.tls ? 's' : ''}://localhost:8001`,
+          context: ['/api/report'],
+          target: `http${options.tls ? 's' : ''}://localhost:8002`, // uncomment for local only
+          // target: "https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/report",  // uncomment for cloud only
           secure: false,
-          changeOrigin: options.tls,
+          changeOrigin: true,
+        },
+        {
+          context: ['/api'],
+          target: `http${options.tls ? 's' : ''}://localhost:8080`, // uncomment for local only
+          // target: "https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice",  // uncomment for cloud only
+          secure: false,
+          changeOrigin: true,
+        },
+        {
+          context: ['/giftandgain'],
+          target: `http${options.tls ? 's' : ''}://localhost:8001`, // uncomment for local only
+          // target: "https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory",  // uncomment for cloud only
+          secure: false,
+          changeOrigin: true,
         },
       ],
       https: options.tls,
@@ -74,8 +89,8 @@ module.exports = async options =>
       process.env.JHI_DISABLE_WEBPACK_LOGS
         ? null
         : new SimpleProgressWebpackPlugin({
-            format: options.stats === 'minimal' ? 'compact' : 'expanded',
-          }),
+          format: options.stats === 'minimal' ? 'compact' : 'expanded',
+        }),
       new BrowserSyncPlugin(
         {
           https: options.tls,

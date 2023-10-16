@@ -14,9 +14,10 @@ export const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  /* uncomment section for cloud connection testing
   useEffect(() => {
     setShowModal(true);
-    fetch('http://localhost:8003/api/login', {
+    fetch('https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice/api/login', {
       credentials: 'include',
       method: 'POST',
       headers: {
@@ -28,18 +29,18 @@ export const Login = () => {
       }),
     })
       .then(response => response.json())
-      .then(data => console.log(data));
+      .then(data => {
+        console.log(data);
+        sessionStorage.setItem('jhi-authenticationToken', data.access_token);
+      });
   }, []);
-
-  const handleLogin = (username, password, rememberMe = false) => {
-    dispatch(login(username, password, rememberMe));
-  };
+  */
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
-  }, [isAuthenticated]);
+    setShowModal(true);
+  }, []);
+
+  const handleLogin = (username, password, rememberMe = false) => dispatch(login(username, password, rememberMe));
 
   const handleClose = () => {
     setShowModal(false);
