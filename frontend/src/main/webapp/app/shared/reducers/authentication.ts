@@ -49,13 +49,17 @@ interface IAuthParams {
 
 export const authenticate = createAsyncThunk(
   'authentication/login',
-  async ({ username, password }: IAuthParams) =>
-    axios.get<any>(API_LOGIN, {
-      params: {
-        username: convertStringToHtmlSafeString(username),
-        password: convertStringToHtmlSafeString(password),
+  async ({ username, password }: IAuthParams) => {
+    const formData = new URLSearchParams();
+    formData.append('username', convertStringToHtmlSafeString(username));
+    formData.append('password', convertStringToHtmlSafeString(password));
+
+    return axios.post(API_LOGIN, formData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-    }),
+    });
+  },
   {
     serializeError: serializeAxiosError,
   }
