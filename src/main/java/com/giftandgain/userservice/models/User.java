@@ -3,6 +3,8 @@ package com.giftandgain.userservice.models;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -21,7 +23,8 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private ArrayList<String> authorities;
     // this loads the roles each time a user is loaded
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Collection<Authorities> authorities = new ArrayList<>();
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    private Collection<Authorities> authorities = new ArrayList<>();
 }

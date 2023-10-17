@@ -1,8 +1,12 @@
 package com.giftandgain.userservice.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.giftandgain.userservice.constants.constants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.giftandgain.userservice.models.Authorities;
 import com.giftandgain.userservice.models.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.giftandgain.userservice.repository.RoleRepo;
 import com.giftandgain.userservice.repository.UserRepo;
 
 import javax.transaction.Transactional;
@@ -22,7 +25,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService, UserDetailsService {
     // Lombok helps to create the constructors with @RequiredArgsConstructor
     private final UserRepo userRepo;
-    private final RoleRepo roleRepo;
+//    private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -36,8 +39,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         // need to return GrantedAuthority type for spring User model
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getAuthorities().forEach(role -> { authorities.add(new SimpleGrantedAuthority(role.getName()));
+        user.getAuthorities().forEach(role -> { authorities.add(new SimpleGrantedAuthority(role));
         });
+//        user.getAuthorities().forEach(role -> { authorities.add(new SimpleGrantedAuthority(role.getName()));
+//        });
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities );
     }
 
@@ -48,23 +53,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepo.save(user);
     }
 
-    @Override
-    public Authorities saveRole(Authorities authorities) {
-        log.info("Saving new role {} to the database", authorities.getName());
-        return roleRepo.save(authorities);
-    }
+//    @Override
+//    public Authorities saveRole(Authorities authorities) {
+//        log.info("Saving new role {} to the database", authorities.getName());
+//        return roleRepo.update(authorities);
+//    }
 
     @Override
-    public void addRoleToUser(String username, String roleName) {
-        log.info("Adding role {} to user {}", roleName, username );
+    public void addRoleToUser(String username, String authorities) {
+        log.info("Adding role {} to user {}", authorities, username );
         User user = userRepo.findByUsername(username);
-        Authorities authorities = roleRepo.findByName(roleName);
         // Because we have @transactional, don't need to user.save again
         user.getAuthorities().add(authorities);
     }
 
     @Override
-    public User getUser(String username) {
+    public User getUser(String authToken) {
+        String token = authToken.substring("Bearer ".length());
+        Algorithm algorithm = Algorithm.HMAC256(constants.JWT_ALGO_SECRET.getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        String username = decodedJWT.getSubject();
         log.info("Fetching user {}", username);
         return userRepo.findByUsername(username);
     }
