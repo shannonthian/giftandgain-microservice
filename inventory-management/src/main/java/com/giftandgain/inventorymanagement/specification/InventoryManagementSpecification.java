@@ -22,7 +22,7 @@ public class InventoryManagementSpecification {
 	public static Specification<InventoryManagement> hasCategory(Long categoryId) {
 		return (root, cq, cb) -> {
 			if (categoryId != null) {
-				return cb.equal(root.get("category").get("id"), categoryId);
+				return cb.equal(root.get("category").get("categoryId"), categoryId);
 			} else {
 				return null;
 			}

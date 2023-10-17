@@ -11,7 +11,7 @@ const commonConfig = require('./webpack.common.js');
 
 const ENV = 'development';
 
-const localhost = true;  // set this to false before merging to clivan-cicd
+const localhost = true; // set this to false before merging to clivan-cicd
 
 module.exports = async options =>
   webpackMerge(await commonConfig({ env: ENV }), {
@@ -65,19 +65,19 @@ module.exports = async options =>
         */
         {
           context: ['/api/report'],
-          target: localhost ? "http://localhost:8002" : "https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/report",
+          target: localhost ? 'http://localhost:8002' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/report',
           secure: false,
           changeOrigin: !localhost,
         },
         {
           context: ['/api'],
-          target: localhost ? "http://localhost:8080" : "https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice",
+          target: localhost ? 'http://localhost:8080' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice',
           secure: false,
           changeOrigin: !localhost,
         },
         {
           context: ['/giftandgain'],
-          target: localhost ? "http://localhost:8001" : "https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory",
+          target: localhost ? 'http://localhost:8001' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory',
           secure: false,
           changeOrigin: !localhost,
         },
@@ -90,8 +90,8 @@ module.exports = async options =>
       process.env.JHI_DISABLE_WEBPACK_LOGS
         ? null
         : new SimpleProgressWebpackPlugin({
-          format: options.stats === 'minimal' ? 'compact' : 'expanded',
-        }),
+            format: options.stats === 'minimal' ? 'compact' : 'expanded',
+          }),
       new BrowserSyncPlugin(
         {
           https: options.tls,
