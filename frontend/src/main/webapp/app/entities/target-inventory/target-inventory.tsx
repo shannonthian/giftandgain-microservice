@@ -292,6 +292,13 @@ export const TargetInventory = () => {
           )
         )}
       </div>
+      <br />
+      <div className="d-flex">
+        <Link to="/target-inventory/report-download" className="btn btn-warning">
+          <FontAwesomeIcon icon="file-arrow-down" />
+          &nbsp;Download Performance Report
+        </Link>
+      </div>
     </div>
   );
 };

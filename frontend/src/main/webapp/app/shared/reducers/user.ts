@@ -2,7 +2,7 @@ import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { serializeAxiosError } from "./reducer.utils";
 
-interface IUser {
+export interface IUser {
   id?: number;
   name?: string;
   username?: string;

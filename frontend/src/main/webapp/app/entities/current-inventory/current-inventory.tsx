@@ -64,7 +64,6 @@ export const CurrentInventory = ({ isManager }) => {
   }, []);
 
   const getAllEntities = () => {
-    console.log(itemName, categoryId, expiryStartDate, expiryEndDate, createdBy, createdStartDate, createdEndDate);
     dispatch(
       getEntities({
         itemName,
@@ -92,6 +91,7 @@ export const CurrentInventory = ({ isManager }) => {
       `${createdStartDate ? `createdStartDateStr=${convertDateToDateStr(createdStartDate)}&` : ''}` +
       `${createdEndDate ? `createdEndDateStr=${convertDateToDateStr(createdEndDate)}&` : ''}` +
       `page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`;
+    console.log(endURL);
     if (location.search !== endURL) {
       navigate(`${location.pathname}${endURL}`);
     }

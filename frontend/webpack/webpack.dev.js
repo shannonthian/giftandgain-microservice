@@ -11,6 +11,8 @@ const commonConfig = require('./webpack.common.js');
 
 const ENV = 'development';
 
+const localhost = true;  // set this to false before merging to clivan-cicd
+
 module.exports = async options =>
   webpackMerge(await commonConfig({ env: ENV }), {
     devtool: 'cheap-module-source-map', // https://reactjs.org/docs/cross-origin-errors.html
@@ -53,32 +55,31 @@ module.exports = async options =>
       allowedHosts: 'all',
       port: 9060,
       proxy: [
+        /*
         {
           context: ['/services', '/management', '/v3/api-docs', '/h2-console', '/auth'],
           target: `http${options.tls ? 's' : ''}://localhost:8080`,
           secure: false,
           changeOrigin: options.tls,
         },
+        */
         {
           context: ['/api/report'],
-          target: `http${options.tls ? 's' : ''}://localhost:8002`, // uncomment for local only
-          // target: "https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/report",  // uncomment for cloud only
+          target: localhost ? "http://localhost:8002" : "https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/report",
           secure: false,
-          changeOrigin: true,
+          changeOrigin: !localhost,
         },
         {
           context: ['/api'],
-          target: `http${options.tls ? 's' : ''}://localhost:8080`, // uncomment for local only
-          // target: "https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice",  // uncomment for cloud only
+          target: localhost ? "http://localhost:8080" : "https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice",
           secure: false,
-          changeOrigin: true,
+          changeOrigin: !localhost,
         },
         {
           context: ['/giftandgain'],
-          target: `http${options.tls ? 's' : ''}://localhost:8001`, // uncomment for local only
-          // target: "https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory",  // uncomment for cloud only
+          target: localhost ? "http://localhost:8001" : "https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory",
           secure: false,
-          changeOrigin: true,
+          changeOrigin: !localhost,
         },
       ],
       https: options.tls,

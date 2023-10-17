@@ -36,6 +36,8 @@ import { faBullseye } from '@fortawesome/free-solid-svg-icons/faBullseye';
 import { faGift } from '@fortawesome/free-solid-svg-icons/faGift';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons/faCircleCheck';
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons/faLayerGroup';
+import { faFileArrowDown } from '@fortawesome/free-solid-svg-icons/faFileArrowDown';
+import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 
@@ -78,6 +80,8 @@ export const loadIcons = () => {
     faBullseye,
     faGift,
     faCircleCheck,
-    faLayerGroup
+    faLayerGroup,
+    faFileArrowDown,
+    faDownload
   );
 };
