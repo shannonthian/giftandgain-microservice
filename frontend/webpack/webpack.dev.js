@@ -71,7 +71,7 @@ module.exports = async options =>
         },
         {
           context: ['/api'],
-          target: localhost ? 'http://localhost:8080' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice',
+          target: localhost ? 'http://localhost:8003' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice',
           secure: false,
           changeOrigin: !localhost,
         },
@@ -96,7 +96,7 @@ module.exports = async options =>
         {
           https: options.tls,
           host: 'localhost',
-          port: 9000,
+          port: 9001,
           proxy: {
             target: `http${options.tls ? 's' : ''}://localhost:${options.watch ? '8080' : '9060'}`,
             ws: true,
