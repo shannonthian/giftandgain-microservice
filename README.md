@@ -8,7 +8,7 @@
 4. In the main directory, edit docker-compose accordingly to which containers to run
 5. Command prompt: docker-compose up --build
 
-# Inventory management
+# Inventory management by Shannon123 testing sonar
 
 1. **Pulling the Application Image from Docker Hub**:
 

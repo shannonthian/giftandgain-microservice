@@ -8,13 +8,13 @@ import javax.persistence.*;
 
 import static javax.persistence.GenerationType.AUTO;
 
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Authorities {
-    @Id
-    @GeneratedValue(strategy = AUTO)
-    private Long id;
-    private String name;
-}
+//@Entity
+//@Data
+//@NoArgsConstructor
+//@AllArgsConstructor
+//public class Authorities {
+//    @Id
+//    @GeneratedValue(strategy = AUTO)
+//    private Long id;
+//    private String name;
+//}
