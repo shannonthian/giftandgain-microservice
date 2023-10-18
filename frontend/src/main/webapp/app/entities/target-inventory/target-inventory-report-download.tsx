@@ -4,7 +4,7 @@ import { Button, Row, Col, Table } from 'reactstrap';
 import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getMonthYearString } from 'app/shared/util/date-utils';
+import { addMonth, getMonthYearString } from 'app/shared/util/date-utils';
 import { IReport, ReportState, downloadReport, getReports } from './target-inventory-report-download.reducer';
 import { AxiosResponse } from 'axios';
 
@@ -16,6 +16,19 @@ export const TargetInventoryReportDownload = () => {
   useEffect(() => {
     dispatch(getReports());
   }, []);
+
+  const monthOptions = (noOfMonths: number) => {
+    const options: IReport[] = [];
+    for (let i = 0; i < noOfMonths; i++) {
+      options.push(
+        {
+          month: +addMonth(1, -i, "M"),
+          year: +addMonth(1, -i, "YYYY")
+        }
+      );
+    }
+    return options;
+  };
 
   const decodeBase64Str = (base64Str: string) => {
     return Buffer.from(base64Str, 'base64').toString();
@@ -33,11 +46,13 @@ export const TargetInventoryReportDownload = () => {
   };
 
   const onClickDownload = (report: IReport) => {
-    if (report.data) {
+    const month = report.month;
+    const year = report.year;
+    report = reports.filter((item) => item.month === month && item.year === year)[0];
+    console.log(report);
+    if (report) {
       downloadData(report);
     } else {
-      const month = report.month;
-      const year = report.year;
       dispatch(
         downloadReport({
           month,
@@ -64,40 +79,32 @@ export const TargetInventoryReportDownload = () => {
           Performance Reports
         </h2>
         <div className="table-responsive">
-          {reports && reports.length > 0 ? (
-            <Table responsive>
-              <thead>
-                <tr>
-                  <th />
-                  <th />
+          <Table responsive>
+            <thead>
+              <tr>
+                <th />
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {monthOptions(6).map((report, i) => (
+                <tr key={i}>
+                  <td>{getMonthYearString(report.month, report.year)}</td>
+                  <td className="text-end">
+                    <div className="btn-group flex-btn-group-container">
+                      <Button color="secondary" onClick={() => onClickDownload(report)} disabled={loading}>
+                        <FontAwesomeIcon icon="download" />
+                        &nbsp;
+                        <span className="d-none d-md-inline">
+                          Download
+                        </span>
+                      </Button>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {reports.map((report, i) => (
-                  <tr key={i}>
-                    <td>{getMonthYearString(report.month, report.year)}</td>
-                    <td className="text-end">
-                      <div className="btn-group flex-btn-group-container">
-                        <Button color="secondary" onClick={() => onClickDownload(report)}>
-                          <FontAwesomeIcon icon="download" />
-                          &nbsp;
-                          <span className="d-none d-md-inline">
-                            Download
-                          </span>
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          ) : (
-            !loading && (
-              <div className="alert alert-warning">
-                No Reports Found
-              </div>
-            )
-          )}
+              ))}
+            </tbody>
+          </Table>
         </div>
         <Button tag={Link} to="/target-inventory" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}
