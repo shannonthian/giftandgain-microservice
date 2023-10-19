@@ -12,7 +12,7 @@ services:
     ports:
       - "3308:3306"
 
-  inventory-management:
+  inventory-management-app:
     build:
       context: ../inventory-management
       dockerfile: Dockerfile
