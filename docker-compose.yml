@@ -14,7 +14,7 @@ services:
 
   inventory-management-app:
     build:
-      context: ../inventory-management
+      context: inventory-management
       dockerfile: Dockerfile
     ports:
       - "8001:8001"
@@ -24,7 +24,7 @@ services:
 
   frontend-giftandgain:
     build:
-      context: ../frontend
+      context: frontend
       dockerfile: Dockerfile
     image: frontend-giftandgain-image
     ports:
