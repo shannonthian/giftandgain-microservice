@@ -34,6 +34,11 @@ services:
     depends_on:
       - giftandgain-db
     command: ["java", "-jar", "/app/app.jar"]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://giftandgain-db:3306/giftandgain
+      SPRING_DATASOURCE_USERNAME: giftandgain
+      SPRING_DATASOURCE_PASSWORD: giftandgain123
+      CORS_ALLOWED_ORIGINS: http://localhost:3001
 
   report:
     container_name: report
@@ -51,7 +56,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://giftandgain-db:3306/giftandgain
       SPRING_DATASOURCE_USERNAME: giftandgain
       SPRING_DATASOURCE_PASSWORD: giftandgain123
-      SPRING_DATA_MONGODB_URI:
+      SPRING_DATA_MONGODB_URI: mongodb+srv://comatrix:HaEd01oNL9axKDKi@cluster0.pndzofp.mongodb.net/gift-and-gain?retryWrites=true&w=majority
 
   auth:
     container_name: auth
