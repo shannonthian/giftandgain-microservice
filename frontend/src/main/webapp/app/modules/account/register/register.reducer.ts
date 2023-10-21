@@ -2,7 +2,7 @@ import axios from 'axios';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { serializeAxiosError } from 'app/shared/reducers/reducer.utils';
-import { API_REGISTER } from 'app/config/constants';
+import { API_REGISTER, AUTHORITIES } from 'app/config/constants';
 
 const initialState = {
   loading: false,

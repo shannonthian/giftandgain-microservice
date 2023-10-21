@@ -2,6 +2,7 @@ package com.giftandgain.report.manager;
 
 import com.giftandgain.report.model.Category;
 import com.giftandgain.report.model.InventoryManagement;
+import com.giftandgain.report.model.InventoryReportDTO;
 import com.giftandgain.report.model.TargetInventory;
 import com.giftandgain.report.repository.TargetInventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 @Configuration
 public class ReportManager {
@@ -27,21 +27,51 @@ public class ReportManager {
         this.targetInventoryRepository = targetInventoryRepository;
     }
 
+    public List<InventoryReportDTO> generateReport(int month, int year) {
+        List<Object[]> targetInventoryResults = targetInventoryRepository.getTargetInventoryResults(month, year);
+        List<Object[]> inventoryManagementResults = targetInventoryRepository.getInventoryManagementResults(month, year);
+
+        Map<String, BigDecimal> inventoryByCategory = new HashMap<>();
+        for (Object[] inventoryResult : inventoryManagementResults) {
+            String category = (String) inventoryResult[0]; // Assuming index 0 contains the Category
+            BigDecimal receivedQuantity = (BigDecimal) inventoryResult[1]; // Assuming index 1 contains receivedQuantity
+            inventoryByCategory.put(category, receivedQuantity);
+        }
+
+        List<InventoryReportDTO> combinedResults = new ArrayList<>();
+
+        for (Object[] targetInventoryResult : targetInventoryResults) {
+            String category = (String) targetInventoryResult[0]; // Assuming index 0 contains the Category
+            String unit = (String) targetInventoryResult[1]; // Assuming index 1 contains the unit
+            BigDecimal targetQuantity = (BigDecimal) targetInventoryResult[2]; // Assuming index 2 contains targetQuantity
+            BigDecimal receivedQuantity = inventoryByCategory.get(category);
+
+            if (receivedQuantity == null) {
+                receivedQuantity = BigDecimal.ZERO;
+            }
+
+            combinedResults.add(new InventoryReportDTO(category, unit, targetQuantity, receivedQuantity));
+        }
+
+        return combinedResults;
+    }
+
     public String generateCsv(int month, int year) {
         System.out.println("generateCsv() :: START");
-        List<Object[]> totalQuantitiesByDate = targetInventoryRepository.getTotalQuantitiesByDate(month, year);
+        List<InventoryReportDTO> report = generateReport(month, year);
+        System.out.println("report" + report);
 
         StringBuilder reportCSV = new StringBuilder();
         String[] header = {"Category", "Unit", "Received Quantity", "Target Quantity"};
         reportCSV.append(String.join(",", header)).append("\n");
 
-        for (Object[] row : totalQuantitiesByDate) {
-            Category category = (Category) row[0];
-            String unit = (String) row[1];
-            BigDecimal receivedQuantity = (BigDecimal) row[2];
-            BigDecimal targetQuantity = (BigDecimal) row[3];
+        for (InventoryReportDTO row : report) {
+            String category = (String) row.getCategory();
+            String unit = (String) row.getUnit();
+            BigDecimal receivedQuantity = (BigDecimal) row.getReceivedQuantity();
+            BigDecimal targetQuantity = (BigDecimal) row.getTargetQuantity();
 
-            reportCSV.append(category.getCategory()).append(",");
+            reportCSV.append(category).append(",");
             reportCSV.append(unit).append(",");
             reportCSV.append(receivedQuantity).append(",");
             reportCSV.append(targetQuantity).append("\n");
