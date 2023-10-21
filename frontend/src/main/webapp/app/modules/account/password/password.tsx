@@ -31,21 +31,25 @@ export const PasswordPage = () => {
   const errorMessage = useAppSelector(state => state.password.errorMessage);
 
   useEffect(() => {
-    if (successMessage) {
-      toast.success(translate(successMessage));
-    } else if (errorMessage) {
-      toast.error(translate(errorMessage));
-    }
-    dispatch(reset());
-  }, [successMessage, errorMessage]);
+    console.log('account', account);
+  }, [account]);
+
+  // useEffect(() => {
+  //   if (successMessage) {
+  //     toast.success(translate(successMessage));
+  //   } else if (errorMessage) {
+  //     toast.error(translate(errorMessage));
+  //   }
+  //   dispatch(reset());
+  // }, [successMessage, errorMessage]);
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="password-title">
-            <Translate contentKey="password.title" interpolate={{ username: account.login }}>
-              Password for {account.login}
+            <Translate contentKey="password.title" interpolate={{ username: account.username }}>
+              Change your password
             </Translate>
           </h2>
           <ValidatedForm id="password-form" onSubmit={handleValidSubmit}>

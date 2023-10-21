@@ -7,6 +7,7 @@ import { locales, languages } from 'app/config/translation';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
 import { saveAccountSettings, reset } from './settings.reducer';
+import { AUTHORITIES } from 'app/config/constants';
 
 export const SettingsPage = () => {
   const dispatch = useAppDispatch();
@@ -35,15 +36,30 @@ export const SettingsPage = () => {
     );
   };
 
+  function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+  }
+
+  const authoritiesString = () => {
+    const authorities: string[] = account.authorities.map(role => {
+      return getKeyByValue(AUTHORITIES, role);
+    });
+    return authorities.join(', ');
+  };
+
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="settings-title">
-            <Translate contentKey="settings.title" interpolate={{ username: account.login }}>
-              User settings for {account.login}
+            <Translate contentKey="settings.title" interpolate={{ username: account.username }}>
+              Settings
             </Translate>
           </h2>
+          <p>
+            <strong>{account.username}</strong>
+          </p>
+          <p>{authoritiesString()}</p>
           <ValidatedForm id="settings-form" onSubmit={handleValidSubmit} defaultValues={account}>
             <ValidatedField
               name="firstName"

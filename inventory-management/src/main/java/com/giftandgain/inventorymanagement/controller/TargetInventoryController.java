@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.Base64;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.giftandgain.inventorymanagement.entity.Category;
 import com.giftandgain.inventorymanagement.entity.TargetInventory;
 import com.giftandgain.inventorymanagement.repository.TargetInventoryRepository;
 import com.giftandgain.inventorymanagement.specification.TargetInventorySpecification;
@@ -162,6 +164,36 @@ public class TargetInventoryController {
 		} catch (EmptyResultDataAccessException e) {
 			return ResponseEntity.notFound().build(); // HTTP 404 Not Found
 		}
+	}
+
+	// Called by report microservice
+	@GetMapping("/giftandgain/target/generate-report")
+	public ResponseEntity<String> generateReport(@RequestParam int month, @RequestParam int year) {
+		List<Object[]> totalQuantitiesByDate = targetRepo.getTotalQuantitiesByDate(month, year);
+	
+		StringBuilder reportCSV = new StringBuilder();
+		String[] header = {"Category", "Unit", "Received Quantity", "Target Quantity"};
+		reportCSV.append(String.join(",", header)).append("\n");
+	
+		for (Object[] row : totalQuantitiesByDate) {
+			Category category = (Category) row[0];
+			String unit = (String) row[1];
+			BigDecimal receivedQuantity = (BigDecimal) row[2];
+			BigDecimal targetQuantity = (BigDecimal) row[3];
+	
+			reportCSV.append(category.getCategory()).append(",");
+			reportCSV.append(unit).append(",");
+			reportCSV.append(receivedQuantity).append(",");
+			reportCSV.append(targetQuantity).append("\n");
+		}
+	
+		byte[] csvData = reportCSV.toString().getBytes();
+	
+		// Encode the CSV data as a base64 string
+		String base64Csv = Base64.getEncoder().encodeToString(csvData);
+	
+		// Return the base64-encoded CSV as a string in the response body
+		return ResponseEntity.ok(base64Csv);
 	}
 
 }

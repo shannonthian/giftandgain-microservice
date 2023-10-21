@@ -3,6 +3,7 @@ package com.giftandgain.userservice.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.giftandgain.userservice.constants.constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,8 +53,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         // need to typecast into our User model
         User user = (User) authentication.getPrincipal();
         // JWT algorithm to sign the access and refresh token
-        // TODOBEN - refactor the "secret"
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        Algorithm algorithm = Algorithm.HMAC256(constants.JWT_ALGO_SECRET.getBytes());
         String access_token = JWT.create()
                 .withSubject(user.getUsername())
                 // Access token usually last few min, so that they can use refresh token

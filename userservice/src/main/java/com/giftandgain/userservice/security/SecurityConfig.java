@@ -74,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:9000","http://frontend-balancer-601654883.us-east-1.elb.amazonaws.com:9060"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:9000","http://localhost:9001","http://frontend-balancer-601654883.us-east-1.elb.amazonaws.com:9060"));
         configuration.setAllowedMethods(Arrays.asList("HEAD",
                 "GET", "POST", "PUT", "DELETE", "PATCH"));
         // setAllowCredentials(true) is important, otherwise:

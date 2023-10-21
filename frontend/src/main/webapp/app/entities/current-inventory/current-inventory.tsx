@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Button, Table } from 'reactstrap';
-import { Translate, TextFormat, getPaginationState, JhiPagination, JhiItemCount } from 'react-jhipster';
+import { Button, Col, Form, FormGroup, Input, Label, Row, Table } from 'reactstrap';
+import { Translate, TextFormat, getPaginationState, JhiPagination, JhiItemCount, ValidatedField, translate, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
@@ -11,6 +11,13 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { ICurrentInventory } from 'app/shared/model/current-inventory.model';
 import { getEntities } from './current-inventory.reducer';
+import { ICategory } from 'app/shared/model/category.model';
+import { getEntities as getCategoryEntities } from '../category/category.reducer';
+import { UserState, getUsers } from 'app/shared/reducers/user';
+
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+import { convertDateToDateStr } from 'app/shared/util/date-utils';
 
 export const CurrentInventory = ({ isManager }) => {
   const dispatch = useAppDispatch();
@@ -25,10 +32,47 @@ export const CurrentInventory = ({ isManager }) => {
   const currentInventoryList: ICurrentInventory[] = useAppSelector(state => state.currentInventory.entities);
   const loading: boolean = useAppSelector(state => state.currentInventory.loading);
   const totalItems: number = useAppSelector(state => state.currentInventory.totalItems);
+  const categoryList: ICategory[] = useAppSelector(state => state.category.entities);
+  const { users }: UserState = useAppSelector(state => state.user);
+
+  const [itemName, setItemName] = useState("");
+  const [categoryId, setCategoryId] = useState(0);
+  const [createdBy, setCreatedBy] = useState("");
+
+  const [expiryDateRange, setExpiryDateRange] = useState([null, null]);
+  const [expiryStartDate, expiryEndDate] = expiryDateRange;
+
+  const [createdDateRange, setCreatedDateRange] = useState([null, null]);
+  const [createdStartDate, createdEndDate] = createdDateRange;
+
+  const categoryOptions = categoryList.map((item) => {
+    if (item.status === 'A')
+      return <option key={item.categoryId} value={item.categoryId}>{item.category}</option>
+  });
+
+  const userOptions = users.map((item) => {
+    return <option key={item.id}>{item.username}</option>
+  });
+
+  useEffect(() => {
+    dispatch(
+      getCategoryEntities({
+        sort: `category,${ASC}`,
+      })
+    );
+    dispatch(getUsers());
+  }, []);
 
   const getAllEntities = () => {
     dispatch(
       getEntities({
+        itemName,
+        categoryId,
+        expiryStartDateStr: convertDateToDateStr(expiryStartDate),
+        expiryEndDateStr: convertDateToDateStr(expiryEndDate),
+        createdBy,
+        createdStartDateStr: convertDateToDateStr(createdStartDate),
+        createdEndDateStr: convertDateToDateStr(createdEndDate),
         page: paginationState.activePage - 1,
         size: paginationState.itemsPerPage,
         sort: `${paginationState.sort},${paginationState.order}`,
@@ -38,7 +82,16 @@ export const CurrentInventory = ({ isManager }) => {
 
   const sortEntities = () => {
     getAllEntities();
-    const endURL = `?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`;
+    const endURL = `?` +
+      `${itemName ? `itemName=${itemName}&` : ''}` +
+      `${categoryId ? `categoryId=${categoryId}&` : ''}` +
+      `${expiryStartDate ? `expiryStartDateStr=${convertDateToDateStr(expiryStartDate)}&` : ''}` +
+      `${expiryEndDate ? `expiryEndDateStr=${convertDateToDateStr(expiryEndDate)}&` : ''}` +
+      `${createdBy ? `createdBy=${createdBy}&` : ''}` +
+      `${createdStartDate ? `createdStartDateStr=${convertDateToDateStr(createdStartDate)}&` : ''}` +
+      `${createdEndDate ? `createdEndDateStr=${convertDateToDateStr(createdEndDate)}&` : ''}` +
+      `page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`;
+    console.log(endURL);
     if (location.search !== endURL) {
       navigate(`${location.pathname}${endURL}`);
     }
@@ -81,6 +134,19 @@ export const CurrentInventory = ({ isManager }) => {
     sortEntities();
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    sortEntities();
+  };
+
+  const clearSearch = () => {
+    setItemName("");
+    setCategoryId(0);
+    setExpiryDateRange([null, null]);
+    setCreatedBy("");
+    setCreatedDateRange([null, null]);
+  }
+
   const getSortIconByFieldName = (fieldName: string) => {
     const sortFieldName = paginationState.sort;
     const order = paginationState.order;
@@ -107,6 +173,120 @@ export const CurrentInventory = ({ isManager }) => {
           </Link>
         </div>
       </h2>
+      <br />
+      <div className='jh-card card'>
+        <Form onSubmit={handleSubmit}>
+          <Row>
+            <Col sm="6">
+              <FormGroup>
+                <Label for="itemName">
+                  <Translate contentKey="giftandgainFrontendApp.currentInventory.itemName">
+                    Item Name
+                  </Translate>
+                </Label>
+                <Input
+                  id="itemName"
+                  type="text"
+                  value={itemName}
+                  onChange={(e) => {
+                    setItemName(e.target.value);
+                  }}
+                />
+              </FormGroup>
+            </Col>
+            <Col sm="6">
+              <FormGroup>
+                <Label for="category">
+                  <Translate contentKey="giftandgainFrontendApp.currentInventory.category">
+                    Category
+                  </Translate>
+                </Label>
+                <Input
+                  id="category"
+                  type="select"
+                  value={categoryId}
+                  onChange={(e) => {
+                    setCategoryId(+e.target.value);
+                  }}
+                >
+                  <option></option>
+                  {categoryOptions}
+                </Input>
+              </FormGroup>
+            </Col>
+            <Col sm="6">
+              <FormGroup>
+                <Label for="expiryDate">
+                  <Translate contentKey="giftandgainFrontendApp.currentInventory.expiryDate">
+                    Expiry Date
+                  </Translate>
+                </Label>
+                <DatePicker
+                  id="expiryDate"
+                  className="form-control"
+                  selectsRange={true}
+                  startDate={expiryStartDate}
+                  endDate={expiryEndDate}
+                  onChange={(update) => {
+                    setExpiryDateRange(update);
+                  }}
+                  dateFormat="dd/MM/yyyy"
+                />
+              </FormGroup>
+            </Col>
+            <Col sm="6">
+              <FormGroup>
+                <Label for="createdBy">
+                  <Translate contentKey="giftandgainFrontendApp.currentInventory.createdBy">
+                    Created By
+                  </Translate>
+                </Label>
+                <Input
+                  id="createdBy"
+                  type="select"
+                  value={createdBy}
+                  onChange={(e) => {
+                    setCreatedBy(e.target.value);
+                  }}
+                >
+                  <option></option>
+                  {userOptions}
+                </Input>
+              </FormGroup>
+            </Col>
+            <Col sm="6">
+              <FormGroup>
+                <Label for="createdDate">
+                  <Translate contentKey="giftandgainFrontendApp.currentInventory.createdDate">
+                    Created Date
+                  </Translate>
+                </Label>
+                <DatePicker
+                  id="createdDate"
+                  className="form-control"
+                  selectsRange={true}
+                  startDate={createdStartDate}
+                  endDate={createdEndDate}
+                  onChange={(update) => {
+                    setCreatedDateRange(update);
+                  }}
+                  dateFormat="dd/MM/yyyy"
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+          <Button color="warning" id="sort-entity" type="submit" disabled={loading}>
+            <FontAwesomeIcon icon="search" />
+            &nbsp;Search
+          </Button>
+          &nbsp;
+          <Button color="secondary" id="sort-entity" type="button" disabled={loading} onClick={clearSearch}>
+            <FontAwesomeIcon icon="trash" />
+            &nbsp;Reset
+          </Button>
+        </Form>
+      </div>
+      <br />
       <div className="table-responsive">
         {currentInventoryList && currentInventoryList.length > 0 ? (
           <Table responsive>

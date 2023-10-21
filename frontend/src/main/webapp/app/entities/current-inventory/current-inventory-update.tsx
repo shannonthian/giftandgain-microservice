@@ -17,7 +17,7 @@ import { getEntity, updateEntity, createEntity, reset } from './current-inventor
 import { ICategory } from 'app/shared/model/category.model';
 import { getEntities as getCategoryEntities } from '../category/category.reducer';
 import { ASC } from 'app/shared/util/pagination.constants';
-import { IUser } from 'app/shared/model/user.model';
+import { AuthenticationState } from 'app/shared/reducers/authentication';
 
 export const CurrentInventoryUpdate = () => {
   const dispatch = useAppDispatch();
@@ -32,7 +32,7 @@ export const CurrentInventoryUpdate = () => {
   const updating: boolean = useAppSelector(state => state.currentInventory.updating);
   const updateSuccess: boolean = useAppSelector(state => state.currentInventory.updateSuccess);
   const categoryList: ICategory[] = useAppSelector(state => state.category.entities);
-  const account: IUser = useAppSelector(state => state.authentication.account);
+  const { account }: AuthenticationState = useAppSelector(state => state.authentication);
 
   const handleClose = () => {
     navigate('/current-inventory' + location.search);
@@ -88,7 +88,7 @@ export const CurrentInventoryUpdate = () => {
       category: {
         categoryId: values.category,
       },
-      createdBy: isNew ? account.login : currentInventoryEntity.createdBy,
+      createdBy: isNew ? account.username : currentInventoryEntity.createdBy,
     };
 
     if (isNew) {

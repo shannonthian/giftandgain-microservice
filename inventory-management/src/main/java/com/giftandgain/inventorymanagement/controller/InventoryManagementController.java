@@ -169,6 +169,7 @@ public class InventoryManagementController {
 		currentInventory.setCategory(updatedInventory.getCategory());
 		currentInventory.setReceivedQuantity(updatedInventory.getReceivedQuantity());
 		currentInventory.setExpiryDate(updatedInventory.getExpiryDate());
+		currentInventory.setRemarks(updatedInventory.getRemarks());
 		currentInventory.setCreatedDateToNow();
 		inventoryRepo.save(currentInventory);
 

@@ -11,6 +11,8 @@ const commonConfig = require('./webpack.common.js');
 
 const ENV = 'development';
 
+const localhost = false; // set this to false before merging to clivan-cicd
+
 module.exports = async options =>
   webpackMerge(await commonConfig({ env: ENV }), {
     devtool: 'cheap-module-source-map', // https://reactjs.org/docs/cross-origin-errors.html
@@ -53,19 +55,31 @@ module.exports = async options =>
       allowedHosts: 'all',
       port: 9060,
       proxy: [
+        /*
         {
-          context: ['/api', '/services', '/management', '/v3/api-docs', '/h2-console', '/auth'],
+          context: ['/services', '/management', '/v3/api-docs', '/h2-console', '/auth'],
           target: `http${options.tls ? 's' : ''}://localhost:8080`,
           secure: false,
           changeOrigin: options.tls,
         },
+        */
+        {
+          context: ['/api/report'],
+          target: localhost ? 'http://localhost:8002' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/report',
+          secure: false,
+          changeOrigin: !localhost,
+        },
+        {
+          context: ['/api'],
+          target: localhost ? 'http://localhost:8003' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice',
+          secure: false,
+          changeOrigin: !localhost,
+        },
         {
           context: ['/giftandgain'],
-          //target: `http${options.tls ? 's' : ''}://localhost:8001`,
-          target: 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory',
+          target: localhost ? 'http://localhost:8001' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory',
           secure: false,
-          //changeOrigin: options.tls,
-          changeOrigin: true,
+          changeOrigin: !localhost,
         },
       ],
       https: options.tls,
@@ -82,7 +96,7 @@ module.exports = async options =>
         {
           https: options.tls,
           host: 'localhost',
-          port: 9000,
+          port: 9001,
           proxy: {
             target: `http${options.tls ? 's' : ''}://localhost:${options.watch ? '8080' : '9060'}`,
             ws: true,
@@ -110,6 +124,10 @@ module.exports = async options =>
       new WebpackNotifierPlugin({
         title: 'Gift & Gain',
         contentImage: path.join(__dirname, 'logo-charity.png'),
+      }),
+      new webpack.DefinePlugin({
+        'process.env.INVENTORY_MICROSERVICE_URL': JSON.stringify(process.env.INVENTORY_MICROSERVICE_URL),
+        'process.env.AUTH_MICROSERVICE_URL': JSON.stringify(process.env.AUTH_MICROSERVICE_URL),
       }),
     ].filter(Boolean),
   });

@@ -5,7 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.giftandgain.userservice.models.Authorities;
+import com.giftandgain.userservice.constants.constants;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import com.giftandgain.userservice.models.User;
@@ -20,9 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -35,7 +33,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/account")
-    public ResponseEntity <User> getUser(@RequestBody AccountForm accountForm) { return ResponseEntity.ok().body(userService.getUser(accountForm.getUsername()));}
+    public ResponseEntity <User> getUser(@RequestHeader Map<String,String> reqHeader) { return ResponseEntity.ok().body(userService.getUser(reqHeader.get("authorization")));}
 
     @GetMapping("/users")
     public ResponseEntity <List<User>> getUsers() {
@@ -48,15 +46,9 @@ public class UserController {
         return  ResponseEntity.created(uri).body(userService.saveUser(user));
     }
 
-    @PostMapping("/role/save")
-    public ResponseEntity <Authorities> saveRole(@RequestBody Authorities authorities) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
-        return  ResponseEntity.created(uri).body(userService.saveRole(authorities));
-    }
-
     @PostMapping("/role/addtouser")
     public ResponseEntity <?> addRoleToUser(@RequestBody RoleToUserForm form) {
-        userService.addRoleToUser(form.getUsername(), form.getRoleName());
+        userService.addRoleToUser(form.getUsername(), form.getAuthorities());
         return ResponseEntity.ok().build();
     }
 
@@ -66,7 +58,6 @@ public class UserController {
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String refresh_token = authorizationHeader.substring("Bearer ".length());
-                // TODOBEN - refactor the "secret"
                 // TODOBEN - refactor algorithm?
                 // need to ensure that the sign and verify both same algo
                 // JWT Refresh Token - so typically, BE send back the tokens
@@ -75,8 +66,8 @@ public class UserController {
                 // usually is wait till access token expire, receive the expired token error msg
                 // from BE, then use refresh token send request
                 // get another access token
-                // seamless experience - user doesnt know token expired, requested new token
-                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                // seamless experience - user doesn't know token expired, requested new token
+                Algorithm algorithm = Algorithm.HMAC256(constants.JWT_ALGO_SECRET.getBytes());
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refresh_token);
                 String username = decodedJWT.getSubject();
@@ -88,7 +79,7 @@ public class UserController {
                         // Issuer - can be company name / author
                         .withIssuer(request.getRequestURL().toString())
                         // roles
-                        .withClaim("roles", user.getAuthorities().stream().map(Authorities::getName).collect(Collectors.toList()))
+                        .withClaim("roles", user.getAuthorities())
                         .sign(algorithm);
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("access_token", access_token);
@@ -116,10 +107,5 @@ public class UserController {
 @Data
 class RoleToUserForm {
     private String username;
-    private String roleName;
-}
-
-@Data
-class AccountForm {
-    private String username;
+    private String authorities;
 }
