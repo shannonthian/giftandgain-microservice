@@ -27,7 +27,7 @@ export const Home = () => {
             Our platform will streamline the process of managing inventory of
             donation items received by food charity organizations, and
             keep potential donors informed about items that are in high demand.
-          </b>x*/}
+          </b> */}
         </p>
         {/*
         <p className="lead">
