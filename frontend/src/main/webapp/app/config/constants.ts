@@ -33,7 +33,7 @@ export const DATE_DISPLAY_FORMAT = 'MMMM YYYY';
 
 // export const URL_AUTH_MICROSERVICE = process.env.AUTH_MICROSERVICE_URL; // docker-sit branch
 export const URL_AUTH_MICROSERVICE = ""; // frontend branch
-export const API_REGISTER = URL_AUTH_MICROSERVICE + '/api/register';
+export const API_REGISTER = URL_AUTH_MICROSERVICE + '/api/user/save';
 export const API_UPDATE_ACCOUNT = URL_AUTH_MICROSERVICE + '/api/account';
 export const API_ACTIVATE_ACCOUNT = (key: string) => `${URL_AUTH_MICROSERVICE}/api/activate?key=${key}`;
 export const API_CHANGE_PASSWORD = URL_AUTH_MICROSERVICE + '/api/change-password';

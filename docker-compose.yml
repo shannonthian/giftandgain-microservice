@@ -34,6 +34,10 @@ services:
     depends_on:
       - giftandgain-db
     command: ["java", "-jar", "/app/app.jar"]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
 
   report:
     container_name: report
