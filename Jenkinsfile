@@ -88,6 +88,7 @@ pipeline {
                 sh 'docker rmi ${ECR_REGISTRY}/listing-repository:report'
                 sh 'docker rmi ${ECR_REGISTRY}/listing-repository:userservice'
                 sh 'docker rmi ${ECR_REGISTRY}/listing-repository:frontend'
+                sh 'docker rmi -f $(docker images -aq)'
             }
         }
        }

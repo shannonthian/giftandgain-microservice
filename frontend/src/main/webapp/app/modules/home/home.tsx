@@ -16,18 +16,16 @@ export const Home = () => {
       <Col md="3" className="pad">
         <span className="hipster rounded" />
       </Col>
-      <Col md="9" style={{ padding: "20px 80px 20px 50px" }}>
+      <Col md="9" style={{ padding: '20px 80px 20px 50px' }}>
         <h2>
           <Translate contentKey="home.title">Gift & Gain</Translate>
         </h2>
-        <p className="lead" style={{ textAlign: "justify" }}>
+        <p className="lead" style={{ textAlign: 'justify' }}>
           <b>
-            Gift & Gain Application aims to be a leading user-friendly digital platform
-            for food charity organizations and potential donors.
-            Our platform will streamline the process of managing inventory of
-            donation items received by food charity organizations, and
+            Gift & Gain Application aims to be a leading user-friendly digital platform for food charity organizations and potential donors.
+            Our platform will streamline the process of managing inventory of donation items received by food charity organizations, and
             keep potential donors informed about items that are in high demand.
-          </b> 
+          </b>
         </p>
         {/*
         <p className="lead">
