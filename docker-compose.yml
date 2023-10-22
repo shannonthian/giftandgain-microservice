@@ -14,10 +14,9 @@ services:
   giftandgain-db:
     image: mysql:8-oracle
     environment:
-      MYSQL_ROOT_PASSWORD: giftandgain123
-      MYSQL_USER: giftandgain
-      MYSQL_PASSWORD: giftandgain123
-      MYSQL_DATABASE: giftandgain
+      SPRING_DATASOURCE_URL: jdbc:mysql://giftandgain-db:3306/giftandgain
+      SPRING_DATASOURCE_USERNAME: giftandgain
+      SPRING_DATASOURCE_PASSWORD: giftandgain123
     networks:
       - spring-cloud-network
 
