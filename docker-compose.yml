@@ -34,6 +34,10 @@ services:
     depends_on:
       - giftandgain-db
     command: ["java", "-jar", "/app/app.jar"]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://giftandgain-db:3306/giftandgain
+      SPRING_DATASOURCE_USERNAME: giftandgain
+      SPRING_DATASOURCE_PASSWORD: giftandgain123
 
   report:
     container_name: report
