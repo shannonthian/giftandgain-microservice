@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: '3'
 
 services:
@@ -31,4 +32,88 @@ services:
       - "9001:80"
     depends_on:
       - inventory-management-app
+=======
+version: "3"
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: always
+    networks:
+      - spring-cloud-network
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+
+  giftandgain-db:
+    image: mysql:8-oracle
+    environment:
+      MYSQL_ROOT_PASSWORD: giftandgain123
+      MYSQL_USER: giftandgain
+      MYSQL_PASSWORD: giftandgain123
+      MYSQL_DATABASE: giftandgain
+    networks:
+      - spring-cloud-network
+    ports:
+      - "3306:3306"
+
+  inventory-management-app:
+    build:
+      context: inventory-management
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    networks:
+      - spring-cloud-network
+    depends_on:
+      - giftandgain-db
+    command: ["java", "-jar", "/app/app.jar"]
+
+  report:
+    container_name: report
+    build:
+      context: report
+      dockerfile: Dockerfile
+    image: report:latest
+    ports:
+      - 8002:8002
+    depends_on:
+      - giftandgain-db
+    networks:
+      - spring-cloud-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://giftandgain-db:3306/giftandgain
+      SPRING_DATASOURCE_USERNAME: giftandgain
+      SPRING_DATASOURCE_PASSWORD: giftandgain123
+      SPRING_DATA_MONGODB_URI:
+
+  auth:
+    container_name: auth
+    build:
+      context: userservice
+      dockerfile: Dockerfile
+    image: auth:latest
+    ports:
+      - 8003:8003
+    depends_on:
+      - postgres
+    networks:
+      - spring-cloud-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      CORS_ALLOWED_ORIGINS: http://localhost:3001
+
+  # frontend-giftandgain:
+  #   build:
+  #     context: frontend
+  #     dockerfile: Dockerfile
+  #   image: frontend-giftandgain-image
+  #   ports:
+  #     - "9001:80"
+  #   depends_on:
+  #     - inventory-management-app
+>>>>>>> 58618c5d9c4648d6759a5fd8ccd40fcc21ae6afd
 
