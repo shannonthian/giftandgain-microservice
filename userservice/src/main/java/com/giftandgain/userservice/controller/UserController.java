@@ -32,6 +32,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UserController {
     private final UserService userService;
 
+    @PostMapping("/account")
+    public ResponseEntity <User> updateUser(@RequestBody UpdateUserForm form) {
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
+        return  ResponseEntity.created(uri).body(userService.updateUser(form.getName(),
+                form.getUsername(), form.getEmail(), form.getAuthorities()));
+    }
     @GetMapping("/account")
     public ResponseEntity <User> getUser(@RequestHeader Map<String,String> reqHeader) { return ResponseEntity.ok().body(userService.getUser(reqHeader.get("authorization")));}
 
@@ -45,6 +51,7 @@ public class UserController {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
         return  ResponseEntity.created(uri).body(userService.saveUser(user));
     }
+
 
     @PostMapping("/role/addtouser")
     public ResponseEntity <?> addRoleToUser(@RequestBody RoleToUserForm form) {
@@ -108,4 +115,12 @@ public class UserController {
 class RoleToUserForm {
     private String username;
     private String authorities;
+}
+
+@Data
+class UpdateUserForm {
+    private String name;
+    private String username;
+    private String email;
+    private ArrayList<String> authorities;
 }
