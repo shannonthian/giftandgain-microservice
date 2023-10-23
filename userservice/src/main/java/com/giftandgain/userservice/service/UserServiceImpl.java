@@ -51,6 +51,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepo.save(user);
     }
 
+    public User updateUser(String name, String username, String email, ArrayList<String> authorities) {
+        log.info("Updating user {} to the database", username);
+        User userToUpdate = userRepo.findByUsername(username);
+        userToUpdate.setName(name);
+        userToUpdate.setEmail(email);
+        userToUpdate.setAuthorities(authorities);
+        return userRepo.save(userToUpdate);
+    }
+
 //    @Override
 //    public Authorities saveRole(Authorities authorities) {
 //        log.info("Saving new role {} to the database", authorities.getName());
