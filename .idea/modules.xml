@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/giftandgain-microservice.iml" filepath="$PROJECT_DIR$/.idea/giftandgain-microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/api-gateway/api-gateway.iml" filepath="$PROJECT_DIR$/api-gateway/api-gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inventory-management/inventory-management.iml" filepath="$PROJECT_DIR$/inventory-management/inventory-management.iml" />
+      <module fileurl="file://$PROJECT_DIR$/listing/listing.iml" filepath="$PROJECT_DIR$/listing/listing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/naming-server/naming-server.iml" filepath="$PROJECT_DIR$/naming-server/naming-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/report/report.iml" filepath="$PROJECT_DIR$/report/report.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userservice/userservice.iml" filepath="$PROJECT_DIR$/userservice/userservice.iml" />
     </modules>
   </component>
 </project>

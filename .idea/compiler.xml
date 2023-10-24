@@ -3,27 +3,14 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="report" />
-        <module name="api-gateway" />
-        <module name="inventory-management" />
-        <module name="listing" />
-        <module name="userservice" />
-        <module name="naming-server" />
-      </profile>
     </annotationProcessing>
-  </component>
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="api-gateway" options="-parameters" />
-      <module name="inventory-management" options="-parameters" />
-      <module name="listing" options="-parameters" />
-      <module name="naming-server" options="-parameters" />
-      <module name="report" options="-parameters" />
-      <module name="userservice" options="-parameters" />
-    </option>
+    <bytecodeTargetLevel>
+      <module name="api-gateway" target="1.8" />
+      <module name="inventory-management" target="1.8" />
+      <module name="listing" target="11" />
+      <module name="naming-server" target="1.8" />
+      <module name="report" target="11" />
+      <module name="userservice" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>
