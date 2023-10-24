@@ -21,7 +21,8 @@ public interface TargetInventoryRepository extends PagingAndSortingRepository<Ta
 
     @Query("SELECT c.category, c.unit, SUM(t.targetQuantity) " +
             "FROM tb_target_inventory t " +
-            "LEFT JOIN t.category c ON FUNCTION('MONTH', t.targetMonthYear) = :month " +
+            "LEFT JOIN t.category c " +
+            "WHERE FUNCTION('MONTH', t.targetMonthYear) = :month " +
             "AND FUNCTION('YEAR', t.targetMonthYear) = :year " +
             "GROUP BY c.category, c.unit")
     List<Object[]> getTargetInventoryResults(@Param("month") int month, @Param("year") int year);

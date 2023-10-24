@@ -17,10 +17,10 @@ export const DonateRight = () => {
     remarks: "hello",
     createdBy: "admin"
   };
-  
+
   // Define the URL of the backend endpoint
   const url = 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory/giftandgain/inventory/create';
-  
+
   // Define the headers for the POST request
   const headers = {
     'Content-Type': 'application/json',
@@ -57,8 +57,6 @@ export const DonateRight = () => {
 //     console.error('Error:', error);
 //   });
 //   }, []);
- 
- 
 
   useEffect(() => {
     const today = new Date();
@@ -80,7 +78,7 @@ export const DonateRight = () => {
 
   const convertListToListing = (list: string[]) => {
     return list.map((item, index) => {
-      return <b key={index}>{index + 1}. {item}<br /></b>
+      return <b key={index}>&#x2022; {item}<br /></b>
     });
   }
   const highPriorityListing = convertListToListing(highPriorityWishList);
@@ -126,8 +124,6 @@ export const DonateRight = () => {
           We would greatly appreciate your help to fulfil our beneficiaries wish list below.
           <br /> <br />
           <u id="wish-list"><b>Food Donation Wish List</b></u>
-          <br />
-          <span style={{ color: "red" }}>(ordered from highest to lowest priority)</span>
           <br />
           {highPriorityWishList.length ? highPriorityListing : lowPriorityListing}
         </b>
