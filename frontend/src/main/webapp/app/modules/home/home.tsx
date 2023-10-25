@@ -24,7 +24,8 @@ export const Home = () => {
           <b>
             Gift & Gain Application aims to be a leading user-friendly digital platform for food charity organizations and potential donors.
             Our platform will streamline the process of managing inventory of donation items received by food charity organizations, and
-            keep potential donors informed about items that are in high demand. Browse our webpage to find out more!
+            keep potential donors informed about items that are in high demand. Browse our webpage to find out more! Testing our automated CICD pipeline,
+            and it works! Hurray!
           </b>
         </p>
         {/*
