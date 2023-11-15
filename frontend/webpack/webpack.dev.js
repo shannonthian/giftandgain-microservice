@@ -64,23 +64,29 @@ module.exports = async options =>
         },
         */
         {
-          context: ['/api/report'],
-          target: localhost ? 'http://localhost:8002' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/report',
+          context: ['/api', '/giftandgain'],
+          target: localhost ? 'http://localhost:8756' : 'api-gateway-url',
           secure: false,
           changeOrigin: !localhost,
         },
-        {
-          context: ['/api'],
-          target: localhost ? 'http://localhost:8003' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice',
-          secure: false,
-          changeOrigin: !localhost,
-        },
-        {
-          context: ['/giftandgain'],
-          target: localhost ? 'http://localhost:8001' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory',
-          secure: false,
-          changeOrigin: !localhost,
-        },
+        // {
+        //   context: ['/api/report'],
+        //   target: localhost ? 'http://localhost:8002' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/report',
+        //   secure: false,
+        //   changeOrigin: !localhost,
+        // },
+        // {
+        //   context: ['/api'],
+        //   target: localhost ? 'http://localhost:8003' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/userservice',
+        //   secure: false,
+        //   changeOrigin: !localhost,
+        // },
+        // {
+        //   context: ['/giftandgain'],
+        //   target: localhost ? 'http://localhost:8001' : 'https://qh7hxkd331.execute-api.us-east-1.amazonaws.com/inventory',
+        //   secure: false,
+        //   changeOrigin: !localhost,
+        // },
       ],
       https: options.tls,
       historyApiFallback: true,
