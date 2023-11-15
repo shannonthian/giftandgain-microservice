@@ -38,7 +38,7 @@ pipeline {
                   sh 'mvn clean install -DskipTests=true' 
                }
                 dir('report'){
-                  sh 'mvn clean install -DskipTests=true' 
+                  sh 'mvn clean install' 
                }
                 dir('userservice'){
                   sh 'mvn clean install -DskipTests=true' 
